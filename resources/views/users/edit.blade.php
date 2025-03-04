@@ -12,7 +12,7 @@
 
 @if (count($errors) > 0)
     <div class="alert alert-danger">
-      <strong>Whoops!</strong> There were some problems with your input.<br><br>
+      <strong>Whoops!</strong> Il y a eu quelques problèmes avec votre saisie.<br><br>
       <ul>
          @foreach ($errors->all() as $error)
            <li>{{ $error }}</li>
@@ -28,8 +28,8 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Name:</strong>
-                <input type="text" name="name" placeholder="Name" class="form-control" value="{{ $user->name }}">
+                <strong>Nom complet:</strong>
+                <input type="text" name="name" placeholder="Nom complet" class="form-control" value="{{ $user->name }}">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -38,22 +38,22 @@
                 <input type="email" name="email" placeholder="Email" class="form-control" value="{{ $user->email }}">
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="col-xs-12 col-sm-12 col-md-6">
             <div class="form-group">
-                <strong>Password:</strong>
-                <input type="password" name="password" placeholder="Password" class="form-control">
+                <strong>Mot de passe:</strong>
+                <input type="password" name="password" placeholder="Mot de passe" class="form-control">
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            <div class="form-group">
+                <strong>Confirmez le mot de passe:</strong>
+                <input type="password" name="confirm-password" placeholder="Confirmez le mot de passe" class="form-control">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Confirm Password:</strong>
-                <input type="password" name="confirm-password" placeholder="Confirm Password" class="form-control">
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Role:</strong>
-                <select name="roles[]" class="form-control" multiple="multiple">
+                <strong>Rôle:</strong>
+                <select name="roles[]" class="form-control" >
                     @foreach ($roles as $value => $label)
                         <option value="{{ $value }}" {{ isset($userRole[$value]) ? 'selected' : ''}}>
                             {{ $label }}
@@ -62,8 +62,8 @@
                 </select>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-primary btn-sm mt-2 mb-3"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
+        <div class="col-xs-12 col-sm-12 col-md-12 ">
+            <button type="submit" class="btn btn-primary "><i class="fa-solid fa-floppy-disk"></i> Soumettre</button>
         </div>
     </div>
 </form>

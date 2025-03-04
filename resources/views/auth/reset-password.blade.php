@@ -1,9 +1,4 @@
-
-
 <x-guest-layout>
-
-
-
 
     <div class="row justify-content-center">
 
@@ -16,7 +11,6 @@
                         <div class="col-lg-6 d-none d-lg-block bg-password-image"></div>
                         <div class="col-lg-6">
                             <div class="p-5">
-
 
                                 <form class="user" method="POST" action="{{ route('password.store') }}">
                                         @csrf
@@ -74,7 +68,5 @@
         </div>
 
     </div>
-
-
 
 </x-guest-layout>

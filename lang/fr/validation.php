@@ -1,0 +1,81 @@
+<?php
+
+return [
+
+    'accepted' => 'Le champ :attribute doit être accepté.',
+    'accepted_if' => 'Le champ :attribute doit être accepté lorsque :other est :value.',
+    'active_url' => 'Le champ :attribute doit être une URL valide.',
+    'after' => 'Le champ :attribute doit être une date après :date.',
+    'after_or_equal' => 'Le champ :attribute doit être une date après ou égale à :date.',
+    'alpha' => 'Le champ :attribute ne doit contenir que des lettres.',
+    'alpha_dash' => 'Le champ :attribute ne doit contenir que des lettres, chiffres, tirets et underscores.',
+    'alpha_num' => 'Le champ :attribute ne doit contenir que des lettres et des chiffres.',
+    'array' => 'Le champ :attribute doit être un tableau.',
+    'before' => 'Le champ :attribute doit être une date avant :date.',
+    'before_or_equal' => 'Le champ :attribute doit être une date avant ou égale à :date.',
+    'between' => [
+        'numeric' => 'Le champ :attribute doit être entre :min et :max.',
+        'file' => 'Le champ :attribute doit être entre :min et :max kilo-octets.',
+        'string' => 'Le champ :attribute doit contenir entre :min et :max caractères.',
+        'array' => 'Le champ :attribute doit contenir entre :min et :max éléments.',
+    ],
+    'boolean' => 'Le champ :attribute doit être vrai ou faux.',
+    'confirmed' => 'Le champ de confirmation :attribute ne correspond pas.',
+    'date' => 'Le champ :attribute doit être une date valide.',
+    'date_equals' => 'Le champ :attribute doit être une date égale à :date.',
+    'date_format' => 'Le champ :attribute doit correspondre au format :format.',
+    'different' => 'Les champs :attribute et :other doivent être différents.',
+    'digits' => 'Le champ :attribute doit contenir :digits chiffres.',
+    'digits_between' => 'Le champ :attribute doit contenir entre :min et :max chiffres.',
+    'email' => 'Le champ :attribute doit être une adresse e-mail valide.',
+    'ends_with' => 'Le champ :attribute doit se terminer par l’une des valeurs suivantes : :values.',
+    'exists' => 'Le champ :attribute sélectionné est invalide.',
+    'file' => 'Le champ :attribute doit être un fichier.',
+    'image' => 'Le champ :attribute doit être une image.',
+    'in' => 'Le champ :attribute sélectionné est invalide.',
+    'integer' => 'Le champ :attribute doit être un entier.',
+    'max' => [
+        'numeric' => 'Le champ :attribute ne doit pas dépasser :max.',
+        'file' => 'Le champ :attribute ne doit pas dépasser :max kilo-octets.',
+        'string' => 'Le champ :attribute ne doit pas dépasser :max caractères.',
+        'array' => 'Le champ :attribute ne doit pas contenir plus de :max éléments.',
+    ],
+    'min' => [
+        'numeric' => 'Le champ :attribute doit être au moins :min.',
+        'file' => 'Le champ :attribute doit faire au moins :min kilo-octets.',
+        'string' => 'Le champ :attribute doit contenir au moins :min caractères.',
+        'array' => 'Le champ :attribute doit contenir au moins :min éléments.',
+    ],
+    'not_in' => 'Le champ :attribute sélectionné est invalide.',
+    'numeric' => 'Le champ :attribute doit être un nombre.',
+    'password' => [
+        'letters' => 'Le champ :attribute doit contenir au moins une lettre.',
+        'mixed' => 'Le champ :attribute doit contenir au moins une majuscule et une minuscule.',
+        'numbers' => 'Le champ :attribute doit contenir au moins un chiffre.',
+        'symbols' => 'Le champ :attribute doit contenir au moins un symbole.',
+        'uncompromised' => 'Le mot de passe choisi a été compromis dans une fuite de données. Veuillez en choisir un autre.',
+    ],
+    'regex' => 'Le format du champ :attribute est invalide.',
+    'required' => 'Le champ :attribute est obligatoire.',
+    'same' => 'Le champ :attribute doit correspondre à :other.',
+    'size' => [
+        'numeric' => 'Le champ :attribute doit être :size.',
+        'file' => 'Le champ :attribute doit faire :size kilo-octets.',
+        'string' => 'Le champ :attribute doit contenir :size caractères.',
+        'array' => 'Le champ :attribute doit contenir :size éléments.',
+    ],
+    'string' => 'Le champ :attribute doit être une chaîne de caractères.',
+    'timezone' => 'Le champ :attribute doit être un fuseau horaire valide.',
+    'unique' => 'Le champ :attribute a déjà été pris.',
+    'url' => 'Le champ :attribute doit être une URL valide.',
+    'uuid' => 'Le champ :attribute doit être un UUID valide.',
+
+    'custom' => [
+        'attribute-name' => [
+            'rule-name' => 'message-personnalisé',
+        ],
+    ],
+
+    'attributes' => [],
+
+];

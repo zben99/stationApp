@@ -12,7 +12,8 @@
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                    <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                    <div class="col-lg-6 d-none d-lg-block bg-login-image" style="background: url('/assets/images/logo.png') center/contain no-repeat;"></div>
+
                     <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
@@ -26,7 +27,7 @@
                                         placeholder="Entrez l'adresse e-mail">
 
                                         @error('email')
-                                            <div class="error">{{ $message }}</div>
+                                            <code>{{ $message }}</code>
                                         @enderror
                                 </div>
                                 <div class="form-group">
@@ -36,13 +37,16 @@
                                     required autocomplete="current-password" placeholder="Mot de passe">
 
                                     @error('password')
-                                        <div class="error">{{ $message }}</div>
+                                        <code>{{ $message }}</code>
                                     @enderror
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox small">
                                         <input type="checkbox" class="custom-control-input" id="customCheck" name="remember">
                                         <label class="custom-control-label" for="customCheck">Souviens-toi de moi</label>
+                                        @error('remember')
+                                            <code>{{ $message }}</code>
+                                        @enderror
                                     </div>
                                 </div>
 

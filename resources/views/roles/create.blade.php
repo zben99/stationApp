@@ -2,17 +2,17 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Create New Role</h2>
+            <h2>Créer un nouveau rôle</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary btn-sm mb-2" href="{{ route('roles.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
+            <a class="btn btn-danger btn-sm mb-2" href="{{ route('roles.index') }}"><i class="fa fa-arrow-left"></i> Retour</a>
         </div>
     </div>
 </div>
 
 @if (count($errors) > 0)
     <div class="alert alert-danger">
-        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <strong>Whoops!</strong> Il y a eu quelques problèmes avec votre saisie.<br><br>
         <ul>
         @foreach ($errors->all() as $error)
             <li>{{ $error }}</li>
@@ -26,11 +26,15 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Name:</strong>
+                <strong>Rôle:</strong>
                 <input type="text" name="name" placeholder="Name" class="form-control">
+
+                @error('name')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="col-xs-12 col-sm-12 col-md-4">
             <div class="form-group">
                 <strong>Permission:</strong>
                 <br/>
@@ -39,10 +43,14 @@
                     {{ $value->name }}</label>
                 <br/>
                 @endforeach
+
+                @error('permission')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-primary btn-sm mb-3"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
+        <div class="col-xs-12 col-sm-12 col-md-12 ">
+            <button type="submit" class="btn btn-primary "><i class="fa-solid fa-floppy-disk"></i> Soumettre</button>
         </div>
     </div>
 </form>

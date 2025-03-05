@@ -2,10 +2,10 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Edit User</h2>
+            <h2>Modifier l'utilisateur</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary btn-sm mb-2" href="{{ route('users.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
+            <a class="btn btn-danger btn-sm mb-2" href="{{ route('users.index') }}"><i class="fa fa-arrow-left"></i> Retour</a>
         </div>
     </div>
 </div>
@@ -47,7 +47,7 @@
         <div class="col-xs-12 col-sm-12 col-md-6">
             <div class="form-group">
                 <strong>Confirmez le mot de passe:</strong>
-                <input type="password" name="confirm-password" placeholder="Confirmez le mot de passe" class="form-control">
+                <input type="password" name="password_confirmation" placeholder="Confirmez le mot de passe" class="form-control">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">

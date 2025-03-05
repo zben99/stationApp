@@ -5,7 +5,7 @@
             <h2>Edit Role</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary btn-sm mb-2" href="{{ route('roles.index') }}"><i class="fa fa-arrow-left"></i> Retour</a>
+            <a class="btn btn-danger btn-sm mb-2" href="{{ route('roles.index') }}"><i class="fa fa-arrow-left"></i> Retour</a>
         </div>
     </div>
 </div>

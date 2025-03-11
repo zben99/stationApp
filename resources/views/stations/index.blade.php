@@ -3,7 +3,7 @@
 
     <x-slot name="header">
 
-        Gestion des utilisateurs
+        Gestion des Stations services
 
     </x-slot>
 
@@ -19,7 +19,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <div class="pull-right">
-                                <a class="btn btn-success mb-2" href="{{ route('users.create') }}"><i class="fa fa-plus"></i> Créer un nouvel utilisateur</a>
+                                <a class="btn btn-success mb-2" href="{{ route('stations.create') }}"><i class="fa fa-plus"></i> Créer une nouvelle station service</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -28,45 +28,46 @@
                                     <thead>
                                         <tr>
                                             <th>N°</th>
-                                            <th>Nom complêt</th>
-                                            <th>Email</th>
-                                            <th>Rôles</th>
+                                            <th>Référence</th>
+                                            <th>Adresse</th>
+                                            <th>Statut</th>
                                             <th >Action</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        @foreach ($data as $key => $user)
+                                        @foreach ($data as $key => $station)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $station->name }}</td>
+                                            <td>{{ $station->location }}</td>
                                             <td>
-                                              @if(!empty($user->getRoleNames()))
-                                                @foreach($user->getRoleNames() as $v)
-                                                   <label class="badge bg-success">{{ $v }}</label>
-                                                @endforeach
-                                              @endif
+                                                @if ($station->is_active==1)
+                                                    Activé
+                                                @else
+                                                    Désactivé
+                                                @endif
                                             </td>
                                             <td>
 
 
 
-                                                  @can('user-edit')
-                                                        <a class="btn btn-primary btn-sm" href="{{ route('users.edit',$user->id) }}">
+                                                  @can('station-edit')
+                                                        <a class="btn btn-primary btn-sm" href="{{ route('stations.edit',$station->id) }}">
                                                             <i class="bi bi-pencil-square"></i> Modifier
                                                         </a>
                                                     @endcan
 
-                                                    @can('user-delete')
-                                                        <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="display:inline" id="deleteForm{{ $user->id }}">
+                                                    @can('station-delete')
+                                                        <form method="POST" action="{{ route('stations.destroy', $station->id) }}" style="display:inline" id="deleteForm{{ $station->id }}">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $user->id }})">
+                                                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $station->id }})">
                                                                 <i class="bi bi-trash"></i> Supprimer
                                                             </button>
                                                         </form>
                                                     @endcan
+
                                             </td>
                                         </tr>
                                      @endforeach

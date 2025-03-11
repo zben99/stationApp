@@ -18,7 +18,7 @@ class PermissionTableSeeder extends Seeder
            'role-create',
            'role-edit',
            'role-delete',
-        ];*/
+        ];
 
         $permissions = [
             'user-list',
@@ -27,6 +27,56 @@ class PermissionTableSeeder extends Seeder
             'user-delete',
             'user-active',
          ];
+
+
+         $permissions = [
+            'station-list',
+            'station-create',
+            'station-edit',
+            'station-delete',
+            'station-active',
+         ];
+
+
+         $permissions = [
+            'category-list',
+            'category-create',
+            'category-edit',
+            'category-delete',
+         ];
+
+
+         $permissions = [
+            'product-list',
+            'product-create',
+            'product-edit',
+            'product-delete',
+
+         ];
+
+         $permissions = [
+            'suppliers-list',
+            'suppliers-create',
+            'suppliers-edit',
+            'suppliers-delete',
+
+         ];
+
+         $permissions = [
+            'clients-list',
+            'clients-create',
+            'clients-edit',
+            'clients-delete',
+         ];
+*/
+
+
+ $permissions = [
+    'station-associate',
+ ];
+
+
+
 
         foreach ($permissions as $permission) {
              Permission::create(['name' => $permission]);

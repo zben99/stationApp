@@ -2,11 +2,13 @@
 
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StationUserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\StationUserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -93,11 +95,11 @@ Route::get('categories/create', [CategoryController::class, 'create'])->name('ca
 Route::post('categories', [CategoryController::class, 'store'])->name('categories.store')
     ->middleware('can:category-create');
 
-Route::get('categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit')
+Route::get('categories/{categorie}/edit', [CategoryController::class, 'edit'])->name('categories.edit')
     ->middleware('can:category-edit');
-Route::post('categories/{id}/update', [CategoryController::class, 'update'])->name('categories.update')
+Route::put('categories/{categorie}/update', [CategoryController::class, 'update'])->name('categories.update')
     ->middleware('can:category-edit');
-Route::post('categories/{id}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy')
+Route::delete('categories/{categorie}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy')
     ->middleware('can:category-delete');
 
 // Gestion des produits
@@ -108,11 +110,11 @@ Route::get('products/create', [ProductController::class, 'create'])->name('produ
 Route::post('products', [ProductController::class, 'store'])->name('products.store')
     ->middleware('can:product-create');
 
-Route::get('products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')
+Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')
     ->middleware('can:product-edit');
-Route::post('products/{id}/update', [ProductController::class, 'update'])->name('products.update')
+Route::put('products/{product}/update', [ProductController::class, 'update'])->name('products.update')
     ->middleware('can:product-edit');
-Route::post('products/{id}/delete', [ProductController::class, 'destroy'])->name('products.destroy')
+Route::delete('products/{product}/delete', [ProductController::class, 'destroy'])->name('products.destroy')
     ->middleware('can:product-delete');
 
 // Gestion des fournisseurs

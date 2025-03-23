@@ -68,11 +68,28 @@ class PermissionTableSeeder extends Seeder
             'clients-edit',
             'clients-delete',
          ];
-*/
+
 
 
  $permissions = [
     'station-associate',
+ ];
+ */
+
+
+
+ $permissions = [
+    //categories
+    'category-list',
+    'category-create',
+    'category-edit',
+    'category-delete',
+
+       //produits
+       'product-list',
+       'product-create',
+       'product-edit',
+       'product-delete',
  ];
 
 

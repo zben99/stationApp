@@ -50,11 +50,19 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+
                 <a class="collapse-item" href="{{route('stations.index')}}">Gestion des stations</a>
 
 
                 @can('station-associate') <!-- Si l'utilisateur a le droit de gérer les associations -->
                      <a class="collapse-item" href="{{route('stations.associate')}}">Gestion des associations</a>
+                @endcan
+
+                @can('category-list')
+                    <a class="collapse-item" href="{{route('categories.index')}}">Gestion des catégories</a>
+                @endcan
+                @can('product-list')
+                    <a class="collapse-item" href="{{route('products.index')}}">Gestion des produits</a>
                 @endcan
 
             </div>

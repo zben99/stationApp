@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Catégories de Produits
-        Schema::create('categories', function (Blueprint $table) {
+
+
+        Schema::create('station_categorie_produit', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('type', ['fuel', 'stock']);
-            $table->boolean('is_active')->default(true);
+            $table->foreignId('station_id')->constrained()->onDelete('cascade');
+            $table->foreignId('categorie_produit_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('station_categorie_produit');
     }
 };

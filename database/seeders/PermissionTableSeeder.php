@@ -79,7 +79,7 @@ class PermissionTableSeeder extends Seeder
 
 
  $permissions = [
-    //categories
+  /*  //categories
     'category-list',
     'category-create',
     'category-edit',
@@ -90,7 +90,31 @@ class PermissionTableSeeder extends Seeder
        'product-create',
        'product-edit',
        'product-delete',
+
+        //fournisseurs
+       'supplier-list',
+       'supplier-create',
+       'supplier-edit',
+       'supplier-delete',
+
+           //fournisseurs
+           'client-list',
+           'client-create',
+           'client-view',
+           'client-edit',
+           'client-delete',*/
+
+
+            //Rubrique des Depenses
+            'expense-category-list',
+            'expense-category-create',
+            'expense-category-edit',
+            'expense-category-delete',
+
+
  ];
+
+
 
 
 

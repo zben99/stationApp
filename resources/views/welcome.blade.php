@@ -90,7 +90,17 @@
     </ul>
     <br>
     <div class="buttons">
-      <a href="{{ route('login') }}">Connexion</a>
+
+
+        @auth
+        <a href="{{ url('/dashboard') }}">Dashboard</a>
+        @else
+            <a href="{{ route('login') }}">Connexion</a>
+        @endif
+
+
+
+
     </div>
     <br><br>
     <footer class="mt-12 text-sm text-gray-500 dark:text-gray-400">

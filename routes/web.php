@@ -4,11 +4,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\StationUserController;
+use App\Http\Controllers\ExpenseCategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -141,13 +144,13 @@ Route::get('suppliers/create', [SupplierController::class, 'create'])->name('sup
 ->middleware('can:supplier-create');
 Route::post('suppliers', [SupplierController::class, 'store'])->name('suppliers.store')
 ->middleware('can:supplier-create');
-Route::get('suppliers/{id}', [SupplierController::class, 'show'])->name('suppliers.show')
+Route::get('suppliers/{supplier}', [SupplierController::class, 'show'])->name('suppliers.show')
 ->middleware('can:supplier-view');
-Route::get('suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit')
+Route::get('suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit')
 ->middleware('can:supplier-edit');
-Route::post('suppliers/{id}/update', [SupplierController::class, 'update'])->name('suppliers.update')
+Route::put('suppliers/{supplier}/update', [SupplierController::class, 'update'])->name('suppliers.update')
 ->middleware('can:supplier-edit');
-Route::post('suppliers/{id}/delete', [SupplierController::class, 'destroy'])->name('suppliers.destroy')
+Route::delete('suppliers/{supplier}/delete', [SupplierController::class, 'destroy'])->name('suppliers.destroy')
 ->middleware('can:supplier-delete');
 
 // Gestion des clients
@@ -157,14 +160,35 @@ Route::get('clients/create', [ClientController::class, 'create'])->name('clients
 ->middleware('can:client-create');
 Route::post('clients', [ClientController::class, 'store'])->name('clients.store')
 ->middleware('can:client-create');
-Route::get('clients/{id}', [ClientController::class, 'show'])->name('clients.show')
+Route::get('clients/{client}', [ClientController::class, 'show'])->name('clients.show')
 ->middleware('can:client-view');
-Route::get('clients/{id}/edit', [ClientController::class, 'edit'])->name('clients.edit')
+Route::get('clients/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit')
 ->middleware('can:client-edit');
-Route::post('clients/{id}/update', [ClientController::class, 'update'])->name('clients.update')
+Route::put('clients/{client}/update', [ClientController::class, 'update'])->name('clients.update')
 ->middleware('can:client-edit');
-Route::post('clients/{id}/delete', [ClientController::class, 'destroy'])->name('clients.destroy')
+Route::delete('clients/{client}/delete', [ClientController::class, 'destroy'])->name('clients.destroy')
 ->middleware('can:client-delete');
+
+
+// Gestion des rubriques de dépenses
+Route::get('expense-categories', [ExpenseCategoryController::class, 'index'])->name('expense-categories.index')
+    ->middleware('can:expense-category-list');
+
+Route::get('expense-categories/create', [ExpenseCategoryController::class, 'create'])->name('expense-categories.create')
+    ->middleware('can:expense-category-create');
+
+Route::post('expense-categories', [ExpenseCategoryController::class, 'store'])->name('expense-categories.store')
+    ->middleware('can:expense-category-create');
+
+Route::get('expense-categories/{expense_category}/edit', [ExpenseCategoryController::class, 'edit'])->name('expense-categories.edit')
+    ->middleware('can:expense-category-edit');
+
+Route::put('expense-categories/{expense_category}/update', [ExpenseCategoryController::class, 'update'])->name('expense-categories.update')
+    ->middleware('can:expense-category-edit');
+
+Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryController::class, 'destroy'])->name('expense-categories.destroy')
+    ->middleware('can:expense-category-delete');
+
 
 });
 

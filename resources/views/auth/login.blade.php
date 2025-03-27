@@ -22,9 +22,9 @@
                             <form class="user" method="POST" action="{{ route('login') }}">
                                 @csrf
                                 <div class="form-group">
-                                    <input type="email" name="email" :value="old('email')" required autofocus autocomplete="username" class="form-control form-control-user"
+                                    <input type="text" name="email" :value="old('email')" required autofocus autocomplete="username" class="form-control form-control-user"
                                         id="email" aria-describedby="emailHelp"
-                                        placeholder="Entrez l'adresse e-mail">
+                                        placeholder="Entrez votre nom d'utilisateur">
 
                                         @error('email')
                                             <code>{{ $message }}</code>
@@ -56,11 +56,7 @@
 
                             </form>
                             <hr>
-                            @if (Route::has('password.request'))
-                                <div class="text-center">
-                                    <a class="small" href="{{Route('password.request')}}">Mot de passe oublié?</a>
-                                </div>
-                            @endif
+
 
                         </div>
                     </div>

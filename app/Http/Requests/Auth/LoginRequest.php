@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -51,7 +51,32 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        // ✅ L'utilisateur est maintenant connecté
+        $user = Auth::user();
+
+        // Vérification du rôle
+        if ($user->hasRole('Admin')) {
+            // Pour un admin, tu peux stocker un flag ou rediriger vers une page pour choisir la station
+            session(['needs_station_selection' => true]);
+
+            // Optionnel : tu peux aussi stocker un message ou une variable temporaire ici
+            return;
+        }
+
+        // Pour les non-admins, on vérifie qu'ils sont associés à une station
+        if (!$user->station_id) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Aucune station n\'est associée à votre compte.',
+            ]);
+        }
+
+        // Sinon, on peut stocker directement la station dans la session par exemple
+        session(['selected_station_id' => $user->station_id]);
     }
+
 
     /**
      * Ensure the login request is not rate limited.

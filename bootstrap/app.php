@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // ✅ Middleware nommé pour les routes (recommandé ici)
+        $middleware->alias([
+            'ensure.station' => \App\Http\Middleware\EnsureStationIsSet::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

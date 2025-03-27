@@ -17,7 +17,7 @@ class UserUpdateRequest extends FormRequest
         $userId = $this->route('user'); // Récupère l'ID de l'utilisateur depuis la route
         return [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $userId,
+            'email' => 'required|unique:users,email,' . $userId,
             'password' => 'nullable|confirmed',
             'roles' => 'required'
         ];

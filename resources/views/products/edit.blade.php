@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Créer un produit </h2>
+                <h2>Modifier le produit </h2>
             </div>
             <div class="pull-right">
                 <a class="btn btn-danger btn-sm mb-2" href="{{ route('products.index') }}"><i class="fa fa-arrow-left"></i> Retour</a>

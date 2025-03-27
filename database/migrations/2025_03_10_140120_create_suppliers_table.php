@@ -14,6 +14,7 @@ return new class extends Migration
         // Fournisseurs
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('contact');
             $table->timestamps();

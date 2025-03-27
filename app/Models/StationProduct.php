@@ -3,23 +3,23 @@
 namespace App\Models;
 
 use App\Models\Station;
-use App\Models\Category;
+use App\Models\StationCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Product extends Model
+class StationProduct extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category_id', 'station_id', 'stock', 'price'];
+    protected $fillable = ['station_id', 'name', 'category_id', 'stock', 'price'];
 
     public function station()
     {
         return $this->belongsTo(Station::class);
     }
 
-    public function category()
+    public function stationCategory()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(StationCategory::class, 'category_id');
     }
 }

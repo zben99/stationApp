@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\StationCategory;
 use App\Http\Requests\CategorieProduitRequest;
 
 class CategoryController extends Controller
 {
     public function index(Request $request)
     {
+        $stationId = session('selected_station_id'); // Assure-toi que ceci est bien stocké au moment de la sélection
 
-        $data = Category::latest()->paginate(5);
+        if (!$stationId) {
+            return redirect()->route('station.selection')->with('error', 'Veuillez sélectionner une station.');
+        }
 
-        return view('categories.index',compact('data'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        $data = StationCategory::where('station_id', $stationId)
+            ->orderBy('name', 'asc') // Tri alphabétique
+            ->paginate(10);
+
+        return view('categories.index', compact('data'))
+            ->with('i', ($request->input('page', 1) - 1) * 10);
     }
 
     public function create()
@@ -24,23 +31,29 @@ class CategoryController extends Controller
 
     public function store(CategorieProduitRequest $request)
     {
-        Category::create($request->validated());
-        return redirect()->route('categories.index')->with('success', 'Catégorie ajoutée avec succès.');
+        $data = $request->validated();
+
+        // Injecter la station depuis la session
+        $data['station_id'] = session('selected_station_id');
+
+        StationCategory::create($data);
+
+        return redirect()->route('categories.index')->with('success', 'Catégorie créée avec succès.');
     }
 
-    public function edit(Category $categorie)
+    public function edit(StationCategory $categorie)
     {
         return view('categories.edit', compact('categorie'));
     }
 
-    public function update(CategorieProduitRequest $request, Category $categorie)
+    public function update(CategorieProduitRequest $request, StationCategory $categorie)
     {
        // dd($request->validated());
         $categorie->update($request->validated());
         return redirect()->route('categories.index')->with('success', 'Catégorie mise à jour.');
     }
 
-    public function destroy(Category $categorie)
+    public function destroy(StationCategory $categorie)
     {
         $categorie->delete();
         return redirect()->route('categories.index')->with('success', 'Catégorie supprimée.');

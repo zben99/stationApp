@@ -87,68 +87,6 @@ Route::delete('stations/{station}/delete', [StationController::class, 'destroy']
 
 
 
-// Gestion des catégories de produits
-Route::get('categories', [CategoryController::class, 'index'])->name('categories.index')
-    ->middleware('can:category-list');
-Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create')
-    ->middleware('can:category-create');
-Route::post('categories', [CategoryController::class, 'store'])->name('categories.store')
-    ->middleware('can:category-create');
-
-Route::get('categories/{categorie}/edit', [CategoryController::class, 'edit'])->name('categories.edit')
-    ->middleware('can:category-edit');
-Route::put('categories/{categorie}/update', [CategoryController::class, 'update'])->name('categories.update')
-    ->middleware('can:category-edit');
-Route::delete('categories/{categorie}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy')
-    ->middleware('can:category-delete');
-
-// Gestion des produits
-Route::get('products', [ProductController::class, 'index'])->name('products.index')
-    ->middleware('can:product-list');
-Route::get('products/create', [ProductController::class, 'create'])->name('products.create')
-    ->middleware('can:product-create');
-Route::post('products', [ProductController::class, 'store'])->name('products.store')
-    ->middleware('can:product-create');
-
-Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')
-    ->middleware('can:product-edit');
-Route::put('products/{product}/update', [ProductController::class, 'update'])->name('products.update')
-    ->middleware('can:product-edit');
-Route::delete('products/{product}/delete', [ProductController::class, 'destroy'])->name('products.destroy')
-    ->middleware('can:product-delete');
-
-// Gestion des fournisseurs
-Route::get('suppliers', [SupplierController::class, 'index'])->name('suppliers.index')
-    ->middleware('can:supplier-list');
-Route::get('suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create')
-    ->middleware('can:supplier-create');
-Route::post('suppliers', [SupplierController::class, 'store'])->name('suppliers.store')
-    ->middleware('can:supplier-create');
-Route::get('suppliers/{id}', [SupplierController::class, 'show'])->name('suppliers.show')
-    ->middleware('can:supplier-view');
-Route::get('suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit')
-    ->middleware('can:supplier-edit');
-Route::post('suppliers/{id}/update', [SupplierController::class, 'update'])->name('suppliers.update')
-    ->middleware('can:supplier-edit');
-Route::post('suppliers/{id}/delete', [SupplierController::class, 'destroy'])->name('suppliers.destroy')
-    ->middleware('can:supplier-delete');
-
-// Gestion des clients
-Route::get('clients', [ClientController::class, 'index'])->name('clients.index')
-    ->middleware('can:client-list');
-Route::get('clients/create', [ClientController::class, 'create'])->name('clients.create')
-    ->middleware('can:client-create');
-Route::post('clients', [ClientController::class, 'store'])->name('clients.store')
-    ->middleware('can:client-create');
-Route::get('clients/{id}', [ClientController::class, 'show'])->name('clients.show')
-    ->middleware('can:client-view');
-Route::get('clients/{id}/edit', [ClientController::class, 'edit'])->name('clients.edit')
-    ->middleware('can:client-edit');
-Route::post('clients/{id}/update', [ClientController::class, 'update'])->name('clients.update')
-    ->middleware('can:client-edit');
-Route::post('clients/{id}/delete', [ClientController::class, 'destroy'])->name('clients.destroy')
-    ->middleware('can:client-delete');
-
 // Gestion des crédits clients (approvisionnement, dettes, remboursements)
 Route::post('clients/{id}/credit/add', [ClientController::class, 'addCredit'])->name('clients.credit.add')
     ->middleware('can:client-credit');
@@ -161,6 +99,74 @@ Route::post('clients/{id}/credit/pay', [ClientController::class, 'payDebt'])->na
 });
 
 
+
+Route::middleware(['auth', 'ensure.station'])->group(function () {
+
+
+
+// Gestion des catégories de produits
+Route::get('categories', [CategoryController::class, 'index'])->name('categories.index')
+->middleware('can:category-list');
+Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create')
+->middleware('can:category-create');
+Route::post('categories', [CategoryController::class, 'store'])->name('categories.store')
+->middleware('can:category-create');
+
+Route::get('categories/{categorie}/edit', [CategoryController::class, 'edit'])->name('categories.edit')
+->middleware('can:category-edit');
+Route::put('categories/{categorie}/update', [CategoryController::class, 'update'])->name('categories.update')
+->middleware('can:category-edit');
+Route::delete('categories/{categorie}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy')
+->middleware('can:category-delete');
+
+// Gestion des produits
+Route::get('products', [ProductController::class, 'index'])->name('products.index')
+->middleware('can:product-list');
+Route::get('products/create', [ProductController::class, 'create'])->name('products.create')
+->middleware('can:product-create');
+Route::post('products', [ProductController::class, 'store'])->name('products.store')
+->middleware('can:product-create');
+
+Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')
+->middleware('can:product-edit');
+Route::put('products/{product}/update', [ProductController::class, 'update'])->name('products.update')
+->middleware('can:product-edit');
+Route::delete('products/{product}/delete', [ProductController::class, 'destroy'])->name('products.destroy')
+->middleware('can:product-delete');
+
+// Gestion des fournisseurs
+Route::get('suppliers', [SupplierController::class, 'index'])->name('suppliers.index')
+->middleware('can:supplier-list');
+Route::get('suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create')
+->middleware('can:supplier-create');
+Route::post('suppliers', [SupplierController::class, 'store'])->name('suppliers.store')
+->middleware('can:supplier-create');
+Route::get('suppliers/{id}', [SupplierController::class, 'show'])->name('suppliers.show')
+->middleware('can:supplier-view');
+Route::get('suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit')
+->middleware('can:supplier-edit');
+Route::post('suppliers/{id}/update', [SupplierController::class, 'update'])->name('suppliers.update')
+->middleware('can:supplier-edit');
+Route::post('suppliers/{id}/delete', [SupplierController::class, 'destroy'])->name('suppliers.destroy')
+->middleware('can:supplier-delete');
+
+// Gestion des clients
+Route::get('clients', [ClientController::class, 'index'])->name('clients.index')
+->middleware('can:client-list');
+Route::get('clients/create', [ClientController::class, 'create'])->name('clients.create')
+->middleware('can:client-create');
+Route::post('clients', [ClientController::class, 'store'])->name('clients.store')
+->middleware('can:client-create');
+Route::get('clients/{id}', [ClientController::class, 'show'])->name('clients.show')
+->middleware('can:client-view');
+Route::get('clients/{id}/edit', [ClientController::class, 'edit'])->name('clients.edit')
+->middleware('can:client-edit');
+Route::post('clients/{id}/update', [ClientController::class, 'update'])->name('clients.update')
+->middleware('can:client-edit');
+Route::post('clients/{id}/delete', [ClientController::class, 'destroy'])->name('clients.destroy')
+->middleware('can:client-delete');
+
+});
 
 
 

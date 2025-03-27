@@ -29,7 +29,7 @@
                                         <tr>
                                             <th>N°</th>
                                             <th>Nom complêt</th>
-                                            <th>Email</th>
+                                            <th>Compte</th>
                                             <th>Rôles</th>
                                             <th >Action</th>
                                         </tr>

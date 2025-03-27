@@ -31,20 +31,20 @@
                                     <thead>
                                         <tr>
                                             <th>N°</th>
+                                            <th>Produit</th>
                                             <th>Catégorie</th>
-                                            <th>type</th>
-                                            <th>Statut</th>
+                                            <th>Stock</th>
+                                            <th>Prix</th>
                                             <th >Action</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        @foreach ($products as $key => $categorie)
+                                        @foreach ($products as $key => $product)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            <td>{{++$i}}</td>
                                             <td>{{ $product->name }}</td>
-                                            <td>{{ $product->category->name }}</td>
-                                            <td>{{ $product->station->name }}</td>
+                                            <td>{{ $product->stationCategory->name }}</td>
                                             <td>{{ $product->stock }}</td>
                                             <td>{{ $product->price }}</td>
                                             <td>

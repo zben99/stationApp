@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Station;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -29,9 +30,46 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        if (session('needs_station_selection')) {
 
-        return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->route('station.selection');
+
+        }else {
+
+            $request->session()->regenerate();
+
+            return redirect()->intended(route('dashboard', absolute: false));
+
+        }
+
+
+    }
+
+    public function showSelectionPage()
+    {
+        $user = Auth::user();
+        if (!$user->hasRole('Admin')) {
+            return redirect()->route('dashboard');
+        }
+
+        $stations = Station::all();
+        return view('auth.select-station', compact('stations'));
+    }
+
+    public function select(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user->hasRole('Admin')) {
+            return redirect()->route('dashboard');
+        }
+
+        $request->validate([
+            'station_id' => 'required|exists:stations,id',
+        ]);
+
+        session(['selected_station_id' => $request->station_id]);
+
+        return redirect()->route('dashboard')->with('status', 'Station sélectionnée avec succès.');
     }
 
     /**

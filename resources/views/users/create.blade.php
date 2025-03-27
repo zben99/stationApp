@@ -32,8 +32,8 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Email:</strong>
-                <input type="email" name="email" placeholder="Email" class="form-control">
+                <strong>Compte:</strong>
+                <input type="text" name="email" placeholder="Compte" class="form-control">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-6">

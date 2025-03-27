@@ -2,7 +2,7 @@
  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon rotate-n-15">
         </div>
         <div class="sidebar-brand-text mx-3">E-Station <sup>V1</sup></div>
@@ -30,7 +30,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
             aria-expanded="true" aria-controls="collapseOne">
-            <i class="fas fa-fw fa-cog"></i>
+            <i class="fas fa-user-lock fa-fw"></i>
             <span>Authentification</span>
         </a>
         <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -45,8 +45,8 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Paramétrage</span>
+            <i class="fas fa-sliders-h fa-fw"></i>
+            <span>Paramétrage Global</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -55,8 +55,24 @@
 
 
                 @can('station-associate') <!-- Si l'utilisateur a le droit de gérer les associations -->
-                     <a class="collapse-item" href="{{route('stations.associate')}}">Gestion des associations</a>
+                     <a class="collapse-item" href="{{route('stations.associate')}}">Association Util. Stat.</a>
                 @endcan
+
+
+            </div>
+        </div>
+    </li>
+
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTree"
+            aria-expanded="true" aria-controls="collapseTree">
+            <i class="fas fa-cogs fa-fw"></i>
+            <span>Paramétrage</span>
+        </a>
+        <div id="collapseTree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+
 
                 @can('category-list')
                     <a class="collapse-item" href="{{route('categories.index')}}">Gestion des catégories</a>

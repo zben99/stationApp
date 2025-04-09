@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# Rediriger toutes les requêtes vers /stationApp/public
+RewriteCond %{REQUEST_URI} !^/stationApp/public
+RewriteRule ^(.*)$ /stationApp/public/$1 [L,R=302]

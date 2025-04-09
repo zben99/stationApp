@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TankController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\StationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\StationUserController;
+use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
 
 Route::get('/', function () {
@@ -189,6 +191,18 @@ Route::put('expense-categories/{expense_category}/update', [ExpenseCategoryContr
 Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryController::class, 'destroy'])->name('expense-categories.destroy')
     ->middleware('can:expense-category-delete');
 
+
+
+
+
+
+
+
+
+
+    Route::resource('tanks', TankController::class);
+
+    Route::resource('fuel-receptions', FuelReceptionController::class);
 
 });
 

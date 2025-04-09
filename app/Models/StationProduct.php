@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Tank;
 use App\Models\Station;
 use App\Models\StationCategory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,4 +23,9 @@ class StationProduct extends Model
     {
         return $this->belongsTo(StationCategory::class, 'category_id');
     }
+
+    public function tanks()
+{
+    return $this->hasMany(Tank::class);
+}
 }

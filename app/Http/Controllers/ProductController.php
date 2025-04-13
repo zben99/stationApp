@@ -38,7 +38,6 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'category_id' => 'required',
-            'stock' => 'required|numeric',
             'price' => 'required|numeric'
         ]);
 
@@ -64,7 +63,6 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required',
             'category_id' => 'required',
-            'stock' => 'required|numeric',
             'price' => 'required|numeric'
         ]);
 

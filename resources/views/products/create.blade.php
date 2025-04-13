@@ -53,17 +53,10 @@
         </div>
 
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Stock initial :</strong>
-                <input type="number" step="0.01" name="stock" value="{{ old('stock', $product->stock ?? '') }}" class="form-control" required>
-            </div>
-        </div>
-
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Prix :</strong>
+                <strong>Prix de vente:</strong>
                 <input type="number" step="0.01" name="price" value="{{ old('price', $product->price ?? '') }}" class="form-control" required>
             </div>
         </div>

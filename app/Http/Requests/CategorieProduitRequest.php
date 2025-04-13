@@ -15,7 +15,7 @@ class CategorieProduitRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'in:fuel,stock'],
+            'type' => ['required', 'in:fuel,lubrifiant,boutique'],
             'is_active' => ['nullable', 'boolean'],
         ];
     }
@@ -25,7 +25,7 @@ class CategorieProduitRequest extends FormRequest
         return [
             'name.required' => 'Le nom est obligatoire.',
             'type.required' => 'Le type est obligatoire.',
-            'type.in' => 'Le type doit être soit fuel ou stock.',
+            'type.in' => 'Le type doit être soit fuel ,lubrifiant ou boutique.',
             'is_active.boolean' => 'Le champ actif doit être vrai ou faux.',
         ];
     }

@@ -36,7 +36,8 @@
                 <select name="type" class="form-control">
                     <option value=""></option>
                     <option value="fuel">Fuel</option>
-                    <option value="stock">Stock</option>
+                    <option value="lubrifiant">Lubrifiant</option>
+                    <option value="boutique">Boutique</option>
                 </select>
             </div>
 

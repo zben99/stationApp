@@ -6,7 +6,24 @@
         <div class="sidebar-brand-icon rotate-n-15">
         </div>
         <div class="sidebar-brand-text mx-3">E-Station <sup>V1</sup></div>
+
+
     </a>
+    @if(session('selected_station_id'))
+    @php
+        $station = \App\Models\Station::find(session('selected_station_id'));
+    @endphp
+    @if($station)
+        <div class="text-center text-white small bg-primary bg-opacity-75 p-2 mx-3 my-2 rounded">
+            <i class="fas fa-map-marker-alt me-1 text-warning"></i>
+            <strong class="text-warning"> {{ $station->name }} - {{ $station->location }}</strong>
+        </div>
+    @endif
+@endif
+
+
+
+
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
@@ -92,12 +109,61 @@
                     <a class="collapse-item" href="{{route('expense-categories.index')}}">Rubriques de dépenses</a>
                 @endcan
 
+                <a class="collapse-item" href="{{route('tanks.index')}}">Gestion des cuves</a>
+
 
 
 
             </div>
         </div>
     </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsefour"
+            aria-expanded="true" aria-controls="collapsefour">
+            <i class="fas fas fa-gas-pump"></i>
+            <span>Gestion du carburant</span>
+        </a>
+        <div id="collapsefour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+
+                <a class="collapse-item" href="{{route('fuel-receptions.index')}}">Dépotage Fuel</a>
+
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5"
+            aria-expanded="true" aria-controls="collapse5">
+            <i class="fas fas fa-oil-can"></i>
+            <span>Gestion des Lubrifiants</span>
+        </a>
+        <div id="collapse5" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+
+                <a class="collapse-item" href="{{route('fuel-receptions.index')}}">Dépotage Fuel</a>
+
+            </div>
+        </div>
+    </li>
+
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse6"
+            aria-expanded="true" aria-controls="collapse6">
+            <i class="fas fas fa-store"></i>
+            <span>Gestion de la Boutique</span>
+        </a>
+        <div id="collapse6" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+
+                <a class="collapse-item" href="{{route('fuel-receptions.index')}}">Dépotage Fuel</a>
+
+            </div>
+        </div>
+    </li>
+
 
 
     <!-- Divider -->

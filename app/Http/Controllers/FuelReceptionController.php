@@ -23,26 +23,40 @@ class FuelReceptionController extends Controller
         return view('fuel_receptions.create', compact('tanks', 'suppliers'));
     }
 
+
+
     public function store(Request $request)
-    {
-        $request->validate([
-            'tank_id' => 'required|exists:tanks,id',
-            'date_reception' => 'required|date',
-            'quantite_livree' => 'required|numeric|min:0',
-            'densite' => 'nullable|numeric|min:0',
-            'supplier_id' => 'nullable|exists:suppliers,id',
-            'num_bl' => 'nullable|string|max:100',
-            'remarques' => 'nullable|string',
+{
+    $data =  $request->validate([
+        'tank_id' => 'required|exists:tanks,id',
+        'date_reception' => 'required|date',
+        'quantite_livree' => 'required|numeric|min:1',
+        'densite' => 'nullable|numeric|min:0',
+        'supplier_id' => 'nullable|exists:suppliers,id',
+        'num_bl' => 'nullable|string|max:100',
+        'remarques' => 'nullable|string',
+    ]);
+
+    $tank = Tank::findOrFail($request->tank_id);
+    $stock = TankStock::firstOrCreate(['tank_id' => $tank->id]);
+
+    $quantite_totale = $stock->quantite_actuelle + $request->quantite_livree;
+
+    if ($quantite_totale > $tank->capacite) {
+        return back()->withInput()->withErrors([
+            'quantite_livree' => "Dépassement de capacité : la cuve ne peut contenir plus de {$tank->capacite} L.",
         ]);
-
-        $reception = FuelReception::create($request->all());
-
-        $stock = TankStock::firstOrCreate(['tank_id' => $request->tank_id]);
-        $stock->quantite_actuelle += $request->quantite_livree;
-        $stock->save();
-
-        return redirect()->route('fuel-receptions.index')->with('success', 'Réception enregistrée.');
     }
+
+    $reception = FuelReception::create($data);
+
+    $stock->quantite_actuelle = $quantite_totale;
+    $stock->save();
+
+    return redirect()->route('fuel-receptions.index')->with('success', 'Réception enregistrée.');
+}
+
+
 
     public function edit(FuelReception $fuelReception)
     {

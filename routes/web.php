@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TankController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
@@ -203,6 +204,9 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     Route::resource('tanks', TankController::class);
 
     Route::resource('fuel-receptions', FuelReceptionController::class);
+
+
+    Route::resource('expenses', ExpenseController::class);
 
 });
 

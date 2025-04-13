@@ -33,8 +33,7 @@
                                             <th>N°</th>
                                             <th>Produit</th>
                                             <th>Catégorie</th>
-                                            <th>Stock</th>
-                                            <th>Prix</th>
+                                            <th>Prix de vente</th>
                                             <th >Action</th>
                                         </tr>
                                     </thead>
@@ -45,7 +44,6 @@
                                             <td>{{++$i}}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $product->stationCategory->name }}</td>
-                                            <td>{{ $product->stock }}</td>
                                             <td>{{ $product->price }}</td>
                                             <td>
 

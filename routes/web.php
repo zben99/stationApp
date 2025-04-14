@@ -12,9 +12,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\PackagingController;
 use App\Http\Controllers\StationUserController;
 use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\LubricantProductController;
+use App\Http\Controllers\ProductPackagingController;
+use App\Http\Controllers\LubricantReceptionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -205,9 +209,22 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
     Route::resource('fuel-receptions', FuelReceptionController::class);
 
-
     Route::resource('expenses', ExpenseController::class);
 
+    Route::resource('packagings', PackagingController::class);
+
+    Route::resource('lubricant-receptions', LubricantReceptionController::class);
+
+    Route::prefix('product-packagings')->group(function () {
+        Route::get('{product}/', [ProductPackagingController::class, 'index'])->name('product-packagings.index');
+        Route::get('{product}/create', [ProductPackagingController::class, 'create'])->name('product-packagings.create');
+        Route::post('/', [ProductPackagingController::class, 'store'])->name('product-packagings.store');
+        Route::get('edit/{productPackaging}', [ProductPackagingController::class, 'edit'])->name('product-packagings.edit');
+        Route::put('{productPackaging}', [ProductPackagingController::class, 'update'])->name('product-packagings.update');
+        Route::delete('{productPackaging}', [ProductPackagingController::class, 'destroy'])->name('product-packagings.destroy');
+    });
+
+    Route::resource('lubricant-products', LubricantProductController::class);
 });
 
 

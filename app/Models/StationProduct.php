@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Tank;
 use App\Models\Station;
+use App\Models\Packaging;
 use App\Models\StationCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,7 +26,15 @@ class StationProduct extends Model
     }
 
     public function tanks()
-{
-    return $this->hasMany(Tank::class);
-}
+    {
+        return $this->hasMany(Tank::class);
+    }
+
+    public function packagings()
+    {
+        return $this->belongsToMany(Packaging::class, 'station_product_packaging')
+                    ->withPivot('price')
+                    ->withTimestamps();
+    }
+
 }

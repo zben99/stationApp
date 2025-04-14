@@ -142,7 +142,16 @@
         <div id="collapse5" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
 
-                <a class="collapse-item" href="{{route('fuel-receptions.index')}}">Dépotage Fuel</a>
+
+                <a class="collapse-item" href="{{route('lubricant-products.index')}}">Produit lubrifiants</a>
+
+
+                <a class="collapse-item" href="{{route('packagings.index')}}">Conditionnements LUB</a>
+
+                <a class="collapse-item" href="{{route('lubricant-receptions.index')}}">Approvisionnement</a>
+
+
+
 
             </div>
         </div>

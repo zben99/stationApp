@@ -11,10 +11,6 @@ class ExpenseCategoryController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        if (!$stationId) {
-            return redirect()->route('station.selection')->with('error', 'Veuillez sélectionner une station.');
-        }
-
         $categories = ExpenseCategory::where('station_id', $stationId)->paginate(10);
 
         return view('expense_categories.index', compact('categories'))->with('i', ($request->input('page', 1) - 1) * 10);

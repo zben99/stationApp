@@ -10,9 +10,7 @@ class ClientController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        if (!$stationId) {
-            return redirect()->route('station.selection')->with('error', 'Veuillez sélectionner une station.');
-        }
+
 
         $clients = Client::where('station_id', $stationId)
             ->orderBy('name', 'asc')

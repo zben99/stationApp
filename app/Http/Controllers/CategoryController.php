@@ -12,9 +12,6 @@ class CategoryController extends Controller
     {
         $stationId = session('selected_station_id'); // Assure-toi que ceci est bien stocké au moment de la sélection
 
-        if (!$stationId) {
-            return redirect()->route('station.selection')->with('error', 'Veuillez sélectionner une station.');
-        }
 
         $data = StationCategory::where('station_id', $stationId)
             ->orderBy('name', 'asc') // Tri alphabétique

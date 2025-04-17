@@ -12,9 +12,6 @@ class LubricantProductController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        if (!$stationId) {
-            return redirect()->route('station.selection')->with('error', 'Veuillez sélectionner une station.');
-        }
 
         $products = StationProduct::with('stationCategory', 'station')
             ->where('station_id', $stationId)
@@ -29,9 +26,6 @@ class LubricantProductController extends Controller
     public function create()
     {
         $stationId = session('selected_station_id');
-        if (!$stationId) {
-            return redirect()->route('station.selection')->with('error', 'Veuillez sélectionner une station.');
-        }
 
         $categories = StationCategory::where('station_id', $stationId)
             ->where('type', 'lubrifiant')

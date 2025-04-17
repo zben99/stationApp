@@ -9,7 +9,9 @@ class DriverController extends Controller
 {
     public function index()
     {
-        $drivers = Driver::orderBy('name')->paginate(10);
+        $stationId = session('selected_station_id');
+
+        $drivers = Driver::where('station_id', $stationId)->orderBy('name')->paginate(10);
         return view('drivers.index', compact('drivers'));
     }
 
@@ -20,13 +22,18 @@ class DriverController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'permis' => 'nullable|string|max:100',
         ]);
 
-        Driver::create($request->all());
+
+         // Injecter la station depuis la session
+         $data['station_id'] = session('selected_station_id');
+
+         Driver::create($data);
+
         return redirect()->route('drivers.index')->with('success', 'Chauffeur ajouté avec succès.');
     }
 

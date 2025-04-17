@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // ✅ Middleware nommé pour les routes (recommandé ici)
         $middleware->alias([
             'ensure.station' => \App\Http\Middleware\EnsureStationIsSet::class,
+            'station.required' => \App\Http\Middleware\EnsureStationSelected::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

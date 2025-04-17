@@ -8,7 +8,9 @@ class TransporterController extends Controller
 {
     public function index()
     {
-        $transporters = Transporter::orderBy('name')->paginate(10);
+        $stationId = session('selected_station_id');
+
+        $transporters = Transporter::where('station_id', $stationId)->orderBy('name')->paginate(10);
         return view('transporters.index', compact('transporters'));
     }
 
@@ -19,14 +21,17 @@ class TransporterController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:255',
         ]);
 
-        Transporter::create($request->all());
+         // Injecter la station depuis la session
+         $data['station_id'] = session('selected_station_id');
+
+        Transporter::create($data);
         return redirect()->route('transporters.index')->with('success', 'Transporteur créé avec succès.');
     }
 

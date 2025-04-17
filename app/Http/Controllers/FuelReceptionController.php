@@ -22,10 +22,6 @@ class FuelReceptionController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        if (!$stationId) {
-            return redirect()->route('station.selection')->with('error', 'Veuillez sélectionner une station.');
-        }
-
         $receptions = FuelReception::with(['station', 'transporter', 'driver'])
             ->where('station_id', $stationId)
             ->orderBy('date_reception', 'desc')
@@ -37,9 +33,12 @@ class FuelReceptionController extends Controller
 
     public function create()
     {
-        $tanks = Tank::all();
-        $transporters = Transporter::all();
-        $drivers = Driver::all();
+
+        $stationId = session('selected_station_id');
+
+        $tanks = Tank::where('station_id', $stationId)->get();
+        $transporters = Transporter::where('station_id', $stationId)->get();
+        $drivers = Driver::where('station_id', $stationId)->get();
 
         return view('fuel_receptions.create', compact('tanks', 'transporters', 'drivers'));
     }
@@ -110,45 +109,82 @@ class FuelReceptionController extends Controller
 
 
 
-
-
-
-
-
-    public function edit(FuelReception $fuelReception)
+    public function edit($id)
     {
-        $tanks = Tank::with('product')->get();
-        $suppliers = Supplier::all();
-        return view('fuel_receptions.edit', [
-            'fuelReception' => $fuelReception,
-            'tanks' => $tanks,
-            'suppliers'=> $suppliers
-        ]);
 
+        $stationId = session('selected_station_id');
+
+
+        $reception = FuelReception::with(['lines', 'station', 'transporter', 'driver'])->findOrFail($id);
+        $tanks = Tank::where('station_id', $stationId)->get();
+        $transporters = Transporter::where('station_id', $stationId)->get();
+        $drivers = Driver::where('station_id', $stationId)->get();
+
+        return view('fuel_receptions.edit', compact('reception', 'tanks', 'transporters', 'drivers'));
     }
 
-    public function update(Request $request, FuelReception $fuelReception)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'tank_id' => 'required|exists:tanks,id',
+        $reception = FuelReception::with('lines')->findOrFail($id);
+
+        $data = $request->validate([
             'date_reception' => 'required|date',
-            'quantite_livree' => 'required|numeric|min:0',
-            'densite' => 'nullable|numeric|min:0',
-            'supplier_id' => 'nullable|exists:suppliers,id',
-            'num_bl' => 'nullable|string|max:100',
+            'num_bl' => 'nullable|string',
+            'transporter_id' => 'nullable|exists:transporters,id',
+            'driver_id' => 'nullable|exists:drivers,id',
             'remarques' => 'nullable|string',
+            'tanks.*.tank_id' => 'required|exists:tanks,id',
+            'tanks.*.jauge_avant' => 'nullable|numeric',
+            'tanks.*.reception_par_cuve' => 'nullable|numeric',
+            'tanks.*.jauge_apres' => 'nullable|numeric',
         ]);
 
-        // Ajuster le stock
-        $old_quantity = $fuelReception->quantite_livree;
-        $fuelReception->update($request->all());
+        DB::beginTransaction();
 
-        $stock = TankStock::firstOrCreate(['tank_id' => $request->tank_id]);
-        $stock->quantite_actuelle += ($request->quantite_livree - $old_quantity);
-        $stock->save();
+        try {
+            // 🧼 1. Réajuster les stocks en supprimant les anciens apports
+            foreach ($reception->lines as $oldLine) {
+                $stock = TankStock::firstOrNew(['tank_id' => $oldLine->tank_id]);
+                $stock->quantite_actuelle -= $oldLine->reception_par_cuve ?? 0;
+                $stock->quantite_actuelle = max($stock->quantite_actuelle, 0);
+                $stock->save();
+                $oldLine->delete();
+            }
 
-        return redirect()->route('fuel-receptions.index')->with('success', 'Réception modifiée.');
+            // 📝 2. Mettre à jour la fiche
+            $reception->update([
+                'date_reception' => $data['date_reception'],
+                'num_bl' => $data['num_bl'] ?? null,
+                'transporter_id' => $data['transporter_id'] ?? null,
+                'driver_id' => $data['driver_id'] ?? null,
+                'remarques' => $data['remarques'] ?? null,
+            ]);
+
+            // ✅ 3. Réinsérer les nouvelles lignes et maj stock
+            foreach ($data['tanks'] as $line) {
+                $tank = Tank::findOrFail($line['tank_id']);
+                $receptionLine = $reception->lines()->create([
+                    'tank_id' => $tank->id,
+                    'jauge_avant' => $line['jauge_avant'] ?? null,
+                    'reception_par_cuve' => $line['reception_par_cuve'] ?? null,
+                    'jauge_apres' => $line['jauge_apres'] ?? null,
+                    'produit' => $tank->product->name ?? '-',
+                ]);
+
+                TankStock::updateOrCreate(
+                    ['tank_id' => $tank->id],
+                    ['quantite_actuelle' => DB::raw('quantite_actuelle + ' . ($line['reception_par_cuve'] ?? 0))]
+                );
+            }
+
+            DB::commit();
+            return redirect()->route('fuel-receptions.index')->with('success', 'Dépotage mis à jour avec succès.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
+
 
 
     public function show($id)

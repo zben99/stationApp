@@ -112,7 +112,7 @@ Route::post('clients/{id}/credit/pay', [ClientController::class, 'payDebt'])->na
 
 
 
-Route::middleware(['auth', 'ensure.station'])->group(function () {
+Route::middleware(['auth', 'ensure.station', 'station.required'])->group(function () {
 
 
 

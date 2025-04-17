@@ -10,10 +10,6 @@ class SupplierController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        if (!$stationId) {
-            return redirect()->route('station.selection')->with('error', 'Veuillez sélectionner une station.');
-        }
-
         $suppliers = Supplier::where('station_id', $stationId)
             ->orderBy('name', 'asc')
             ->paginate(10);

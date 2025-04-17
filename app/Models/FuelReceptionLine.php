@@ -17,6 +17,8 @@ class FuelReceptionLine extends Model
         'jauge_avant',
         'reception_par_cuve',
         'jauge_apres',
+        'ecart_reception',
+        'ecart_stock',
         'ecart',
         'sonabhy_d',
         'sonabhy_t',

@@ -42,6 +42,8 @@
                     <th>Jauge avant</th>
                     <th>Quantité reçue</th>
                     <th>Jauge après</th>
+                    <th>Écart réception</th>
+                    <th>Écart stock</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,10 +54,17 @@
                         <td>{{ $line->jauge_avant ?? '—' }}</td>
                         <td>{{ $line->reception_par_cuve ?? '—' }}</td>
                         <td>{{ $line->jauge_apres ?? '—' }}</td>
+                        <td class="{{ abs($line->ecart_reception) > 20 ? 'text-danger' : 'text-success' }}">
+                            {{ $line->ecart_reception ?? '—' }} L
+                        </td>
+                        <td class="{{ abs($line->ecart_stock) > 20 ? 'text-warning' : '' }}">
+                            {{ $line->ecart_stock ?? '—' }} L
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
 
         <a href="{{ route('fuel-receptions.index') }}" class="btn btn-secondary mt-3">Retour</a>
     </div>

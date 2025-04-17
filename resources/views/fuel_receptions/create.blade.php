@@ -91,7 +91,7 @@
         <hr>
         <div class="d-flex justify-content-between">
             <a href="{{ route('fuel-receptions.index') }}" class="btn btn-secondary">Retour</a>
-            <button class="btn btn-primary" type="submit">Mettre à jour</button>
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
         </div>
     </form>
 

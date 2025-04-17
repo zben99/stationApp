@@ -25,6 +25,7 @@ class FuelReception extends Model
         'remarques',
     ];
 
+
     protected $casts = [
         'date_reception' => 'date',
     ];

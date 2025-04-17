@@ -58,6 +58,10 @@ class FuelReceptionController extends Controller
             'tanks.*.jauge_apres' => 'nullable|numeric',
         ]);
 
+        $tankIds = array_column($data['tanks'], 'tank_id');
+        if (count($tankIds) !== count(array_unique($tankIds))) {
+            return redirect()->back()->withErrors(['error' => 'Une même cuve ne peut pas apparaître plusieurs fois.']);
+        }
         $data['station_id'] = session('selected_station_id');
 
         DB::beginTransaction();
@@ -76,20 +80,32 @@ class FuelReceptionController extends Controller
                 $tank = Tank::findOrFail($line['tank_id']);
                 $stock = TankStock::firstOrNew(['tank_id' => $tank->id]);
 
-                $quantiteActuelle = $stock->quantite_actuelle ?? 0;
-                $quantiteReception = $line['reception_par_cuve'] ?? 0;
-                $quantiteProjetee = $quantiteActuelle + $quantiteReception;
+
+
+
+
+                $stock_actuel = $stock->quantite_actuelle ?? 0;
+                $jauge_avant = $line['jauge_avant'] ?? 0;
+                $jauge_apres = $line['jauge_apres'] ?? 0;
+                $quantite = $line['reception_par_cuve'] ?? 0;
+
+                $quantiteProjetee = $stock_actuel + $quantite;
+                $ecart_reception = ($jauge_apres - $jauge_avant) - $quantite;
+                $ecart_stock = $jauge_avant - $stock_actuel;
+
 
                 if ($quantiteProjetee > $tank->capacite) {
-                    throw new \Exception("La réception dépasse la capacité de la cuve '{$tank->name}'. Capacité : {$tank->capacity}, tentative : {$quantiteProjetee}");
+                    throw new \Exception("La réception dépasse la capacité de la cuve '{$tank->code}'. Capacité : {$tank->capacity}, tentative : {$quantiteProjetee}");
                 }
 
                 FuelReceptionLine::create([
                     'fuel_reception_id' => $reception->id,
                     'tank_id' => $tank->id,
                     'jauge_avant' => $line['jauge_avant'] ?? null,
-                    'reception_par_cuve' => $quantiteReception,
+                    'reception_par_cuve' => $quantite,
                     'jauge_apres' => $line['jauge_apres'] ?? null,
+                    'ecart_reception' => $ecart_reception,
+                    'ecart_stock' => $ecart_stock,
                 ]);
 
                 // Mise à jour du stock
@@ -124,66 +140,101 @@ class FuelReceptionController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $reception = FuelReception::with('lines')->findOrFail($id);
+{
+    $reception = FuelReception::with('lines')->findOrFail($id);
 
-        $data = $request->validate([
-            'date_reception' => 'required|date',
-            'num_bl' => 'nullable|string',
-            'transporter_id' => 'nullable|exists:transporters,id',
-            'driver_id' => 'nullable|exists:drivers,id',
-            'remarques' => 'nullable|string',
-            'tanks.*.tank_id' => 'required|exists:tanks,id',
-            'tanks.*.jauge_avant' => 'nullable|numeric',
-            'tanks.*.reception_par_cuve' => 'nullable|numeric',
-            'tanks.*.jauge_apres' => 'nullable|numeric',
+    $data = $request->validate([
+        'date_reception' => 'required|date',
+        'num_bl' => 'nullable|string',
+        'transporter_id' => 'nullable|exists:transporters,id',
+        'driver_id' => 'nullable|exists:drivers,id',
+        'remarques' => 'nullable|string',
+        'tanks.*.tank_id' => 'required|exists:tanks,id',
+        'tanks.*.jauge_avant' => 'nullable|numeric',
+        'tanks.*.reception_par_cuve' => 'nullable|numeric',
+        'tanks.*.jauge_apres' => 'nullable|numeric',
+    ]);
+
+    // ❌ Doublon de cuve
+    $tankIds = array_column($data['tanks'], 'tank_id');
+    if (count($tankIds) !== count(array_unique($tankIds))) {
+        return redirect()->back()->withErrors(['error' => 'Une même cuve ne peut pas apparaître plusieurs fois.']);
+    }
+
+    DB::beginTransaction();
+
+    try {
+        $tempLines = [];
+
+        // 💡 Étape 1 : Prévalider toutes les lignes
+        foreach ($data['tanks'] as $line) {
+            $tank = Tank::with('product')->findOrFail($line['tank_id']);
+            $stock = TankStock::firstOrNew(['tank_id' => $tank->id]);
+
+            $stock_actuel = $stock->quantite_actuelle ?? 0;
+            $jauge_avant = $line['jauge_avant'] ?? 0;
+            $jauge_apres = $line['jauge_apres'] ?? 0;
+            $quantite = $line['reception_par_cuve'] ?? 0;
+
+            if ($jauge_apres > $tank->capacite) {
+                throw new \Exception("La jauge après dépasse la capacité de la cuve '{$tank->code}' (max : {$tank->capacite} L, reçu : {$jauge_apres} L).");
+            }
+
+            $tempLines[] = [
+                'tank' => $tank,
+                'stock' => $stock,
+                'jauge_avant' => $jauge_avant,
+                'jauge_apres' => $jauge_apres,
+                'quantite' => $quantite,
+                'stock_actuel' => $stock_actuel,
+                'ecart_reception' => ($jauge_apres - $jauge_avant) - $quantite,
+                'ecart_stock' => $jauge_avant - $stock_actuel,
+            ];
+        }
+
+        // ✅ Étape 2 : Mise à jour de la fiche réception
+        $reception->update([
+            'date_reception' => $data['date_reception'],
+            'num_bl' => $data['num_bl'] ?? null,
+            'transporter_id' => $data['transporter_id'] ?? null,
+            'driver_id' => $data['driver_id'] ?? null,
+            'remarques' => $data['remarques'] ?? null,
         ]);
 
-        DB::beginTransaction();
+        // 🧽 Étape 3 : Nettoyage sécurisé des anciennes lignes
+        foreach ($reception->lines as $oldLine) {
+            $stock = TankStock::firstOrNew(['tank_id' => $oldLine->tank_id]);
+            $stock->quantite_actuelle -= $oldLine->reception_par_cuve ?? 0;
+            $stock->quantite_actuelle = max($stock->quantite_actuelle, 0);
+            $stock->save();
+            $oldLine->delete();
+        }
 
-        try {
-            // 🧼 1. Réajuster les stocks en supprimant les anciens apports
-            foreach ($reception->lines as $oldLine) {
-                $stock = TankStock::firstOrNew(['tank_id' => $oldLine->tank_id]);
-                $stock->quantite_actuelle -= $oldLine->reception_par_cuve ?? 0;
-                $stock->quantite_actuelle = max($stock->quantite_actuelle, 0);
-                $stock->save();
-                $oldLine->delete();
-            }
-
-            // 📝 2. Mettre à jour la fiche
-            $reception->update([
-                'date_reception' => $data['date_reception'],
-                'num_bl' => $data['num_bl'] ?? null,
-                'transporter_id' => $data['transporter_id'] ?? null,
-                'driver_id' => $data['driver_id'] ?? null,
-                'remarques' => $data['remarques'] ?? null,
+        // 📌 Étape 4 : Ajout des nouvelles lignes + mise à jour du stock
+        foreach ($tempLines as $line) {
+            $reception->lines()->create([
+                'tank_id' => $line['tank']->id,
+                'jauge_avant' => $line['jauge_avant'],
+                'reception_par_cuve' => $line['quantite'],
+                'jauge_apres' => $line['jauge_apres'],
+                'produit' => $line['tank']->product->name ?? '-',
+                'ecart_reception' => $line['ecart_reception'],
+                'ecart_stock' => $line['ecart_stock'],
             ]);
 
-            // ✅ 3. Réinsérer les nouvelles lignes et maj stock
-            foreach ($data['tanks'] as $line) {
-                $tank = Tank::findOrFail($line['tank_id']);
-                $receptionLine = $reception->lines()->create([
-                    'tank_id' => $tank->id,
-                    'jauge_avant' => $line['jauge_avant'] ?? null,
-                    'reception_par_cuve' => $line['reception_par_cuve'] ?? null,
-                    'jauge_apres' => $line['jauge_apres'] ?? null,
-                    'produit' => $tank->product->name ?? '-',
-                ]);
-
-                TankStock::updateOrCreate(
-                    ['tank_id' => $tank->id],
-                    ['quantite_actuelle' => DB::raw('quantite_actuelle + ' . ($line['reception_par_cuve'] ?? 0))]
-                );
-            }
-
-            DB::commit();
-            return redirect()->route('fuel-receptions.index')->with('success', 'Dépotage mis à jour avec succès.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            TankStock::updateOrCreate(
+                ['tank_id' => $line['tank']->id],
+                ['quantite_actuelle' => $line['jauge_apres']]
+            );
         }
+
+        DB::commit();
+        return redirect()->route('fuel-receptions.index')->with('success', 'Dépotage mis à jour avec succès.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
+}
 
 
 
@@ -210,15 +261,33 @@ class FuelReceptionController extends Controller
         return $pdf->download('depotage_'.$reception->date_reception.'.pdf');
     }
 
-    public function destroy(FuelReception $fuelReception)
+    public function destroy($id)
     {
-        $stock = TankStock::where('tank_id', $fuelReception->tank_id)->first();
-        if ($stock) {
-            $stock->quantite_actuelle -= $fuelReception->quantite_livree;
-            $stock->save();
-        }
+        $reception = FuelReception::with('lines')->findOrFail($id);
 
-        $fuelReception->delete();
-        return redirect()->route('fuel-receptions.index')->with('success', 'Réception supprimée.');
+        DB::beginTransaction();
+
+        try {
+            // 1. Réajuster les stocks de chaque cuve
+            foreach ($reception->lines as $line) {
+                $stock = TankStock::firstOrNew(['tank_id' => $line->tank_id]);
+                $stock->quantite_actuelle -= $line->reception_par_cuve ?? 0;
+                $stock->quantite_actuelle = max($stock->quantite_actuelle, 0);
+                $stock->save();
+            }
+
+            // 2. Supprimer les lignes de réception
+            $reception->lines()->delete();
+
+            // 3. Supprimer la fiche réception
+            $reception->delete();
+
+            DB::commit();
+            return redirect()->route('fuel-receptions.index')->with('success', 'Dépotage supprimé avec succès.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => "Échec de suppression : " . $e->getMessage()]);
+        }
     }
+
 }

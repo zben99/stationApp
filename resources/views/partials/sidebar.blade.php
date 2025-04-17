@@ -102,6 +102,10 @@
                     <a class="collapse-item" href="{{route('suppliers.index')}}">Gestion des fournisseurs</a>
                 @endcan
 
+
+
+
+
                 @can('client-list')
                     <a class="collapse-item" href="{{route('clients.index')}}">Gestion des clients</a>
                 @endcan
@@ -126,6 +130,12 @@
         </a>
         <div id="collapsefour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+
+
+                <a class="collapse-item" href="{{route('transporters.index')}}">Gestion des transporters</a>
+
+                <a class="collapse-item" href="{{route('drivers.index')}}">Gestion des Chauffeurs</a>
+
 
                 <a class="collapse-item" href="{{route('fuel-receptions.index')}}">Dépotage Fuel</a>
 

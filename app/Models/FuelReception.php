@@ -1,9 +1,6 @@
 <?php
-
 namespace App\Models;
 
-use App\Models\Tank;
-use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -12,41 +9,34 @@ class FuelReception extends Model
     use HasFactory;
 
     protected $fillable = [
-        'tank_id',
+        'station_id',
         'date_reception',
-        'quantite_livree',
-        'densite',
-        'supplier_id',
         'num_bl',
+        'transporter_id',
+        'driver_id',
+        'contre_plein_litre',
+        'contre_plein_valeur',
+        'observation_type',
+        'observation_litre',
         'remarques',
     ];
 
-
-    protected $casts = [
-        'date_reception' => 'date',
-    ];
-
-
-    public function tank()
-    {
-        return $this->belongsTo(Tank::class);
-    }
-
-    // Accès direct au produit via la cuve
-    public function product()
-    {
-        return $this->tank?->product();
-    }
-
     public function station()
     {
-        return $this->tank?->station();
+        return $this->belongsTo(Station::class);
     }
 
-    public function supplier()
+    public function transporter()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Transporter::class);
     }
 
+    public function lines()
+    {
+        return $this->hasMany(FuelReceptionLine::class);
+    }
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class);
+    }
 }
-

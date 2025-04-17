@@ -13,15 +13,23 @@ return new class extends Migration
     {
         Schema::create('fuel_receptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tank_id')->constrained()->onDelete('cascade');
+            $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->date('date_reception');
-            $table->decimal('quantite_livree', 10, 2);
-            $table->decimal('densite', 5, 3)->nullable();
-            $table->string('fournisseur')->nullable();
             $table->string('num_bl')->nullable();
+
+            $table->foreignId('transporter_id')->constrained()->onDelete('set null')->nullable();
+            $table->foreignId('driver_id')->nullable()->constrained()->onDelete('set null');
+
+            $table->decimal('contre_plein_litre', 10, 2)->nullable();
+            $table->decimal('contre_plein_valeur', 12, 2)->nullable();
+
+            $table->enum('observation_type', ['prêt', 'remboursement'])->nullable();
+            $table->decimal('observation_litre', 10, 2)->nullable();
+
             $table->text('remarques')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**

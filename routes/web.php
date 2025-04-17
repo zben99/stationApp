@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TankController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PackagingController;
 use App\Http\Controllers\StationUserController;
+use App\Http\Controllers\TransporterController;
 use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\LubricantProductController;
@@ -225,6 +227,12 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     });
 
     Route::resource('lubricant-products', LubricantProductController::class);
+
+
+    Route::resource('transporters', TransporterController::class);
+
+    Route::resource('drivers', DriverController::class);
+
 });
 
 

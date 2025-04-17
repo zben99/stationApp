@@ -210,6 +210,9 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     Route::resource('tanks', TankController::class);
 
     Route::resource('fuel-receptions', FuelReceptionController::class);
+    Route::get('fuel-receptions/{id}/export', [FuelReceptionController::class, 'export'])->name('fuel-receptions.export');
+    Route::get('fuel-receptions/{id}/export-pdf', [FuelReceptionController::class, 'exportPdf'])->name('fuel-receptions.export.pdf');
+
 
     Route::resource('expenses', ExpenseController::class);
 

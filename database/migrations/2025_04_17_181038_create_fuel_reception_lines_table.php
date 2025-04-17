@@ -15,7 +15,6 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('fuel_reception_id')->constrained()->onDelete('cascade');
                 $table->foreignId('tank_id')->constrained()->onDelete('cascade');
-                $table->string('produit');
 
                 $table->decimal('jauge_avant', 10, 2)->nullable();
                 $table->decimal('reception_par_cuve', 10, 2)->nullable();

@@ -113,9 +113,6 @@
                     <a class="collapse-item" href="{{route('expense-categories.index')}}">Rubriques de dépenses</a>
                 @endcan
 
-                <a class="collapse-item" href="{{route('tanks.index')}}">Gestion des cuves</a>
-
-
 
 
             </div>
@@ -130,6 +127,9 @@
         </a>
         <div id="collapsefour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+
+
+                <a class="collapse-item" href="{{route('tanks.index')}}">Gestion des cuves</a>
 
 
                 <a class="collapse-item" href="{{route('transporters.index')}}">Gestion des transporters</a>

@@ -72,4 +72,37 @@
             });
         }
     </script>
+
+       <!-- Inclure jQuery et DataTables -->
+       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+       <script>
+           $(document).ready(function() {
+               $('#dataTable').DataTable({
+                   "paging": false,
+                   "info": false,
+                   "language": {
+                       "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                       "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                       "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
+                       "sInfoFiltered": "(filtré à partir de _MAX_ entrées)",
+                       "sLengthMenu": "Afficher _MENU_ entrées",
+                       "sLoadingRecords": "Chargement...",
+                       "sProcessing": "Traitement...",
+                       "sSearch": "Rechercher:",
+                       "sZeroRecords": "Aucun résultat trouvé",
+                       "oPaginate": {
+                           "sFirst": "Premier",
+                           "sLast": "Dernier",
+                           "sNext": "Suivant",
+                           "sPrevious": "Précédent"
+                       },
+                       "oAria": {
+                           "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                           "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+                       }
+                   }
+               });
+           });
+       </script>
 </x-app-layout>

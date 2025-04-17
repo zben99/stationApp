@@ -1,6 +1,10 @@
 <?php
 namespace App\Models;
 
+use App\Models\Driver;
+use App\Models\Station;
+use App\Models\Transporter;
+use App\Models\FuelReceptionLine;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -20,6 +24,11 @@ class FuelReception extends Model
         'observation_litre',
         'remarques',
     ];
+
+    protected $casts = [
+        'date_reception' => 'date',
+    ];
+
 
     public function station()
     {

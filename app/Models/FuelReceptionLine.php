@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Tank;
+use App\Models\FuelReception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -12,7 +14,6 @@ class FuelReceptionLine extends Model
     protected $fillable = [
         'fuel_reception_id',
         'tank_id',
-        'produit',
         'jauge_avant',
         'reception_par_cuve',
         'jauge_apres',

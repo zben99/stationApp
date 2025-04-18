@@ -109,9 +109,7 @@
                 @can('client-list')
                     <a class="collapse-item" href="{{route('clients.index')}}">Gestion des clients</a>
                 @endcan
-                @can('expense-category-list')
-                    <a class="collapse-item" href="{{route('expense-categories.index')}}">Rubriques de dépenses</a>
-                @endcan
+
 
 
 
@@ -171,13 +169,18 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse6"
             aria-expanded="true" aria-controls="collapse6">
-            <i class="fas fas fa-store"></i>
-            <span>Gestion de la Boutique</span>
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Gestion des dépenses</span>
         </a>
         <div id="collapse6" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
 
-                <a class="collapse-item" href="{{route('fuel-receptions.index')}}">Dépotage Fuel</a>
+                @can('expense-category-list')
+                    <a class="collapse-item" href="{{route('expense-categories.index')}}">Rubriques de dépenses</a>
+                @endcan
+
+                <a class="collapse-item" href="{{route('expenses.index')}}">Gestion des dépenses</a>
+
 
             </div>
         </div>

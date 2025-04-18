@@ -6,7 +6,7 @@
                 <h2>Modifier le produit </h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-danger btn-sm mb-2" href="{{ route('products.index') }}"><i class="fa fa-arrow-left"></i> Retour</a>
+                <a class="btn btn-danger btn-sm mb-2" href="{{ route('lubricant-products.index') }}"><i class="fa fa-arrow-left"></i> Retour</a>
             </div>
         </div>
     </div>
@@ -22,7 +22,7 @@
         </div>
     @endif
 
-    <form action="{{ isset($product) ? route('products.update', $product->id) : route('products.store') }}" method="POST">
+    <form action="{{ isset($product) ? route('lubricant-products.update', $product->id) : route('lubricant-products.store') }}" method="POST">
         @csrf
         @if(isset($product))
             @method('PUT')

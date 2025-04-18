@@ -17,12 +17,10 @@
         </div>
     @endsession
 
-
-
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <div class="pull-right">
-                                <a class="btn btn-success mb-2" href="{{ route('products.create') }}"><i class="fa fa-plus"></i> Nouveau produit</a>
+                                <a class="btn btn-success mb-2" href="{{ route('lubricant-products.create') }}"><i class="fa fa-plus"></i> Nouveau produit</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -50,13 +48,13 @@
 
 
                                                   @can('product-edit')
-                                                        <a class="btn btn-primary btn-sm" href="{{ route('products.edit',$product->id) }}">
+                                                        <a class="btn btn-primary btn-sm" href="{{ route('lubricant-products.edit',$product->id) }}">
                                                             <i class="bi bi-pencil-square"></i> Modifier
                                                         </a>
                                                     @endcan
 
                                                     @can('product-delete')
-                                                        <form method="POST" action="{{ route('products.destroy', $product->id) }}" style="display:inline" id="deleteForm{{ $product->id }}">
+                                                        <form method="POST" action="{{ route('lubricant-products.destroy', $product->id) }}" style="display:inline" id="deleteForm{{ $product->id }}">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $product->id }})">

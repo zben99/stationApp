@@ -28,8 +28,8 @@ class LubricantProductController extends Controller
         $stationId = session('selected_station_id');
 
         $categories = StationCategory::where('station_id', $stationId)
-            ->where('type', 'lubrifiant')
-            ->get();
+        ->whereIn('type', ['lubrifiant', 'pea'])
+        ->get();
 
         return view('lubricants.products.create', compact('categories'));
     }
@@ -59,7 +59,7 @@ class LubricantProductController extends Controller
         $stationId = session('selected_station_id');
 
         $categories = StationCategory::where('station_id', $stationId)
-            ->where('type', 'lubrifiant')
+        ->whereIn('type', ['lubrifiant', 'pea'])
             ->get();
 
         return view('lubricants.products.edit', [

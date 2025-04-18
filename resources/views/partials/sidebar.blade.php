@@ -145,7 +145,7 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5"
             aria-expanded="true" aria-controls="collapse5">
             <i class="fas fas fa-oil-can"></i>
-            <span>Gestion des Lubrifiants</span>
+            <span>Lubrifiants et PEA</span>
         </a>
         <div id="collapse5" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">

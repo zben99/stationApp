@@ -1,0 +1,37 @@
+<x-app-layout>
+    <x-slot name="title">Modifier recharge de crédit</x-slot>
+
+    <form action="{{ route('credit-topups.update', $creditTopup) }}" method="POST">
+        @csrf @method('PUT')
+
+        <div class="mb-3">
+            <label for="client_id">Client</label>
+            <select name="client_id" class="form-control" required>
+                @foreach($clients as $client)
+                    <option value="{{ $client->id }}" {{ $client->id == $creditTopup->client_id ? 'selected' : '' }}>
+                        {{ $client->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="amount">Montant (F CFA)</label>
+            <input type="number" name="amount" value="{{ $creditTopup->amount }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="date">Date</label>
+            <input type="date" name="date" value="{{ $creditTopup->date }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="notes">Notes</label>
+            <textarea name="notes" class="form-control">{{ $creditTopup->notes }}</textarea>
+        </div>
+
+        <button class="btn btn-primary">Mettre à jour</button>
+        <a href="{{ route('credit-topups.index') }}" class="btn btn-secondary">Annuler</a>
+    </form>
+</x-app-layout>
+

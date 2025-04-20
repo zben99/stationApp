@@ -187,6 +187,28 @@
     </li>
 
 
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse7"
+            aria-expanded="true" aria-controls="collapse7">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Gestion des clients</span>
+        </a>
+        <div id="collapse7" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+
+                <a class="collapse-item" href="{{route('clients.index')}}">Gestion des clients</a>
+
+                <a class="collapse-item" href="{{route('balance-topups.index')}}">Recharges de solde</a>
+
+                <a class="collapse-item" href="{{route('credit-topups.index')}}">Recharges de crédit</a>
+
+                <a class="collapse-item" href="{{route('credit-payments.index')}}">Remboursements de crédit</a>
+
+
+            </div>
+        </div>
+    </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider">

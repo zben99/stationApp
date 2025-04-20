@@ -14,8 +14,11 @@ use App\Http\Controllers\StationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PackagingController;
+use App\Http\Controllers\CreditTopupController;
 use App\Http\Controllers\StationUserController;
 use App\Http\Controllers\TransporterController;
+use App\Http\Controllers\BalanceTopupController;
+use App\Http\Controllers\CreditPaymentController;
 use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\LubricantProductController;
@@ -220,6 +223,15 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
     Route::resource('lubricant-receptions', LubricantReceptionController::class);
 
+    // Recharges de solde
+    Route::resource('balance-topups', BalanceTopupController::class);
+
+    // Recharges de crédit
+    Route::resource('credit-topups', CreditTopupController::class);
+
+    // Remboursements de crédit
+    Route::resource('credit-payments', CreditPaymentController::class);
+
     Route::prefix('product-packagings')->group(function () {
         Route::get('{product}/', [ProductPackagingController::class, 'index'])->name('product-packagings.index');
         Route::get('{product}/create', [ProductPackagingController::class, 'create'])->name('product-packagings.create');
@@ -230,7 +242,6 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     });
 
     Route::resource('lubricant-products', LubricantProductController::class);
-
 
     Route::resource('transporters', TransporterController::class);
 

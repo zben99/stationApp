@@ -21,6 +21,7 @@ use App\Http\Controllers\BalanceTopupController;
 use App\Http\Controllers\CreditPaymentController;
 use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\LubricantProductController;
 use App\Http\Controllers\ProductPackagingController;
 use App\Http\Controllers\LubricantReceptionController;
@@ -235,6 +236,10 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     Route::get('clients/{client}/credit-history/pdf', [ClientController::class, 'exportCreditHistoryPdf'])->name('clients.credit-history.pdf');
     Route::get('clients/{client}/credit-history/excel', [ClientController::class, 'exportCreditHistoryExcel'])->name('clients.credit-history.excel');
 
+    Route::resource('purchase-invoices', PurchaseInvoiceController::class);
+
+    Route::get('purchase-invoices/export/pdf', [PurchaseInvoiceController::class, 'exportPdf'])->name('purchase-invoices.export.pdf');
+    Route::get('purchase-invoices/export/excel', [PurchaseInvoiceController::class, 'exportExcel'])->name('purchase-invoices.export.excel');
 
 
     Route::prefix('product-packagings')->group(function () {

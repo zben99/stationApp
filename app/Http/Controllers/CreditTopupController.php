@@ -80,12 +80,12 @@ class CreditTopupController extends Controller
     }
 
     public function show(CreditTopup $creditTopup)
-{
-    // On charge les paiements associés au crédit
-    $creditTopup->load('payments', 'client');
+    {
+        // On charge les paiements associés au crédit
+        $creditTopup->load('payments', 'client');
 
-    return view('credit_topups.show', compact('creditTopup'));
-}
+        return view('credit_topups.show', compact('creditTopup'));
+    }
 
 }
 

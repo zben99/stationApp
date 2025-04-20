@@ -1,8 +1,11 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\CreditTopup;
+use App\Models\BalanceTopup;
+use App\Models\CreditPayment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Client extends Model
 {
@@ -23,5 +26,21 @@ class Client extends Model
     {
         return $this->belongsTo(Station::class);
     }
+
+    public function creditTopups()
+    {
+        return $this->hasMany(CreditTopup::class);
+    }
+
+    public function balanceTopups()
+    {
+        return $this->hasMany(BalanceTopup::class);
+    }
+
+    public function creditPayments()
+    {
+        return $this->hasMany(CreditPayment::class);
+    }
+
 }
 

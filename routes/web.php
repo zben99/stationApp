@@ -232,6 +232,11 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     // Remboursements de crédit
     Route::resource('credit-payments', CreditPaymentController::class);
 
+    Route::get('clients/{client}/credit-history/pdf', [ClientController::class, 'exportCreditHistoryPdf'])->name('clients.credit-history.pdf');
+    Route::get('clients/{client}/credit-history/excel', [ClientController::class, 'exportCreditHistoryExcel'])->name('clients.credit-history.excel');
+
+
+
     Route::prefix('product-packagings')->group(function () {
         Route::get('{product}/', [ProductPackagingController::class, 'index'])->name('product-packagings.index');
         Route::get('{product}/create', [ProductPackagingController::class, 'create'])->name('product-packagings.create');

@@ -78,5 +78,14 @@ class CreditTopupController extends Controller
         $creditTopup->delete();
         return back()->with('success', 'Recharge de crédit supprimée.');
     }
+
+    public function show(CreditTopup $creditTopup)
+{
+    // On charge les paiements associés au crédit
+    $creditTopup->load('payments', 'client');
+
+    return view('credit_topups.show', compact('creditTopup'));
+}
+
 }
 

@@ -34,7 +34,7 @@
                     <tbody>
                         @foreach($topups as $key => $topup)
                             <tr>
-                                <td>{{ ++$i }}</td>
+                                <td></td>
                                 <td>{{ $topup->client->name }}</td>
                                 <td>{{ number_format($topup->amount, 0, ',', ' ') }} F</td>
                                 <td>{{ number_format($topup->total_payments, 0, ',', ' ') }} F</td>

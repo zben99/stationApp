@@ -4,6 +4,15 @@
     </x-slot>
 
     <div class="card shadow mb-4">
+        <div class="mb-3">
+            <a href="{{ route('clients.credit-history.pdf', $client->id) }}" class="btn btn-outline-danger">
+                <i class="fas fa-file-pdf"></i> Export PDF
+            </a>
+
+            <a href="{{ route('clients.credit-history.excel', $client->id) }}" class="btn btn-outline-success">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </a>
+        </div>
         <div class="card-body">
             <div class="row mb-3">
                 <div class="col-md-6">

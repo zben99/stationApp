@@ -3,6 +3,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\ClientCreditExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClientController extends Controller
 {
@@ -80,4 +83,20 @@ class ClientController extends Controller
 
         return redirect()->route('clients.index')->with('success', 'Client supprimé avec succès.');
     }
+
+
+        public function exportCreditHistoryPdf(Client $client)
+    {
+        $creditTopups = $client->creditTopups()->with('payments')->get();
+
+        $pdf = Pdf::loadView('exports.client_credit_pdf', compact('client', 'creditTopups'));
+        return $pdf->download('historique_credit_' . $client->name . '.pdf');
+    }
+
+    public function exportCreditHistoryExcel(Client $client)
+    {
+        return Excel::download(new ClientCreditExport($client), 'historique_credit_' . $client->name . '.xlsx');
+    }
+
+
 }

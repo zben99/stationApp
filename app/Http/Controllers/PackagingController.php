@@ -7,42 +7,59 @@ use Illuminate\Http\Request;
 
 class PackagingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $packagings = Packaging::latest()->get();
+        $query = Packaging::orderBy('label');
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $packagings = $query->get();
+
         return view('packagings.index', compact('packagings'));
     }
 
     public function create()
     {
-        return view('packagings.create');
+        $types = ['lubrifiant', 'gaz', 'lavage', 'pea', 'autre'];
+        $units = ['L', 'kg', 'u'];
+
+        return view('packagings.create', compact('types', 'units'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'label' => 'required|string|max:50',
-            'volume_litre' => 'required|numeric|min:0.01',
+            'quantity' => 'required|numeric|min:0.01',
+            'unit' => 'required|string|in:L,kg,u',
+            'type' => 'nullable|string|max:50',
         ]);
 
-        Packaging::create($request->only('label', 'volume_litre'));
+        Packaging::create($request->only('label', 'quantity', 'unit', 'type'));
 
         return redirect()->route('packagings.index')->with('success', 'Conditionnement ajouté.');
     }
 
     public function edit(Packaging $packaging)
     {
-        return view('packagings.edit', compact('packaging'));
+        $types = ['lubrifiant', 'gaz', 'lavage', 'pea', 'autre'];
+        $units = ['L', 'kg', 'u'];
+
+        return view('packagings.edit', compact('packaging', 'types', 'units'));
     }
 
     public function update(Request $request, Packaging $packaging)
     {
         $request->validate([
             'label' => 'required|string|max:50',
-            'volume_litre' => 'required|numeric|min:0.01',
+            'quantity' => 'required|numeric|min:0.01',
+            'unit' => 'required|string|in:L,kg,u',
+            'type' => 'nullable|string|max:50',
         ]);
 
-        $packaging->update($request->only('label', 'volume_litre'));
+        $packaging->update($request->only('label', 'quantity', 'unit', 'type'));
 
         return redirect()->route('packagings.index')->with('success', 'Conditionnement modifié.');
     }

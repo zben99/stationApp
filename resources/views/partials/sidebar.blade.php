@@ -167,6 +167,12 @@
 
 
     <li class="nav-item">
+        <a class="nav-link" href="{{route('purchase-invoices.index')}}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Factures Four. boutique</span></a>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse6"
             aria-expanded="true" aria-controls="collapse6">
             <i class="fas fa-money-bill-wave"></i>
@@ -200,7 +206,7 @@
 
                 <a class="collapse-item" href="{{route('balance-topups.index')}}">Recharges de solde</a>
 
-                <a class="collapse-item" href="{{route('credit-topups.index')}}">Recharges de crédit</a>
+                <a class="collapse-item" href="{{route('credit-topups.index')}}">Enregistrement de crédit</a>
 
                 <a class="collapse-item" href="{{route('credit-payments.index')}}">Remboursements de crédit</a>
 
@@ -208,6 +214,9 @@
             </div>
         </div>
     </li>
+
+
+
 
 
     <!-- Divider -->

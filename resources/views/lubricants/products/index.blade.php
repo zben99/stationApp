@@ -6,7 +6,7 @@
 
     <x-slot name="header">
 
-        Gestion des Produits
+        Gestion des Produits (Lubrifiant & PEA)
 
     </x-slot>
 

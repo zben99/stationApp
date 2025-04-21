@@ -11,7 +11,9 @@ class Packaging extends Model
 
     protected $fillable = [
         'label',
-        'volume_litre',
+        'quantity',
+        'unit',
+        'type',
     ];
 
     public function products()

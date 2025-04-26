@@ -12,7 +12,6 @@ class ProductPackaging extends Model
         'station_product_id',
         'packaging_id',
         'price',
-        'stock',
     ];
 
     public function product()

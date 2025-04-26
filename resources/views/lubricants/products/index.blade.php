@@ -31,7 +31,6 @@
                                             <th>N°</th>
                                             <th>Produit</th>
                                             <th>Catégorie</th>
-                                            <th>Prix de vente</th>
                                             <th >Action</th>
                                         </tr>
                                     </thead>
@@ -42,11 +41,12 @@
                                             <td>{{++$i}}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $product->stationCategory->name }}</td>
-                                            <td>{{ $product->price }}</td>
+
                                             <td>
 
-
-
+                                                <a class="btn btn-secondary btn-sm" href="{{ route('product-packagings.index', $product->id) }}">
+                                                    <i class="bi bi-box-seam"></i> Conditionnements
+                                                </a>
                                                   @can('product-edit')
                                                         <a class="btn btn-primary btn-sm" href="{{ route('lubricant-products.edit',$product->id) }}">
                                                             <i class="bi bi-pencil-square"></i> Modifier

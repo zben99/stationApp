@@ -3,11 +3,11 @@
 @if(isset($availablePackagings))
 <div class="mb-3">
     <label for="packaging_id" class="form-label">Conditionnement</label>
-    <select name="packaging_id" class="form-select" required>
+    <select name="packaging_id" class="form-control" required>
         <option value="">-- Sélectionner --</option>
         @foreach($availablePackagings as $packaging)
             <option value="{{ $packaging->id }}" {{ old('packaging_id') == $packaging->id ? 'selected' : '' }}>
-                {{ $packaging->label }} ({{ $packaging->volume_litre }} L)
+                {{ $packaging->label }} ({{ $packaging->unit }} )
             </option>
         @endforeach
     </select>

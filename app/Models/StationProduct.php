@@ -37,4 +37,8 @@ class StationProduct extends Model
                     ->withTimestamps();
     }
 
+    public function lubricantStock()
+    {
+        return $this->hasOne(LubricantStock::class);
+    }
 }

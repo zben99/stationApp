@@ -246,7 +246,9 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
         Route::get('{product}/', [ProductPackagingController::class, 'index'])->name('product-packagings.index');
         Route::get('{product}/create', [ProductPackagingController::class, 'create'])->name('product-packagings.create');
         Route::post('/', [ProductPackagingController::class, 'store'])->name('product-packagings.store');
-        Route::get('edit/{productPackaging}', [ProductPackagingController::class, 'edit'])->name('product-packagings.edit');
+        Route::get('product-packagings/{product}/edit/{productPackaging}', [ProductPackagingController::class, 'edit'])
+        ->name('product-packagings.edit');
+
         Route::put('{productPackaging}', [ProductPackagingController::class, 'update'])->name('product-packagings.update');
         Route::delete('{productPackaging}', [ProductPackagingController::class, 'destroy'])->name('product-packagings.destroy');
     });

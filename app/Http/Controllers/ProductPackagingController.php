@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\StationProduct;
 use App\Models\Packaging;
 use App\Models\ProductPackaging;
+use App\Models\LubricantStock;
 use Illuminate\Http\Request;
 
 class ProductPackagingController extends Controller
 {
     public function index($productId)
     {
-        $product = StationProduct::with(['packagings'])->findOrFail($productId);
+        $product = StationProduct::with(['packagings', 'lubricantStock'])->findOrFail($productId);
         return view('product_packagings.index', compact('product'));
     }
 
@@ -31,12 +32,24 @@ class ProductPackagingController extends Controller
             'station_product_id' => 'required|exists:station_products,id',
             'packaging_id' => 'required|exists:packagings,id',
             'price' => 'nullable|numeric|min:0',
-            'stock' => 'nullable|integer|min:0',
+            'stock' => 'nullable|integer|min:0'
         ]);
 
-        ProductPackaging::create($request->only('station_product_id', 'packaging_id', 'price', 'stock'));
+        // Création du product-packaging
+        $packaging = ProductPackaging::create([
+            'station_product_id' => $request->station_product_id,
+            'packaging_id' => $request->packaging_id,
+            'price' => $request->price,
+        ]);
 
-        return redirect()->route('product-packagings.index', $request->station_product_id)->with('success', 'Conditionnement associé.');
+        // Création automatique de l'entrée de stock initiale (0 par défaut)
+        LubricantStock::create([
+            'station_product_id' => $request->station_product_id,
+            'quantite_actuelle' => $request->stock,
+        ]);
+
+        return redirect()->route('product-packagings.index', $request->station_product_id)
+                         ->with('success', 'Conditionnement associé avec succès.');
     }
 
     public function edit(ProductPackaging $productPackaging)
@@ -48,12 +61,14 @@ class ProductPackagingController extends Controller
     {
         $request->validate([
             'price' => 'nullable|numeric|min:0',
-            'stock' => 'nullable|integer|min:0',
         ]);
 
-        $productPackaging->update($request->only('price', 'stock'));
+        $productPackaging->update([
+            'price' => $request->price,
+        ]);
 
-        return redirect()->route('product-packagings.index', $productPackaging->station_product_id)->with('success', 'Conditionnement mis à jour.');
+        return redirect()->route('product-packagings.index', $productPackaging->station_product_id)
+                         ->with('success', 'Conditionnement mis à jour.');
     }
 
     public function destroy(ProductPackaging $productPackaging)
@@ -61,6 +76,7 @@ class ProductPackagingController extends Controller
         $productId = $productPackaging->station_product_id;
         $productPackaging->delete();
 
-        return redirect()->route('product-packagings.index', $productId)->with('success', 'Conditionnement supprimé.');
+        return redirect()->route('product-packagings.index', $productId)
+                         ->with('success', 'Conditionnement supprimé.');
     }
 }

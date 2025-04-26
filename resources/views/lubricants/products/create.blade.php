@@ -49,12 +49,6 @@
 
 
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Prix de vente:</strong>
-                <input type="number" step="0.01" name="price" value="{{ old('price', $product->price ?? '') }}" class="form-control" required>
-            </div>
-        </div>
 
 
 

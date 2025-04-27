@@ -103,12 +103,8 @@
                 @endcan
 
 
+                <a class="collapse-item" href="{{route('packagings.index')}}">Packeging </a>
 
-
-
-                @can('client-list')
-                    <a class="collapse-item" href="{{route('clients.index')}}">Gestion des clients</a>
-                @endcan
 
 
 
@@ -153,12 +149,7 @@
 
                 <a class="collapse-item" href="{{route('lubricant-products.index')}}">Produits</a>
 
-
-                <a class="collapse-item" href="{{route('packagings.index')}}">Conditionnements </a>
-
                 <a class="collapse-item" href="{{route('lubricant-receptions.index')}}">Reception</a>
-
-
 
 
             </div>

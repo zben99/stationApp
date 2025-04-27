@@ -1,13 +1,9 @@
 <?php
 
-
-// MODELE : LubricantStock.php
-
 namespace App\Models;
 
-use App\Models\StationProduct;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class LubricantStock extends Model
 {
@@ -15,11 +11,20 @@ class LubricantStock extends Model
 
     protected $fillable = [
         'station_product_id',
+        'product_packaging_id',
         'quantite_actuelle',
     ];
 
-    public function product()
+    public function stationProduct()
     {
-        return $this->belongsTo(StationProduct::class, 'station_product_id');
+        return $this->belongsTo(StationProduct::class);
     }
+
+    public function productPackaging()
+    {
+        return $this->belongsTo(ProductPackaging::class);
+    }
+
+
+
 }

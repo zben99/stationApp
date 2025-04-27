@@ -2,105 +2,173 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LubricantReception;
-use App\Models\LubricantStock;
-use App\Models\StationProduct;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\StationProduct;
+use App\Models\StationCategory;
+use App\Models\ProductPackaging;
+use App\Models\LubricantReception;
 
 class LubricantReceptionController extends Controller
 {
     public function index()
     {
-        $receptions = LubricantReception::with('product', 'supplier')->latest()->get();
-        return view('lubricants.index', compact('receptions'));
+
+
+        $receptions = LubricantReception::with('product', 'supplier', 'packaging')->latest()->paginate(20);
+
+        return view('lubricant_receptions.index', compact('receptions'));
     }
 
     public function create()
     {
-        $products = StationProduct::whereHas('stationCategory', fn($q) => $q->where('type', 'lubrifiant'))->get();
-        $suppliers = Supplier::all();
-        return view('lubricants.create', compact('products', 'suppliers'));
+
+
+        $stationId = session('selected_station_id');
+
+        // Récupérer les catégories lubrifiant et pea
+        $categories = StationCategory::where('station_id', $stationId)
+            ->whereIn('type', ['lubrifiant', 'pea'])
+            ->pluck('id'); // On récupère juste les IDs
+
+        // Récupérer les produits correspondants
+        $stationProducts = StationProduct::whereIn('category_id', $categories)->get();
+
+        // Récupérer les fournisseurs liés à la station
+        $suppliers = Supplier::where('station_id', $stationId)->get();
+
+        // Pour les packagings : on ne récupère rien ici, on ira chercher par AJAX selon le produit choisi
+        $packagings = []; // vide au début
+
+        return view('lubricant_receptions.create', compact('stationProducts', 'suppliers', 'packagings'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'station_product_id' => 'required|exists:station_products,id',
+            'product_packaging_id' => 'required|exists:station_product_packaging,id',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'date_reception' => 'required|date',
-            'quantite' => 'required|numeric|min:0',
+            'quantite' => 'required|numeric|min:0.01',
             'prix_achat' => 'nullable|numeric|min:0',
             'prix_vente' => 'nullable|numeric|min:0',
-            'observations' => 'nullable|string',
+            'observations' => 'nullable|string|max:1000',
         ]);
 
-        $reception = LubricantReception::create($request->all());
+        // 1. On enregistre la réception
+        $reception = LubricantReception::create($validated);
 
-        // Stock
-        $stock = LubricantStock::firstOrCreate([
-            'station_product_id' => $request->station_product_id
-        ]);
-        $stock->quantite_actuelle += $request->quantite;
-        $stock->save();
+        // 2. Mise à jour automatique du stock
+        LubricantReception::updateOrCreateStock(
+            $validated['station_product_id'],
+            $validated['product_packaging_id'],
+            $validated['quantite']
+        );
 
-        // Optionnel : Mettre à jour le prix du produit
-        $product = StationProduct::find($request->station_product_id);
-        if ($request->filled('prix_vente')) {
-            $product->price = $request->prix_vente;
-            $product->save();
-        }
+        return redirect()->route('lubricant-receptions.index')->with('success', 'Réception enregistrée avec succès.');
+    }
 
-        return redirect()->route('lubricant-receptions.index')->with('success', 'Réception enregistrée.');
+    public function show(LubricantReception $lubricantReception)
+    {
+        return view('lubricant_receptions.show', compact('lubricantReception'));
     }
 
     public function edit(LubricantReception $lubricantReception)
     {
-        $products = StationProduct::whereHas('category', fn($q) => $q->where('type', 'lubrifiant'))->get();
-        $suppliers = Supplier::all();
-        return view('lubricants.edit', compact('lubricantReception', 'products', 'suppliers'));
+        $stationId = session('selected_station_id');
+
+        // Récupérer les catégories lubrifiant et pea
+        $categories = StationCategory::where('station_id', $stationId)
+            ->whereIn('type', ['lubrifiant', 'pea'])
+            ->pluck('id');
+
+        // Produits de la station
+        $stationProducts = StationProduct::whereIn('category_id', $categories)->get();
+
+        // Fournisseurs de la station
+        $suppliers = Supplier::where('station_id', $stationId)->get();
+
+        // Packagings liés au produit actuel, MÊME format que getPackagings
+        $packagings = ProductPackaging::with('packaging')
+            ->where('station_product_id', $lubricantReception->station_product_id)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->packaging->label,
+                    'unit' => $item->packaging->unit,
+                ];
+            });
+
+        return view('lubricant_receptions.edit', compact('lubricantReception', 'stationProducts', 'suppliers', 'packagings'));
     }
+
+
+
 
     public function update(Request $request, LubricantReception $lubricantReception)
     {
-        $request->validate([
+        $validated = $request->validate([
             'station_product_id' => 'required|exists:station_products,id',
+            'product_packaging_id' => 'required|exists:station_product_packaging,id',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'date_reception' => 'required|date',
-            'quantite' => 'required|numeric|min:0',
+            'quantite' => 'required|numeric|min:0.01',
             'prix_achat' => 'nullable|numeric|min:0',
             'prix_vente' => 'nullable|numeric|min:0',
-            'observations' => 'nullable|string',
+            'observations' => 'nullable|string|max:1000',
         ]);
 
-        // Ajustement du stock
-        $oldQty = $lubricantReception->quantite;
-        $lubricantReception->update($request->all());
+        // 1. Calculer la différence de la quantité (ancienne vs nouvelle)
+        $previousQuantity = $lubricantReception->quantite;
 
-        $stock = LubricantStock::firstOrCreate(['station_product_id' => $request->station_product_id]);
-        $stock->quantite_actuelle += ($request->quantite - $oldQty);
-        $stock->save();
+        // 2. Mettre à jour la réception
+        $lubricantReception->update($validated);
 
-        // Mise à jour du prix du produit
-        if ($request->filled('prix_vente')) {
-            $product = StationProduct::find($request->station_product_id);
-            $product->price = $request->prix_vente;
-            $product->save();
-        }
+        // 3. Mettre à jour le stock avec la différence
+        LubricantReception::updateOrCreateStock(
+            $validated['station_product_id'],
+            $validated['product_packaging_id'],
+            $validated['quantite'],
+            $previousQuantity // Passer l'ancienne quantité pour ajuster correctement le stock
+        );
 
-        return redirect()->route('lubricant-receptions.index')->with('success', 'Réception modifiée.');
+        return redirect()->route('lubricant-receptions.index')->with('success', 'Réception mise à jour avec succès.');
     }
+
+
 
     public function destroy(LubricantReception $lubricantReception)
     {
-        $stock = LubricantStock::where('station_product_id', $lubricantReception->station_product_id)->first();
-        if ($stock) {
-            $stock->quantite_actuelle -= $lubricantReception->quantite;
-            $stock->save();
-        }
+        // 1. Avant de supprimer, décrémenter le stock
+        LubricantReception::updateOrCreateStock(
+            $lubricantReception->station_product_id,
+            $lubricantReception->product_packaging_id,
+            -$lubricantReception->quantite // on décrémente en négatif
+        );
 
+        // 2. Ensuite supprimer
         $lubricantReception->delete();
 
-        return redirect()->route('lubricant-receptions.index')->with('success', 'Réception supprimée.');
+        return redirect()->route('lubricant-receptions.index')->with('success', 'Réception supprimée avec succès.');
+    }
+
+
+
+    public function getPackagings($productId)
+    {
+        $packagings = ProductPackaging::with('packaging')
+        ->where('station_product_id', $productId)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->packaging->label,
+                'unit' => $item->packaging->unit,
+            ];
+        });
+
+        return response()->json($packagings);
     }
 }

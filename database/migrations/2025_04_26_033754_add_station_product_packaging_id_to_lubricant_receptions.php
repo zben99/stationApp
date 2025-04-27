@@ -12,17 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('lubricant_receptions', function (Blueprint $table) {
-            //
+            $table->foreignId('product_packaging_id')
+                  ->after('station_product_id')
+                  ->constrained()
+                  ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('lubricant_receptions', function (Blueprint $table) {
-            //
+            $table->dropForeign(['product_packaging_id']);
+            $table->dropColumn('product_packaging_id');
         });
     }
 };

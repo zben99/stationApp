@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StationProduct;
 use App\Models\Packaging;
-use App\Models\ProductPackaging;
-use App\Models\LubricantStock;
 use Illuminate\Http\Request;
+use App\Models\LubricantStock;
+use App\Models\StationProduct;
+use App\Models\ProductPackaging;
+use App\Models\LubricantReception;
 
 class ProductPackagingController extends Controller
 {
     public function index($productId)
     {
-        $product = StationProduct::with(['packagings', 'lubricantStock'])->findOrFail($productId);
+        $product = StationProduct::with(['productPackagings.lubricantStock', 'productPackagings.packaging'])->findOrFail($productId);
+
         return view('product_packagings.index', compact('product'));
     }
-
     public function create($productId)
     {
         $product = StationProduct::findOrFail($productId);
@@ -42,11 +43,15 @@ class ProductPackagingController extends Controller
             'price' => $request->price,
         ]);
 
-        // Création automatique de l'entrée de stock initiale (0 par défaut)
+
+
+           // 2. Création du stock lié au product-packaging
         LubricantStock::create([
-            'station_product_id' => $request->station_product_id,
-            'quantite_actuelle' => $request->stock,
+            'station_product_id'    => $request->station_product_id,
+            'product_packaging_id'  => $packaging->id, // 👈 Ici la correction
+            'quantite_actuelle'     => $request->stock ?? 0,
         ]);
+
 
         return redirect()->route('product-packagings.index', $request->station_product_id)
                          ->with('success', 'Conditionnement associé avec succès.');

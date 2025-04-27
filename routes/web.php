@@ -259,6 +259,9 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
     Route::resource('drivers', DriverController::class);
 
+    Route::get('/product/{product}/packagings', [LubricantReceptionController::class, 'getPackagings']);
+
+
 });
 
 

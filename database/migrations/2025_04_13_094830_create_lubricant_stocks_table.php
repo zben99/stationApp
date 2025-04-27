@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('lubricant_stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('station_product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_packaging_id')->constrained()->onDelete('cascade');
             $table->decimal('quantite_actuelle', 10, 2)->default(0);
             $table->timestamps();
+
+            $table->unique(['station_product_id', 'product_packaging_id']); // pour éviter doublons
         });
     }
 

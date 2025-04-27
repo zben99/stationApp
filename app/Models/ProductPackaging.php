@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\LubricantStock;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductPackaging extends Model
@@ -22,6 +23,20 @@ class ProductPackaging extends Model
     public function packaging()
     {
         return $this->belongsTo(Packaging::class);
+    }
+
+    public function lubricantStock()
+    {
+        return $this->hasOne(LubricantStock::class, 'product_packaging_id', 'id');
+    }
+
+    public function getQuantiteDisponibleAttribute()
+    {
+        if ($this->lubricantStock && $this->lubricantStock->product_packaging_id == $this->id) {
+            return $this->lubricantStock->quantite_actuelle;
+        }
+
+        return 0;
     }
 }
 

@@ -16,12 +16,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($product->packagings as $packaging)
+                    @foreach($product->productPackagings as $productPackaging)
                         <tr>
-                            <td>{{ $packaging->label }}</td>
-                            <td>{{ $packaging->unit }}</td>
-                            <td>{{ number_format($packaging->pivot->price, 0, ',', ' ') }} F</td>
-                            <td>{{ $product->lubricantStock?->quantite_actuelle ?? 0 }}</td>
+                            <td>{{ $productPackaging->packaging->label }}</td>
+                            <td>{{ $productPackaging->packaging->unit }}</td>
+                            <td>{{ number_format($productPackaging->price, 0, ',', ' ') }} F</td>
+                            <td>{{ $productPackaging->quantite_disponible }}</td>
                             <td>
                                 <a href="#" class="btn btn-sm btn-warning">Modifier</a>
 

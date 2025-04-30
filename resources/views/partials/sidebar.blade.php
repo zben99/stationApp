@@ -141,7 +141,7 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5"
             aria-expanded="true" aria-controls="collapse5">
             <i class="fas fas fa-oil-can"></i>
-            <span>Lubrifiants et PEA</span>
+            <span>Lub / PEA / GAZ / Lampe</span>
         </a>
         <div id="collapse5" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -149,7 +149,7 @@
 
                 <a class="collapse-item" href="{{route('lubricant-products.index')}}">Produits</a>
 
-                <a class="collapse-item" href="{{route('lubricant-receptions.index')}}">Reception</a>
+                <a class="collapse-item" href="{{route('lubricant-receptions.batch.index')}}">Reception</a>
 
 
             </div>

@@ -11,24 +11,34 @@ class LubricantProductController extends Controller
     public function index(Request $request)
     {
         $stationId = session('selected_station_id');
+        $categoryId = $request->input('category');
 
-
-        $products = StationProduct::with('stationCategory', 'station')
+        $query = StationProduct::with('stationCategory', 'station')
             ->where('station_id', $stationId)
-            ->whereHas('stationCategory', fn($q) => $q->where('type', 'lubrifiant'))
-            ->orderBy('name', 'asc')
-            ->paginate(10);
+            ->whereHas('stationCategory', function ($q) {
+                $q->whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes']);
+            });
 
-        return view('lubricants.products.index', compact('products'))
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        $products = $query->orderBy('name')->paginate(10);
+
+        $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])->get();
+
+        return view('lubricants.products.index', compact('products', 'categories'))
             ->with('i', ($request->input('page', 1) - 1) * 10);
     }
+
+
 
     public function create()
     {
         $stationId = session('selected_station_id');
 
         $categories = StationCategory::where('station_id', $stationId)
-        ->whereIn('type', ['lubrifiant', 'pea'])
+        ->whereIn("name", ["Lubrifiant", "Produits d'Entretien Auto (PEA)"])
         ->get();
 
         return view('lubricants.products.create', compact('categories'));

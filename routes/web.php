@@ -25,6 +25,7 @@ use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\LubricantProductController;
 use App\Http\Controllers\ProductPackagingController;
 use App\Http\Controllers\LubricantReceptionController;
+use App\Http\Controllers\LubricantReceptionBatchController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -222,7 +223,19 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
     Route::resource('packagings', PackagingController::class);
 
-    Route::resource('lubricant-receptions', LubricantReceptionController::class);
+
+
+    Route::prefix('lubricant-receptions')->name('lubricant-receptions.')->group(function () {
+        Route::get('/batches', [LubricantReceptionBatchController::class, 'index'])->name('batch.index');
+        Route::get('/batch/create', [LubricantReceptionBatchController::class, 'create'])->name('batch.create');
+        Route::post('/batch/store', [LubricantReceptionBatchController::class, 'store'])->name('batch.store');
+        Route::get('/batch/{batch}', [LubricantReceptionBatchController::class, 'show'])->name('batch.show');
+        Route::get('/batch/{batch}/edit', [LubricantReceptionBatchController::class, 'edit'])->name('batch.edit');
+        Route::put('/batch/{batch}', [LubricantReceptionBatchController::class, 'update'])->name('batch.update'); // ✅ celle-ci
+        Route::delete('/batch/{batch}', [LubricantReceptionBatchController::class, 'destroy'])->name('batch.destroy');
+
+        Route::get('/packagings/{productId}', [LubricantReceptionBatchController::class, 'getPackagings'])->name('packagings');
+    });
 
     // Recharges de solde
     Route::resource('balance-topups', BalanceTopupController::class);

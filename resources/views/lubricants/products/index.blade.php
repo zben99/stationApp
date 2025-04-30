@@ -6,7 +6,7 @@
 
     <x-slot name="header">
 
-        Gestion des Produits (Lubrifiant & PEA)
+        Gestion des Produits (Lubrifiant / PEA / GAZ / Lampes)
 
     </x-slot>
 
@@ -24,6 +24,21 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <form method="GET" action="{{ route('lubricant-products.index') }}" class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select name="category" class="form-control" onchange="this.form.submit()">
+                                            <option value="">-- Toutes les catégories --</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>

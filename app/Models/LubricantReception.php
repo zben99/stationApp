@@ -18,6 +18,7 @@ class LubricantReception extends Model
     ];
     protected $fillable = [
         'station_product_id',
+        'batch_id',
         'product_packaging_id',
         'supplier_id',
         'date_reception',

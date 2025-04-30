@@ -147,9 +147,9 @@
             <div class="bg-white py-2 collapse-inner rounded">
 
 
-                <a class="collapse-item" href="{{route('lubricant-products.index')}}">Produits</a>
+                <a class="collapse-item" href="{{route('lubricant-products.index')}}">Gestion de Produits</a>
 
-                <a class="collapse-item" href="{{route('lubricant-receptions.batch.index')}}">Reception</a>
+                <a class="collapse-item" href="{{route('lubricant-receptions.batch.index')}}">Approvisionnement</a>
 
 
             </div>

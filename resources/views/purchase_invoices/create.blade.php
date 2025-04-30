@@ -21,15 +21,32 @@
 
         <div class="mb-3">
             <label>Valeur HT</label>
-            <input type="number" step="0.01" name="amount_ht" class="form-control" required>
+            <input type="number" step="0.01" name="amount_ht" id="amount_ht" class="form-control" required>
+
         </div>
 
         <div class="mb-3">
             <label>Valeur TTC</label>
-            <input type="number" step="0.01" name="amount_ttc" class="form-control" required>
+            <input type="number" step="0.01" name="amount_ttc" id="amount_ttc" class="form-control" readonly>
         </div>
 
         <button class="btn btn-primary">Enregistrer</button>
         <a href="{{ route('purchase-invoices.index') }}" class="btn btn-secondary">Annuler</a>
     </form>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const htInput = document.getElementById('amount_ht');
+            const ttcInput = document.getElementById('amount_ttc');
+
+            htInput.addEventListener('input', function () {
+                const ht = parseFloat(htInput.value) || 0;
+                const tva = ht * 0.18;
+                const ttc = ht + tva;
+                ttcInput.value = ttc.toFixed(2);
+            });
+        });
+    </script>
+
 </x-app-layout>

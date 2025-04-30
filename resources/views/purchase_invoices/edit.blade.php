@@ -21,15 +21,33 @@
 
         <div class="mb-3">
             <label>Valeur HT</label>
-            <input type="number" step="0.01" name="amount_ht" class="form-control" value="{{ $purchaseInvoice->amount_ht }}" required>
+            <input type="number" step="0.01" name="amount_ht" id="amount_ht" class="form-control" value="{{ $purchaseInvoice->amount_ht }}" required>
         </div>
 
         <div class="mb-3">
             <label>Valeur TTC</label>
-            <input type="number" step="0.01" name="amount_ttc" class="form-control" value="{{ $purchaseInvoice->amount_ttc }}" required>
+            <input type="number" step="0.01" name="amount_ttc" id="amount_ttc" class="form-control" value="{{ $purchaseInvoice->amount_ttc }}" readonly>
         </div>
 
         <button class="btn btn-primary">Mettre à jour</button>
         <a href="{{ route('purchase-invoices.index') }}" class="btn btn-secondary">Annuler</a>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const htInput = document.getElementById('amount_ht');
+            const ttcInput = document.getElementById('amount_ttc');
+
+            function updateTTC() {
+                const ht = parseFloat(htInput.value) || 0;
+                const ttc = ht + (ht * 0.18);
+                ttcInput.value = ttc.toFixed(2);
+            }
+
+            htInput.addEventListener('input', updateTTC);
+
+            // Mettre à jour au chargement si HT a une valeur
+            updateTTC();
+        });
+    </script>
 </x-app-layout>

@@ -12,14 +12,34 @@ use App\Models\LubricantReceptionBatch;
 
 class LubricantReceptionBatchController extends Controller
 {
-    public function index()
-    {
-        $batches = LubricantReceptionBatch::with('receptions.product', 'receptions.packaging.packaging', 'supplier')
-            ->orderByDesc('date_reception')
-            ->paginate(20);
 
-        return view('lubricant_reception_batches.index', compact('batches'));
+
+    public function index(Request $request)
+    {
+        $stationId = session('selected_station_id');
+
+        $categories = StationCategory::where('station_id', $stationId)
+            ->whereIn('type', ['lubrifiant', 'pea', 'gaz', 'lampe'])
+            ->get();
+
+        $query = LubricantReceptionBatch::with([
+            'receptions.product.stationCategory',
+            'receptions.packaging.packaging',
+            'supplier'
+        ])->orderByDesc('date_reception');
+
+        if ($request->filled('category')) {
+            $categoryId = $request->get('category');
+            $query->whereHas('receptions.product', function ($q) use ($categoryId) {
+                $q->where('category_id', $categoryId);
+            });
+        }
+
+        $batches = $query->paginate(20);
+
+        return view('lubricant_reception_batches.index', compact('batches', 'categories'));
     }
+
 
     public function create()
     {
@@ -43,6 +63,8 @@ class LubricantReceptionBatchController extends Controller
         $request->validate([
             'date_reception' => 'required|date',
             'supplier_id' => 'nullable|exists:suppliers,id',
+            'num_bc' => 'nullable|string|max:255',
+            'num_bl' => 'nullable|string|max:255',
             'products' => 'required|array|min:1',
             'products.*.station_product_id' => 'required|exists:station_products,id',
             'products.*.product_packaging_id' => 'required|exists:station_product_packaging,id',
@@ -58,6 +80,8 @@ class LubricantReceptionBatchController extends Controller
             'station_id' => $stationId,
             'supplier_id' => $request->supplier_id,
             'date_reception' => $request->date_reception,
+            'num_bc' => $request->num_bc,
+            'num_bl' => $request->num_bl,
         ]);
 
         foreach ($request->products as $prod) {
@@ -131,6 +155,8 @@ class LubricantReceptionBatchController extends Controller
         $request->validate([
             'date_reception' => 'required|date',
             'supplier_id' => 'nullable|exists:suppliers,id',
+            'num_bc' => 'nullable|string|max:255',
+            'num_bl' => 'nullable|string|max:255',
             'products' => 'required|array|min:1',
             'products.*.id' => 'required|exists:lubricant_receptions,id',
             'products.*.station_product_id' => 'required|exists:station_products,id',
@@ -140,10 +166,14 @@ class LubricantReceptionBatchController extends Controller
             'products.*.observations' => 'nullable|string|max:1000',
         ]);
 
+
         // Mettre à jour les infos du batch
         $batch->update([
             'date_reception' => $request->date_reception,
             'supplier_id' => $request->supplier_id,
+            'num_bc' => $request->num_bc,
+            'num_bl' => $request->num_bl,
+
         ]);
 
         foreach ($request->products as $prod) {

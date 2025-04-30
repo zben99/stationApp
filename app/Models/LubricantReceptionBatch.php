@@ -17,6 +17,8 @@ class LubricantReceptionBatch extends Model
         'station_id',
         'supplier_id',
         'date_reception',
+        'num_bc',
+        'num_bl',
     ];
 
     // 🔁 Une batch a plusieurs lignes de réception

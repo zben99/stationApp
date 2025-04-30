@@ -32,6 +32,18 @@
             </select>
         </div>
 
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="num_bc" class="form-label">N° Bon de Commande (BC)</label>
+                <input type="text" name="num_bc" class="form-control" value="{{  $batch->num_bc}}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="num_bl" class="form-label">N° Bon de Livraison (BL)</label>
+                <input type="text" name="num_bl" class="form-control" value="{{ $batch->num_bl }}">
+            </div>
+        </div>
+
         <div class="mb-4">
             <label class="form-label">Produits reçus</label>
             <table class="table table-bordered">

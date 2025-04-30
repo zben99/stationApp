@@ -16,6 +16,22 @@
 
         <div class="card-body">
             <div class="table-responsive">
+                <form method="GET" action="{{ route('lubricant-receptions.batch.index') }}" class="mb-3">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label for="category" class="form-label">Filtrer par catégorie</label>
+                            <select name="category" id="category" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Toutes les catégories --</option>
+                                @foreach ($categories as $cat)
+                                    <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                        {{ $cat->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
                 <table class="table table-bordered" id="dataTable" width="100%">
                     <thead>
                         <tr>

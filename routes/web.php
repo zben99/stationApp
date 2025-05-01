@@ -27,6 +27,7 @@ use App\Http\Controllers\CreditPaymentController;
 use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\PurchaseInvoiceController;
+use App\Http\Controllers\DailyProductSaleController;
 use App\Http\Controllers\LubricantProductController;
 use App\Http\Controllers\ProductPackagingController;
 use App\Http\Controllers\LubricantReceptionController;
@@ -298,7 +299,14 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
     Route::get('fuel-indexes/details/{date}/{rotation}', [FuelIndexController::class, 'details'])->name('fuel-indexes.details');
 
+    Route::prefix('daily-product-sales')->name('daily-product-sales.')->group(function () {
+        Route::get('/', [DailyProductSaleController::class, 'index'])->name('index');
+        Route::get('/create', [DailyProductSaleController::class, 'create'])->name('create');
+        Route::post('/', [DailyProductSaleController::class, 'store'])->name('store');
 
+        // Route pour afficher les détails par date et rotation
+        Route::get('/{date}/{rotation}', [DailyProductSaleController::class, 'show'])->name('show');
+    });
 
 
 

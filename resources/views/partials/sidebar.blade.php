@@ -126,9 +126,6 @@
                 <a class="collapse-item" href="{{route('tanks.index')}}">Gestion des cuves</a>
                 <a class="collapse-item" href="{{route('pumps.index')}}">Gestion des Pompes</a>
 
-
-
-
                 <a class="collapse-item" href="{{route('transporters.index')}}">Gestion des transporters</a>
 
                 <a class="collapse-item" href="{{route('drivers.index')}}">Gestion des Chauffeurs</a>
@@ -198,6 +195,27 @@
                 <a class="collapse-item" href="{{route('balances.summary')}}">Gestion des Avoirs</a>
 
                 <a class="collapse-item" href="{{route('credit-topups.index')}}">Gestion des crédits</a>
+
+
+            </div>
+        </div>
+    </li>
+
+
+
+
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse8"
+            aria-expanded="true" aria-controls="collapse8">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Caisse Journalière</span>
+        </a>
+        <div id="collapse8" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{route('fuel-indexes.index')}}">Relevés Fuel</a>
+
+                <a class="collapse-item" href="{{route('credit-topups.index')}}">LUB/PEA/GAZ/LAMPES</a>
 
 
             </div>

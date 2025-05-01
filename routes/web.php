@@ -2,6 +2,7 @@
 
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PumpController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TankController;
 use App\Http\Controllers\UserController;
@@ -289,6 +290,8 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     Route::get('/product/{product}/packagings', [LubricantReceptionController::class, 'getPackagings']);
 
 
+
+    Route::resource('pumps', PumpController::class);
 });
 
 

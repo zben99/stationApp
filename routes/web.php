@@ -320,8 +320,9 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
         Route::delete('/{dailySimpleRevenue}', [DailySimpleRevenueController::class, 'destroy'])->name('destroy');
     });
 
-    Route::get('recettes/review', [DailyRevenueReviewController::class, 'review'])->name('daily-revenues.review');
-
+    Route::resource('daily-revenue-review', DailyRevenueReviewController::class)->only([
+        'index', 'create', 'store', 'show'
+    ]);
 });
 
 

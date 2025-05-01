@@ -17,7 +17,7 @@ return new class extends Migration {
 
             $table->decimal('index_debut', 10, 2);
             $table->decimal('index_fin', 10, 2);
-
+            $table->decimal('montant_declare', 10, 2)->nullable(); // recette réellement encaissée
             $table->decimal('prix_unitaire', 10, 2); // Prix de vente carburant
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // pompiste

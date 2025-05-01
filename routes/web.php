@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\FuelIndexController;
 use App\Http\Controllers\PackagingController;
 use App\Http\Controllers\CreditTopupController;
 use App\Http\Controllers\StationUserController;
@@ -292,6 +293,15 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
 
     Route::resource('pumps', PumpController::class);
+
+    Route::resource('fuel-indexes', FuelIndexController::class);
+
+    Route::get('fuel-indexes/details/{date}/{rotation}', [FuelIndexController::class, 'details'])->name('fuel-indexes.details');
+
+
+
+
+
 });
 
 

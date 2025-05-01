@@ -124,6 +124,9 @@
 
 
                 <a class="collapse-item" href="{{route('tanks.index')}}">Gestion des cuves</a>
+                <a class="collapse-item" href="{{route('pumps.index')}}">Gestion des Pompes</a>
+
+
 
 
                 <a class="collapse-item" href="{{route('transporters.index')}}">Gestion des transporters</a>

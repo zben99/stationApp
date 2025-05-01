@@ -8,6 +8,8 @@ class FuelIndex extends Model
 {
     use HasFactory;
 
+    protected $table = 'fuel_indexes';
+
     protected $fillable = [
         'station_id',
         'pump_id',
@@ -16,7 +18,8 @@ class FuelIndex extends Model
         'rotation',
         'index_debut',
         'index_fin',
-        'prix_unitaire'
+        'prix_unitaire',
+        'montant_declare'
     ];
 
     protected $casts = [
@@ -25,6 +28,7 @@ class FuelIndex extends Model
         'index_debut' => 'decimal:2',
         'index_fin' => 'decimal:2',
         'prix_unitaire' => 'decimal:2',
+        'montant_declare' => 'decimal:2',
     ];
 
     // Relations
@@ -53,4 +57,10 @@ class FuelIndex extends Model
     {
         return round($this->quantite_vendue * $this->prix_unitaire, 2);
     }
+
+    public function getEcartAttribute()
+    {
+        return round(($this->montant_declare ?? 0) - $this->montant_total, 2);
+    }
+
 }

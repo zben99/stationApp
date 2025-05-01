@@ -18,7 +18,9 @@ use App\Http\Controllers\CreditTopupController;
 use App\Http\Controllers\StationUserController;
 use App\Http\Controllers\TransporterController;
 use App\Http\Controllers\BalanceTopupController;
+use App\Http\Controllers\BalanceUsageController;
 use App\Http\Controllers\ClientCreditController;
+use App\Http\Controllers\ClientBalanceController;
 use App\Http\Controllers\CreditPaymentController;
 use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
@@ -240,6 +242,13 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
     // Recharges de solde
     Route::resource('balance-topups', BalanceTopupController::class);
+
+    Route::resource('balance-usages', BalanceUsageController::class)->except(['show']);
+    Route::get('balances/summary', [ClientBalanceController::class, 'index'])->name('balances.summary');
+    Route::get('balances/{client}', [ClientBalanceController::class, 'show'])->name('clients.balance');
+    Route::get('clients/{client}/balance-topups', [BalanceTopupController::class, 'byClient'])->name('clients.balance.topups');
+    Route::get('clients/{client}/balance-usages', [BalanceUsageController::class, 'byClient'])->name('clients.balance.usages');
+
 
     // Recharges de crédit
     Route::resource('credit-topups', CreditTopupController::class);

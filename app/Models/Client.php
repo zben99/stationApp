@@ -46,5 +46,11 @@ class Client extends Model
         return $this->creditTopups()->sum('amount') - $this->creditPayments()->sum('amount');
     }
 
+    public function balanceUsages()
+    {
+        return $this->hasMany(BalanceUsage::class);
+    }
+
+
 }
 

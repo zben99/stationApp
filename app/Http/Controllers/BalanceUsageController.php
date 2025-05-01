@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BalanceUsage;
 use App\Models\Client;
-use App\Models\BalanceTopup;
 use Illuminate\Http\Request;
 
-class BalanceTopupController extends Controller
+class BalanceUsageController extends Controller
 {
     public function index()
     {
         $stationId = session('selected_station_id');
-        $topups = BalanceTopup::with('client')
+        $usages = BalanceUsage::with('client')
             ->where('station_id', $stationId)
             ->latest()
             ->paginate(10);
 
-        return view('balance_topups.index', compact('topups'));
+        return view('balance_usages.index', compact('usages'));
     }
 
     public function create()
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();
-        return view('balance_topups.create', compact('clients'));
+        return view('balance_usages.create', compact('clients'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0.01',
             'date' => 'required|date',
             'notes' => 'nullable|string',
         ]);
@@ -37,53 +37,53 @@ class BalanceTopupController extends Controller
         $data['station_id'] = session('selected_station_id');
         $data['created_by'] = auth()->id();
 
-        $topup = BalanceTopup::create($data);
+        BalanceUsage::create($data);
 
-        return redirect()->route('balance-topups.index')->with('success', 'Recharge ajoutée.');
+        return redirect()->route('balance-usages.index')->with('success', 'Avoir servi enregistré avec succès.');
     }
 
-    public function edit(BalanceTopup $balanceTopup)
+    public function edit(BalanceUsage $balanceUsage)
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();
-        return view('balance_topups.edit', compact('balanceTopup', 'clients'));
+        return view('balance_usages.edit', compact('balanceUsage', 'clients'));
     }
 
-    public function update(Request $request, BalanceTopup $balanceTopup)
+    public function update(Request $request, BalanceUsage $balanceUsage)
     {
         $data = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0.01',
             'date' => 'required|date',
             'notes' => 'nullable|string',
         ]);
 
-        $oldAmount = $balanceTopup->amount;
+        $balanceUsage->update($data);
 
-        $balanceTopup->update($data);
-        return redirect()->route('clients.balance.topups',$balanceTopup->client_id)->with('success', 'Recharge mise à jour.');
+        return redirect()->route('balance-usages.index')->with('success', 'Avoir servi mis à jour avec succès.');
     }
 
-    public function destroy(BalanceTopup $balanceTopup)
+    public function destroy(BalanceUsage $balanceUsage)
     {
-        $balanceTopup->delete();
-        return back()->with('success', 'Recharge supprimée.');
+        $balanceUsage->delete();
+
+        return back()->with('success', 'Avoir servi supprimé avec succès.');
     }
 
     public function byClient(Client $client)
     {
         $stationId = session('selected_station_id');
 
-        // Sécurité : s'assurer que le client appartient à la station active
+        // Vérifie que le client appartient bien à la station active
         if ($client->station_id != $stationId) {
             abort(403, 'Accès non autorisé à ce client.');
         }
 
-        // Charger ses recharges de solde (avoir perçu)
-        $topups = $client->balanceTopups()
+        // Récupère les avoirs servis de ce client
+        $usages = $client->balanceUsages()
             ->orderByDesc('date')
             ->get();
 
-        return view('balance_topups.client_index', compact('client', 'topups'));
+        return view('balance_usages.client_index', compact('client', 'usages'));
     }
-}
 
+}

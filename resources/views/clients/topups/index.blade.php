@@ -1,12 +1,18 @@
 <x-app-layout>
-    <x-slot name="header">Crédits de {{ $client->name }}</x-slot>
+    <x-slot name="header">Avoirs perçus de {{ $client->name }}</x-slot>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="mb-3">
-        <a href="{{ route('credit-topups.show', $client->id) }}" class="btn btn-secondary">← Retour à la fiche client</a>
+    <div class="mb-3 d-flex justify-content-between">
+        <a href="{{ route('clients.balance', $client->id) }}" class="btn btn-secondary">
+            ← Retour à la fiche client
+        </a>
+
+        <a href="{{ route('balance-topups.create', ['client_id' => $client->id]) }}" class="btn btn-success">
+            <i class="fa fa-plus"></i> Nouvelle recharge
+        </a>
     </div>
 
     <table class="table table-bordered">
@@ -22,11 +28,11 @@
             @foreach($topups as $topup)
                 <tr>
                     <td>{{ $topup->date }}</td>
-                    <td class="text-danger">{{ number_format($topup->amount, 0, ',', ' ') }} FCFA</td>
+                    <td class="text-primary fw-bold">{{ number_format($topup->amount, 0, ',', ' ') }} FCFA</td>
                     <td>{{ $topup->notes ?? '-' }}</td>
                     <td>
-                        <a href="{{ route('credit-topups.edit', $topup->id) }}" class="btn btn-sm btn-primary">Modifier</a>
-                        <form action="{{ route('credit-topups.destroy', $topup->id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Supprimer ce crédit ?')">
+                        <a href="{{ route('balance-topups.edit', $topup->id) }}" class="btn btn-sm btn-primary">Modifier</a>
+                        <form action="{{ route('balance-topups.destroy', $topup->id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Supprimer cet avoir ?')">
                             @csrf @method('DELETE')
                             <button class="btn btn-sm btn-danger">Supprimer</button>
                         </form>

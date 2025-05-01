@@ -30,6 +30,8 @@ use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\DailyProductSaleController;
 use App\Http\Controllers\LubricantProductController;
 use App\Http\Controllers\ProductPackagingController;
+use App\Http\Controllers\DailyRevenueReviewController;
+use App\Http\Controllers\DailySimpleRevenueController;
 use App\Http\Controllers\LubricantReceptionController;
 use App\Http\Controllers\LubricantReceptionBatchController;
 
@@ -309,6 +311,16 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     });
 
 
+    Route::prefix('recettes-simples')->name('daily-simple-revenues.')->group(function () {
+        Route::get('/', [DailySimpleRevenueController::class, 'index'])->name('index');
+        Route::get('/create', [DailySimpleRevenueController::class, 'create'])->name('create');
+        Route::post('/', [DailySimpleRevenueController::class, 'store'])->name('store');
+        Route::get('/{dailySimpleRevenue}/edit', [DailySimpleRevenueController::class, 'edit'])->name('edit');
+        Route::put('/{dailySimpleRevenue}', [DailySimpleRevenueController::class, 'update'])->name('update');
+        Route::delete('/{dailySimpleRevenue}', [DailySimpleRevenueController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::get('recettes/review', [DailyRevenueReviewController::class, 'review'])->name('daily-revenues.review');
 
 });
 

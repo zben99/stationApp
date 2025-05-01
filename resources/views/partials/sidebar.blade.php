@@ -215,8 +215,10 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{route('fuel-indexes.index')}}">Relevés Fuel</a>
 
-                <a class="collapse-item" href="{{route('credit-topups.index')}}">LUB/PEA/GAZ/LAMPES</a>
+                <a class="collapse-item" href="{{route('daily-product-sales.index')}}">LUB/PEA/GAZ/LAMPES</a>
 
+
+                <a class="collapse-item" href="{{route('daily-simple-revenues.index')}}">Boutique et lavages</a>
 
             </div>
         </div>

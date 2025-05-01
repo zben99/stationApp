@@ -192,10 +192,7 @@
         </a>
         <div id="collapse7" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-
-                <a class="collapse-item" href="{{route('clients.index')}}">Gestion des clients</a>
-
-                <a class="collapse-item" href="{{route('balance-topups.index')}}">Gestion des Avoirs</a>
+                <a class="collapse-item" href="{{route('balances.summary')}}">Gestion des Avoirs</a>
 
                 <a class="collapse-item" href="{{route('credit-topups.index')}}">Gestion des crédits</a>
 
@@ -203,9 +200,6 @@
             </div>
         </div>
     </li>
-
-
-
 
 
     <!-- Divider -->

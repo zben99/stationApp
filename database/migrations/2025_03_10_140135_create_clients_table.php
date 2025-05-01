@@ -19,7 +19,6 @@ return new class extends Migration
                 $table->string('phone')->unique();
                 $table->string('email')->nullable()->unique();
                 $table->text('address')->nullable();
-                $table->decimal('credit_balance', 10, 2)->default(0);
                 $table->boolean('is_active')->default(true);
                 $table->text('notes')->nullable();
                 $table->timestamps();

@@ -8,12 +8,14 @@
     @endsession
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <div class="pull-right">
-                <a class="btn btn-success mb-2" href="{{ route('credit-topups.create') }}">
-                    <i class="fa fa-plus"></i> Nouvelle recharge
-                </a>
-            </div>
+        <div class="card-header py-3 d-flex justify-content-between">
+            <a class="btn btn-success mb-2" href="{{ route('credit-topups.create') }}">
+                <i class="fa fa-plus"></i> Nouveau crédit
+            </a>
+
+            <a class="btn btn-success mb-2" href="{{ route('credit-payments.create') }}">
+                <i class="fa fa-plus"></i> Nouveau remboursement crédit
+            </a>
         </div>
 
         <div class="card-body">
@@ -23,38 +25,29 @@
                         <tr>
                             <th>N°</th>
                             <th>Client</th>
-                            <th>Montant crédit</th>
-                            <th>Total remboursé</th>
-                            <th>Restant</th>
-                            <th>Statut</th>
-                            <th>Date</th>
+                            <th>Crédit reçu</th>
+                            <th>Remboursé</th>
+                            <th>Reste dû</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($topups as $key => $topup)
+                        @foreach($clients as $key => $client)
                             <tr>
-                                <td></td>
-                                <td>{{ $topup->client->name }}</td>
-                                <td>{{ number_format($topup->amount, 0, ',', ' ') }} F</td>
-                                <td>{{ number_format($topup->total_payments, 0, ',', ' ') }} F</td>
-                                <td>{{ number_format($topup->remaining_balance, 0, ',', ' ') }} F</td>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $client->name }}</td>
+                                <td>{{ number_format($client->creditTopups->sum('amount'), 0, ',', ' ') }} F</td>
+                                <td>{{ number_format($client->creditPayments->sum('amount'), 0, ',', ' ') }} F</td>
+                                <td>{{ number_format($client->creditTopups->sum('amount') - $client->creditPayments->sum('amount'), 0, ',', ' ') }} F</td>
                                 <td>
-                                    @php
-                                        $status = $topup->status;
-                                    @endphp
-                                    <span class="badge
-                                        {{ $status == 'Totalement remboursé' ? 'bg-success' : ($status == 'Partiellement remboursé' ? 'bg-warning text-dark' : 'bg-danger') }}">
-                                        {{ $status }}
-                                    </span>
-                                </td>
-                                <td>{{ $topup->date }}</td>
-                                <td>
-                                    <a href="{{ route('credit-topups.edit', $topup->id) }}" class="btn btn-sm btn-primary">
-                                        Modifier
+                                    <a href="{{ route('credit-topups.show', $client->id) }}" class="btn btn-sm btn-info">
+                                        Voir détail
                                     </a>
-                                    <a href="{{ route('credit-topups.show', $topup->id) }}" class="btn btn-sm btn-info">
-                                        Détails
+                                    <a href="{{ route('clients.topups', ['client' => $client->id]) }}" class="btn btn-sm btn-danger">
+                                        Voir crédits
+                                    </a>
+                                    <a href="{{ route('clients.payments', ['client' => $client->id]) }}" class="btn btn-sm btn-success">
+                                        Voir remboursements
                                     </a>
                                 </td>
                             </tr>
@@ -62,7 +55,7 @@
                     </tbody>
                 </table>
 
-                {!! $topups->links('pagination::bootstrap-5') !!}
+
             </div>
         </div>
     </div>
@@ -125,3 +118,5 @@
     });
 </script>
 </x-app-layout>
+
+

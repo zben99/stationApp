@@ -15,16 +15,6 @@
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="credit_topup_id">Crédit concerné</label>
-            <select name="credit_topup_id" class="form-control" required>
-                @foreach($creditTopups as $topup)
-                    <option value="{{ $topup->id }}" {{ $topup->id == $creditPayment->credit_topup_id ? 'selected' : '' }}>
-                        {{ $topup->client->name }} | {{ $topup->date }} | {{ number_format($topup->amount, 0, ',', ' ') }} F
-                    </option>
-                @endforeach
-            </select>
-        </div>
 
         <div class="mb-3">
             <label for="amount">Montant</label>

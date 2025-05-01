@@ -38,9 +38,8 @@ class CreditPayment extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function creditTopup()
-    {
-        return $this->belongsTo(CreditTopup::class);
-    }
+
+
+
 }
 

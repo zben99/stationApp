@@ -195,11 +195,9 @@
 
                 <a class="collapse-item" href="{{route('clients.index')}}">Gestion des clients</a>
 
-                <a class="collapse-item" href="{{route('balance-topups.index')}}">Recharges de solde</a>
+                <a class="collapse-item" href="{{route('balance-topups.index')}}">Gestion des Avoirs</a>
 
-                <a class="collapse-item" href="{{route('credit-topups.index')}}">Enregistrement de crédit</a>
-
-                <a class="collapse-item" href="{{route('credit-payments.index')}}">Remboursements de crédit</a>
+                <a class="collapse-item" href="{{route('credit-topups.index')}}">Gestion des crédits</a>
 
 
             </div>

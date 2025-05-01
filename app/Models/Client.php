@@ -17,7 +17,6 @@ class Client extends Model
         'phone',
         'email',
         'address',
-        'credit_balance',
         'is_active',
         'notes',
     ];
@@ -40,6 +39,11 @@ class Client extends Model
     public function creditPayments()
     {
         return $this->hasMany(CreditPayment::class);
+    }
+
+    public function getCreditBalanceAttribute()
+    {
+        return $this->creditTopups()->sum('amount') - $this->creditPayments()->sum('amount');
     }
 
 }

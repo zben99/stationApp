@@ -11,12 +11,12 @@ class CreditTopupController extends Controller
     public function index()
     {
         $stationId = session('selected_station_id');
-        $topups = CreditTopup::with('client')
-            ->where('station_id', $stationId)
-            ->latest()
-            ->paginate(10);
 
-        return view('credit_topups.index', compact('topups'));
+        $clients = Client::with('creditTopups', 'creditPayments')
+            ->where('station_id', $stationId)
+            ->get();
+
+        return view('credit_topups.index', compact('clients'));
     }
 
     public function create()
@@ -40,9 +40,6 @@ class CreditTopupController extends Controller
 
         $topup = CreditTopup::create($data);
 
-        // Décrémenter le solde (augmente la dette)
-        $topup->client->decrement('credit_balance', $data['amount']);
-
 
         return redirect()->route('credit-topups.index')->with('success', 'Crédit ajouté.');
     }
@@ -64,28 +61,25 @@ class CreditTopupController extends Controller
 
         $oldAmount = $creditTopup->amount;
 
-        $creditTopup->client->increment('credit_balance', $oldAmount); // annule l'ancien
-        $creditTopup->client->decrement('credit_balance', $data['amount']); // applique le nouveau
 
         $creditTopup->update($data);
 
-        return redirect()->route('credit-topups.index')->with('success', 'Recharge de crédit mise à jour.');
+        return redirect()->route('clients.topups', $creditTopup->client_id)->with('success', 'Recharge de crédit mise à jour.');
     }
 
     public function destroy(CreditTopup $creditTopup)
     {
-        $creditTopup->client->increment('credit_balance', $creditTopup->amount);
         $creditTopup->delete();
         return back()->with('success', 'Recharge de crédit supprimée.');
     }
 
-    public function show(CreditTopup $creditTopup)
+    public function show(Client $client)
     {
-        // On charge les paiements associés au crédit
-        $creditTopup->load('payments', 'client');
+        $client->load(['creditTopups', 'creditPayments', 'station']);
 
-        return view('credit_topups.show', compact('creditTopup'));
+        return view('credit_topups.show_client', compact('client'));
     }
+
 
 }
 

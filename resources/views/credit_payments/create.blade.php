@@ -1,6 +1,15 @@
 <x-app-layout>
     <x-slot name="title">Nouveau remboursement</x-slot>
-
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+          <strong>Whoops!</strong> Il y a eu quelques problèmes avec votre saisie.<br><br>
+          <ul>
+             @foreach ($errors->all() as $error)
+               <li>{{ $error }}</li>
+             @endforeach
+          </ul>
+        </div>
+    @endif
     <form action="{{ route('credit-payments.store') }}" method="POST">
         @csrf
 
@@ -13,16 +22,6 @@
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="credit_topup_id">Crédit concerné</label>
-            <select name="credit_topup_id" class="form-control" required>
-                @foreach($creditTopups as $topup)
-                    <option value="{{ $topup->id }}">
-                        {{ $topup->client->name }} | {{ $topup->date }} | {{ number_format($topup->amount, 0, ',', ' ') }} F
-                    </option>
-                @endforeach
-            </select>
-        </div>
 
         <div class="mb-3">
             <label for="amount">Montant</label>
@@ -40,6 +39,6 @@
         </div>
 
         <button class="btn btn-success">Enregistrer</button>
-        <a href="{{ route('credit-payments.index') }}" class="btn btn-secondary">Annuler</a>
+        <a href="{{ route('credit-topups.index') }}" class="btn btn-secondary">Annuler</a>
     </form>
 </x-app-layout>

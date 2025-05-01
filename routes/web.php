@@ -18,6 +18,7 @@ use App\Http\Controllers\CreditTopupController;
 use App\Http\Controllers\StationUserController;
 use App\Http\Controllers\TransporterController;
 use App\Http\Controllers\BalanceTopupController;
+use App\Http\Controllers\ClientCreditController;
 use App\Http\Controllers\CreditPaymentController;
 use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
@@ -242,6 +243,10 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
     // Recharges de crédit
     Route::resource('credit-topups', CreditTopupController::class);
+    Route::get('/credit-topups/client/{client}', [CreditTopupController::class, 'show'])->name('credit-topups.show');
+
+    Route::get('clients/{client}/credits', [ClientCreditController::class, 'topups'])->name('clients.topups');
+    Route::get('clients/{client}/remboursements', [ClientCreditController::class, 'payments'])->name('clients.payments');
 
     // Remboursements de crédit
     Route::resource('credit-payments', CreditPaymentController::class);

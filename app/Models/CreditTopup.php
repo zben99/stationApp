@@ -37,10 +37,6 @@ class CreditTopup extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function payments()
-    {
-        return $this->hasMany(CreditPayment::class);
-    }
 
     public function getTotalPaymentsAttribute()
 {
@@ -62,8 +58,6 @@ public function getStatusAttribute()
         return 'Totalement remboursé';
     }
 }
-
-
 
 
 }

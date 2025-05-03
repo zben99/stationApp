@@ -18,6 +18,7 @@ class FuelIndex extends Model
         'rotation',
         'index_debut',
         'index_fin',
+        'retour_en_cuve',
         'prix_unitaire',
         'montant_declare'
     ];
@@ -27,6 +28,7 @@ class FuelIndex extends Model
         'rotation' => 'string',
         'index_debut' => 'decimal:2',
         'index_fin' => 'decimal:2',
+        'retour_en_cuve' => 'decimal:2',
         'prix_unitaire' => 'decimal:2',
         'montant_declare' => 'decimal:2',
     ];

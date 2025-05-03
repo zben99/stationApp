@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-4 mb-3">
                 <label>Date</label>
-                <input type="date" name="date" class="form-control" required>
+                <input type="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
             </div>
 
             <div class="col-md-4 mb-3">

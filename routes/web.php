@@ -301,6 +301,11 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
 
     Route::get('fuel-indexes/details/{date}/{rotation}', [FuelIndexController::class, 'details'])->name('fuel-indexes.details');
 
+    Route::get('fuel-indexes/{fuelIndex}/edit', [FuelIndexController::class, 'edit'])->name('fuel-indexes.edit');
+    Route::put('fuel-indexes/{fuelIndex}', [FuelIndexController::class, 'update'])->name('fuel-indexes.update');
+
+
+
     Route::prefix('daily-product-sales')->name('daily-product-sales.')->group(function () {
         Route::get('/', [DailyProductSaleController::class, 'index'])->name('index');
         Route::get('/create', [DailyProductSaleController::class, 'create'])->name('create');

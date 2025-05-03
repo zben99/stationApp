@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->decimal('montant_declare', 10, 2)->nullable(); // recette réellement encaissée
             $table->decimal('prix_unitaire', 10, 2); // Prix de vente carburant
 
+            $table->decimal('retour_en_cuve', 10, 2)->nullable(); // quantité remise
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // pompiste
 
             $table->timestamps();

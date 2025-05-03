@@ -13,10 +13,25 @@
         </select>
     </div>
 
-    <div class="col-md-6 mb-3">
+    <div class="col-md-3 mb-3">
         <label for="date_depense" class="form-label">Date</label>
-        <input type="date" name="date_depense" class="form-control" value="{{ old('date_depense', isset($expense) ? $expense->date_depense->format('Y-m-d') : '') }}" required>
+        <input type="date" name="date_depense" class="form-control"
+            value="{{ old('date_depense', isset($expense) ? $expense->date_depense->format('Y-m-d') : now()->format('Y-m-d')) }}"
+            required>
     </div>
+    <div class="col-md-3 mb-3">
+        <label for="rotation" class="form-label">Rotation</label>
+        <select name="rotation" class="form-control" required>
+            <option value="">-- Sélectionner --</option>
+            @php
+                $selectedRotation = old('rotation', isset($expense) ? $expense->rotation : '');
+            @endphp
+            <option value="6-14" {{ $selectedRotation == '6-14' ? 'selected' : '' }}>6h - 14h</option>
+            <option value="14-22" {{ $selectedRotation == '14-22' ? 'selected' : '' }}>14h - 22h</option>
+            <option value="22-6" {{ $selectedRotation == '22-6' ? 'selected' : '' }}>22h - 6h</option>
+        </select>
+    </div>
+
 </div>
 
 <div class="row">

@@ -15,6 +15,7 @@ class Expense extends Model
         'station_id',
         'expense_category_id',
         'date_depense',
+        'rotation',
         'description',
         'montant',
         'piece_jointe',

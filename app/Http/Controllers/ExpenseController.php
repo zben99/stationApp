@@ -34,6 +34,7 @@ class ExpenseController extends Controller
         $request->validate([
             'expense_category_id' => 'required|exists:expense_categories,id',
             'date_depense' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'montant' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:255',
             'piece_jointe' => 'nullable|file|max:2048',
@@ -62,6 +63,7 @@ class ExpenseController extends Controller
         $request->validate([
             'expense_category_id' => 'required|exists:expense_categories,id',
             'date_depense' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'montant' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:255',
             'piece_jointe' => 'nullable|file|max:2048',

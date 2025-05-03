@@ -10,6 +10,16 @@
         </div>
 
         <div class="mb-3">
+            <label>Rotation</label>
+            <select name="rotation" class="form-control" required>
+                <option value="">-- Choisir une rotation --</option>
+                <option value="6-14" {{ $purchaseInvoice->rotation == '6-14' ? 'selected' : '' }}>6h - 14h</option>
+                <option value="14-22" {{ $purchaseInvoice->rotation == '14-22' ? 'selected' : '' }}>14h - 22h</option>
+                <option value="22-6" {{ $purchaseInvoice->rotation == '22-6' ? 'selected' : '' }}>22h - 6h</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label>Numéro de la facture</label>
             <input type="text" name="invoice_number" class="form-control" value="{{ $purchaseInvoice->invoice_number }}" required>
         </div>
@@ -45,8 +55,6 @@
             }
 
             htInput.addEventListener('input', updateTTC);
-
-            // Mettre à jour au chargement si HT a une valeur
             updateTTC();
         });
     </script>

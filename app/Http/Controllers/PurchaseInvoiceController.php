@@ -43,6 +43,7 @@ class PurchaseInvoiceController extends Controller
         $data = $request->validate([
             'invoice_number' => 'required|string|max:255',
             'date' => 'required|date',
+            'rotation' => 'nullable|string|in:6-14,14-22,22-6',
             'supplier_name' => 'required|string|max:255',
             'amount_ht' => 'required|numeric|min:0',
             'amount_ttc' => 'required|numeric|min:0',
@@ -66,6 +67,7 @@ class PurchaseInvoiceController extends Controller
         $data = $request->validate([
             'invoice_number' => 'required|string|max:255',
             'date' => 'required|date',
+            'rotation' => 'nullable|string|in:6-14,14-22,22-6',
             'supplier_name' => 'required|string|max:255',
             'amount_ht' => 'required|numeric|min:0',
             'amount_ttc' => 'required|numeric|min:0',

@@ -13,6 +13,7 @@ class PurchaseInvoice extends Model
         'station_id',
         'invoice_number',
         'date',
+        'rotation',
         'supplier_name',
         'amount_ht',
         'amount_ttc',

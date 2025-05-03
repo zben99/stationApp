@@ -15,7 +15,15 @@
         <div class="col-md-3">
             <input type="text" name="supplier" value="{{ request('supplier') }}" class="form-control" placeholder="Fournisseur">
         </div>
-        <div class="col-md-3 d-flex gap-2">
+        <div class="col-md-3 mt-2 mt-md-0">
+            <select name="rotation" class="form-control" onchange="this.form.submit()">
+                <option value="">-- Toutes les rotations --</option>
+                <option value="6-14" {{ request('rotation') == '6-14' ? 'selected' : '' }}>6h - 14h</option>
+                <option value="14-22" {{ request('rotation') == '14-22' ? 'selected' : '' }}>14h - 22h</option>
+                <option value="22-6" {{ request('rotation') == '22-6' ? 'selected' : '' }}>22h - 6h</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2 mt-2">
             <button class="btn btn-primary">Filtrer</button>
             <a href="{{ route('purchase-invoices.index') }}" class="btn btn-secondary">Réinitialiser</a>
         </div>
@@ -41,6 +49,7 @@
                         <tr>
                             <th>#</th>
                             <th>Date</th>
+                            <th>Rotation</th>
                             <th>Numéro</th>
                             <th>Fournisseur</th>
                             <th>Valeur HT</th>
@@ -53,6 +62,7 @@
                             <tr>
                                 <td>{{ ++$i }}</td>
                                 <td>{{ $invoice->date }}</td>
+                                <td>{{ $invoice->rotation ?? '—' }}</td>
                                 <td>{{ $invoice->invoice_number }}</td>
                                 <td>{{ $invoice->supplier_name }}</td>
                                 <td>{{ number_format($invoice->amount_ht, 0, ',', ' ') }} F</td>
@@ -64,7 +74,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="7" class="text-center">Aucune facture trouvée.</td></tr>
+                            <tr><td colspan="8" class="text-center">Aucune facture trouvée.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -74,9 +84,7 @@
 
     {{ $invoices->links('pagination::bootstrap-5') }}
 
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
         function confirmDelete(userId) {
             Swal.fire({
@@ -90,44 +98,9 @@
                 cancelButtonText: 'Annuler'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Soumettre le formulaire si l'utilisateur confirme
                     document.getElementById('deleteForm' + userId).submit();
                 }
             });
         }
     </script>
-
-<!-- Inclure jQuery et DataTables -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function() {
-        $('#dataTable').DataTable({
-            "paging": false,  // Désactive la pagination
-            "info": false,    // Désactive l'affichage des informations de pagination
-            "language": {
-                "sEmptyTable": "Aucune donnée disponible dans le tableau",
-                "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
-                "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
-                "sInfoFiltered": "(filtré à partir de _MAX_ entrées)",
-                "sLengthMenu": "Afficher _MENU_ entrées",
-                "sLoadingRecords": "Chargement...",
-                "sProcessing": "Traitement...",
-                "sSearch": "Rechercher:",
-                "sZeroRecords": "Aucun résultat trouvé",
-                "oPaginate": {
-                    "sFirst": "Premier",
-                    "sLast": "Dernier",
-                    "sNext": "Suivant",
-                    "sPrevious": "Précédent"
-                },
-                "oAria": {
-                    "sSortAscending": ": activer pour trier la colonne par ordre croissant",
-                    "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
-                }
-            }
-        });
-    });
-</script>
-
 </x-app-layout>

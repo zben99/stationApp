@@ -10,6 +10,16 @@
         </div>
 
         <div class="mb-3">
+            <label>Rotation</label>
+            <select name="rotation" class="form-control" required>
+                <option value="">-- Choisir une rotation --</option>
+                <option value="6-14">6h - 14h</option>
+                <option value="14-22">14h - 22h</option>
+                <option value="22-6">22h - 6h</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label>Numéro de la facture</label>
             <input type="text" name="invoice_number" class="form-control" required>
         </div>
@@ -22,7 +32,6 @@
         <div class="mb-3">
             <label>Valeur HT</label>
             <input type="number" step="0.01" name="amount_ht" id="amount_ht" class="form-control" required>
-
         </div>
 
         <div class="mb-3">
@@ -33,7 +42,6 @@
         <button class="btn btn-primary">Enregistrer</button>
         <a href="{{ route('purchase-invoices.index') }}" class="btn btn-secondary">Annuler</a>
     </form>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -48,5 +56,4 @@
             });
         });
     </script>
-
 </x-app-layout>

@@ -31,6 +31,7 @@ class BalanceUsageController extends Controller
             'client_id' => 'required|exists:clients,id',
             'amount' => 'required|numeric|min:0.01',
             'date' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'notes' => 'nullable|string',
         ]);
 
@@ -39,7 +40,7 @@ class BalanceUsageController extends Controller
 
         BalanceUsage::create($data);
 
-        return redirect()->route('balance-usages.index')->with('success', 'Avoir servi enregistré avec succès.');
+        return redirect()->route('balances.summary')->with('success', 'Avoir servi enregistré avec succès.');
     }
 
     public function edit(BalanceUsage $balanceUsage)
@@ -54,6 +55,7 @@ class BalanceUsageController extends Controller
             'client_id' => 'required|exists:clients,id',
             'amount' => 'required|numeric|min:0.01',
             'date' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'notes' => 'nullable|string',
         ]);
 

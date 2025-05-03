@@ -29,6 +29,7 @@
                             <th>Crédit lié</th>
                             <th>Montant</th>
                             <th>Date</th>
+                            <th>Rotation</th>
                             <th>Notes</th>
                             <th>Action</th>
                         </tr>
@@ -36,13 +37,12 @@
                     <tbody>
                         @foreach ($payments as $key => $payment)
                             <tr>
-                                <td></td>
+                                <td>{{ $key + 1 }}</td>
                                 <td>{{ $payment->client->name }}</td>
-                                <td>
-                                    Crédit du {{ $payment->creditTopup->date ?? '-' }}
-                                </td>
+                                <td>Crédit du {{ $payment->creditTopup->date ?? '-' }}</td>
                                 <td>{{ number_format($payment->amount, 0, ',', ' ') }} F CFA</td>
                                 <td>{{ $payment->date }}</td>
+                                <td>{{ $payment->rotation ?? '—' }}</td>
                                 <td>{{ $payment->notes }}</td>
                                 <td>
                                     <a class="btn btn-primary btn-sm" href="{{ route('credit-payments.edit', $payment->id) }}">

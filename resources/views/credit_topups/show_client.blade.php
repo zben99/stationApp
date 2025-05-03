@@ -13,16 +13,17 @@
             </div>
         </div>
     </x-slot>
+
     <div class="mb-3">
         <a href="{{ route('credit-topups.index') }}" class="btn btn-secondary">
             ← Retour à la liste des clients
         </a>
     </div>
+
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div><strong>📞 Téléphone :</strong> {{ $client->phone }}</div>
             <div><strong>📧 Email :</strong> {{ $client->email ?? '—' }}</div>
-
             <div>
                 <strong>💰 Solde crédit :</strong>
                 <span class="badge bg-{{ $client->credit_balance > 0 ? 'warning' : 'success' }}">
@@ -38,7 +39,6 @@
         </div>
     </div>
 
-
     <div class="row g-4 mt-1">
         <div class="col-md-6">
             <div class="card shadow-sm border-0">
@@ -48,6 +48,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Date</th>
+                                <th>Rotation</th>
                                 <th>Montant</th>
                                 <th>Notes</th>
                             </tr>
@@ -56,12 +57,13 @@
                             @forelse($client->creditTopups as $topup)
                                 <tr>
                                     <td>{{ $topup->date }}</td>
+                                    <td>{{ $topup->rotation ?? '—' }}</td>
                                     <td class="text-danger fw-bold">{{ number_format($topup->amount, 0, ',', ' ') }} FCFA</td>
                                     <td>{{ $topup->notes ?? '-' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">Aucun crédit enregistré.</td>
+                                    <td colspan="4" class="text-center">Aucun crédit enregistré.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -78,6 +80,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Date</th>
+                                <th>Rotation</th>
                                 <th>Montant</th>
                                 <th>Notes</th>
                             </tr>
@@ -86,12 +89,13 @@
                             @forelse($client->creditPayments as $payment)
                                 <tr>
                                     <td>{{ $payment->date }}</td>
+                                    <td>{{ $payment->rotation ?? '—' }}</td>
                                     <td class="text-success fw-bold">{{ number_format($payment->amount, 0, ',', ' ') }} FCFA</td>
                                     <td>{{ $payment->notes ?? '-' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">Aucun remboursement enregistré.</td>
+                                    <td colspan="4" class="text-center">Aucun remboursement enregistré.</td>
                                 </tr>
                             @endforelse
                         </tbody>

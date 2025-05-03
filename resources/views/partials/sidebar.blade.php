@@ -220,6 +220,10 @@
 
                 <a class="collapse-item" href="{{route('daily-simple-revenues.index')}}">Boutique et lavages</a>
 
+                <a class="collapse-item" href="{{route('daily-revenue-validations.index')}}">Validation de rotation</a>
+
+
+
             </div>
         </div>
     </li>

@@ -33,6 +33,7 @@ use App\Http\Controllers\ProductPackagingController;
 use App\Http\Controllers\DailyRevenueReviewController;
 use App\Http\Controllers\DailySimpleRevenueController;
 use App\Http\Controllers\LubricantReceptionController;
+use App\Http\Controllers\DailyRevenueValidationController;
 use App\Http\Controllers\LubricantReceptionBatchController;
 
 Route::get('/', function () {
@@ -328,6 +329,13 @@ Route::delete('expense-categories/{expense_category}/delete', [ExpenseCategoryCo
     Route::resource('daily-revenue-review', DailyRevenueReviewController::class)->only([
         'index', 'create', 'store', 'show'
     ]);
+
+    Route::resource('daily-revenue-validations', DailyRevenueValidationController::class)->only([
+        'index', 'create', 'store'
+    ]);
+
+    Route::get('/daily-revenue-validations/fetch', [App\Http\Controllers\DailyRevenueValidationController::class, 'fetch'])->name('daily-revenue-validations.fetch');
+
 });
 
 

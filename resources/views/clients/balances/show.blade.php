@@ -12,11 +12,13 @@
             </a>
         </div>
     </x-slot>
+
     <div class="mb-3">
         <a href="{{ route('balances.summary') }}" class="btn btn-secondary">
             ← Retour à la liste des clients
         </a>
     </div>
+
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div><strong>📞 Téléphone :</strong> {{ $client->phone }}</div>
@@ -40,6 +42,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Date</th>
+                                <th>Rotation</th>
                                 <th>Montant</th>
                                 <th>Notes</th>
                             </tr>
@@ -48,12 +51,13 @@
                             @forelse($client->balanceTopups as $topup)
                                 <tr>
                                     <td>{{ $topup->date }}</td>
+                                    <td>{{ $topup->rotation ?? '—' }}</td>
                                     <td class="text-primary fw-bold">{{ number_format($topup->amount, 0, ',', ' ') }} FCFA</td>
                                     <td>{{ $topup->notes ?? '-' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">Aucun avoir perçu.</td>
+                                    <td colspan="4" class="text-center">Aucun avoir perçu.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -70,6 +74,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Date</th>
+                                <th>Rotation</th>
                                 <th>Montant</th>
                                 <th>Notes</th>
                             </tr>
@@ -78,12 +83,13 @@
                             @forelse($client->balanceUsages as $usage)
                                 <tr>
                                     <td>{{ $usage->date }}</td>
+                                    <td>{{ $usage->rotation ?? '—' }}</td>
                                     <td class="text-success fw-bold">{{ number_format($usage->amount, 0, ',', ' ') }} FCFA</td>
                                     <td>{{ $usage->notes ?? '-' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">Aucun avoir servi.</td>
+                                    <td colspan="4" class="text-center">Aucun avoir servi.</td>
                                 </tr>
                             @endforelse
                         </tbody>

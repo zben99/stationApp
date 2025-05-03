@@ -11,8 +11,6 @@
         <a href="{{ route('clients.balance', $client->id) }}" class="btn btn-secondary">
             ← Retour à la fiche client
         </a>
-
-
     </div>
 
     <div class="card shadow mb-4">
@@ -24,6 +22,7 @@
                             <th>N°</th>
                             <th>Montant</th>
                             <th>Date</th>
+                            <th>Rotation</th>
                             <th>Notes</th>
                             <th>Actions</th>
                         </tr>
@@ -34,6 +33,7 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td class="text-primary fw-bold">{{ number_format($topup->amount, 0, ',', ' ') }} F CFA</td>
                                 <td>{{ $topup->date }}</td>
+                                <td>{{ $topup->rotation ?? '—' }}</td>
                                 <td>{{ $topup->notes ?? '-' }}</td>
                                 <td>
                                     <a href="{{ route('balance-topups.edit', $topup->id) }}" class="btn btn-sm btn-primary">Modifier</a>

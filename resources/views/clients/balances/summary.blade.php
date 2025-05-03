@@ -17,7 +17,6 @@
             </a>
         </div>
 
-
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%">
@@ -25,8 +24,8 @@
                         <tr>
                             <th>N°</th>
                             <th>Client</th>
-                            <th>Avoir perçu</th>
-                            <th>Avoir servi</th>
+                            <th>Avoir perçu (par rotation)</th>
+                            <th>Avoir servi (par rotation)</th>
                             <th>Solde</th>
                             <th>Actions</th>
                         </tr>
@@ -36,9 +35,23 @@
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $client->name }}</td>
-                                <td>{{ number_format($client->balanceTopups->sum('amount'), 0, ',', ' ') }} F</td>
-                                <td>{{ number_format($client->balanceUsages->sum('amount'), 0, ',', ' ') }} F</td>
-                                <td>{{ number_format($client->balanceTopups->sum('amount') - $client->balanceUsages->sum('amount'), 0, ',', ' ') }} F</td>
+                                <td>
+                                    @foreach ($client->balanceTopups->groupBy('rotation') as $rotation => $topups)
+                                        <div>{{ $rotation ?? '—' }} :
+                                            <strong>{{ number_format($topups->sum('amount'), 0, ',', ' ') }} F</strong>
+                                        </div>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach ($client->balanceUsages->groupBy('rotation') as $rotation => $usages)
+                                        <div>{{ $rotation ?? '—' }} :
+                                            <strong>{{ number_format($usages->sum('amount'), 0, ',', ' ') }} F</strong>
+                                        </div>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    {{ number_format($client->balanceTopups->sum('amount') - $client->balanceUsages->sum('amount'), 0, ',', ' ') }} F
+                                </td>
                                 <td>
                                     <a href="{{ route('clients.balance', $client->id) }}" class="btn btn-sm btn-info">
                                         Voir détail
@@ -59,7 +72,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
         function confirmDelete(id) {
             Swal.fire({

@@ -31,6 +31,7 @@ class CreditTopupController extends Controller
             'client_id' => 'required|exists:clients,id',
             'amount' => 'required|numeric|min:0',
             'date' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'notes' => 'nullable|string',
         ]);
 
@@ -56,6 +57,7 @@ class CreditTopupController extends Controller
             'client_id' => 'required|exists:clients,id',
             'amount' => 'required|numeric|min:0',
             'date' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'notes' => 'nullable|string',
         ]);
 

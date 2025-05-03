@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->decimal('amount', 10, 2);
             $table->date('date');
+            $table->enum('rotation', ['6-14', '14-22', '22-6']);
             $table->text('notes')->nullable();
             $table->foreignId('created_by')->constrained('users')->onDelete('set null')->nullable();
             $table->timestamps();

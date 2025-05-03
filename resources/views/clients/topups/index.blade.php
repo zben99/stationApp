@@ -19,6 +19,7 @@
         <thead>
             <tr>
                 <th>Date</th>
+                <th>Rotation</th>
                 <th>Montant</th>
                 <th>Notes</th>
                 <th>Actions</th>
@@ -28,6 +29,7 @@
             @foreach($topups as $topup)
                 <tr>
                     <td>{{ $topup->date }}</td>
+                    <td>{{ $topup->rotation ?? '—' }}</td>
                     <td class="text-primary fw-bold">{{ number_format($topup->amount, 0, ',', ' ') }} FCFA</td>
                     <td>{{ $topup->notes ?? '-' }}</td>
                     <td>

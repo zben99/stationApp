@@ -16,10 +16,21 @@
         @csrf
 
         <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <label for="date_reception" class="form-label">Date de réception</label>
                 <input type="date" name="date_reception" class="form-control" required>
             </div>
+
+            <div class="col-md-3 mb-3">
+                <label for="rotation">Rotation</label>
+                <select name="rotation" class="form-control" required>
+                    <option value="">-- Sélectionner --</option>
+                    <option value="6-14" {{ old('rotation', $batch->rotation ?? '') == '6-14' ? 'selected' : '' }}>6h - 14h</option>
+                    <option value="14-22" {{ old('rotation', $batch->rotation ?? '') == '14-22' ? 'selected' : '' }}>14h - 22h</option>
+                    <option value="22-6" {{ old('rotation', $batch->rotation ?? '') == '22-6' ? 'selected' : '' }}>22h - 6h</option>
+                </select>
+            </div>
+
 
             <div class="col-md-6">
                 <label for="supplier_id" class="form-label">Fournisseur</label>

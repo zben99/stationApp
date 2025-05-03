@@ -26,8 +26,11 @@ class LubricantReceptionBatchController extends Controller
             'receptions.product.stationCategory',
             'receptions.packaging.packaging',
             'supplier'
-        ])->orderByDesc('date_reception');
+        ])
+        ->where('station_id', $stationId)
+        ->orderByDesc('date_reception');
 
+        // 🔍 Filtrage par catégorie
         if ($request->filled('category')) {
             $categoryId = $request->get('category');
             $query->whereHas('receptions.product', function ($q) use ($categoryId) {
@@ -35,10 +38,21 @@ class LubricantReceptionBatchController extends Controller
             });
         }
 
-        $batches = $query->paginate(20);
+        // 🔍 Filtrage par rotation
+        if ($request->filled('rotation')) {
+            $query->where('rotation', $request->get('rotation'));
+        }
+
+        // 🔍 Filtrage par date
+        if ($request->filled('date')) {
+            $query->whereDate('date_reception', $request->get('date'));
+        }
+
+        $batches = $query->paginate(20)->appends($request->all());
 
         return view('lubricant_reception_batches.index', compact('batches', 'categories'));
     }
+
 
 
     public function create()
@@ -62,6 +76,7 @@ class LubricantReceptionBatchController extends Controller
     {
         $request->validate([
             'date_reception' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'num_bc' => 'nullable|string|max:255',
             'num_bl' => 'nullable|string|max:255',
@@ -80,6 +95,7 @@ class LubricantReceptionBatchController extends Controller
             'station_id' => $stationId,
             'supplier_id' => $request->supplier_id,
             'date_reception' => $request->date_reception,
+            'rotation' => $request->rotation,
             'num_bc' => $request->num_bc,
             'num_bl' => $request->num_bl,
         ]);
@@ -154,6 +170,7 @@ class LubricantReceptionBatchController extends Controller
     {
         $request->validate([
             'date_reception' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'num_bc' => 'nullable|string|max:255',
             'num_bl' => 'nullable|string|max:255',
@@ -170,6 +187,7 @@ class LubricantReceptionBatchController extends Controller
         // Mettre à jour les infos du batch
         $batch->update([
             'date_reception' => $request->date_reception,
+            'rotation' => $request->rotation,
             'supplier_id' => $request->supplier_id,
             'num_bc' => $request->num_bc,
             'num_bl' => $request->num_bl,

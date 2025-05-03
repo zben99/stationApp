@@ -15,6 +15,7 @@ class FuelReception extends Model
     protected $fillable = [
         'station_id',
         'date_reception',
+        'rotation',
         'num_bl',
         'transporter_id',
         'driver_id',

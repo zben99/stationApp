@@ -18,18 +18,28 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class FuelReceptionController extends Controller
 {
+
     public function index(Request $request)
-    {
-        $stationId = session('selected_station_id');
+{
+    $stationId = session('selected_station_id');
 
-        $receptions = FuelReception::with(['station', 'transporter', 'driver'])
-            ->where('station_id', $stationId)
-            ->orderBy('date_reception', 'desc')
-            ->paginate(10);
+    $query = FuelReception::with(['station', 'transporter', 'driver', 'lines'])
+        ->where('station_id', $stationId)
+        ->orderBy('date_reception', 'desc');
 
-        return view('fuel_receptions.index', compact('receptions'))
-            ->with('i', ($request->input('page', 1) - 1) * 10);
+    if ($request->filled('date')) {
+        $query->whereDate('date_reception', $request->date);
     }
+
+    if ($request->filled('rotation')) {
+        $query->where('rotation', $request->rotation);
+    }
+
+    $receptions = $query->paginate(10)->appends($request->all());
+
+    return view('fuel_receptions.index', compact('receptions'));
+}
+
 
     public function create()
     {
@@ -48,6 +58,7 @@ class FuelReceptionController extends Controller
     {
         $data = $request->validate([
             'date_reception' => 'required|date',
+            'rotation' => 'required|in:6-14,14-22,22-6',
             'num_bl' => 'nullable|string',
             'transporter_id' => 'nullable|exists:transporters,id',
             'driver_id' => 'nullable|exists:drivers,id',
@@ -70,6 +81,7 @@ class FuelReceptionController extends Controller
             $reception = FuelReception::create([
                 'station_id' => $data['station_id'],
                 'date_reception' => $data['date_reception'],
+                'rotation' => $data['rotation'],
                 'num_bl' => $data['num_bl'] ?? null,
                 'transporter_id' => $data['transporter_id'] ?? null,
                 'driver_id' => $data['driver_id'] ?? null,
@@ -145,6 +157,7 @@ class FuelReceptionController extends Controller
 
     $data = $request->validate([
         'date_reception' => 'required|date',
+        'rotation' => 'required|in:6-14,14-22,22-6',
         'num_bl' => 'nullable|string',
         'transporter_id' => 'nullable|exists:transporters,id',
         'driver_id' => 'nullable|exists:drivers,id',
@@ -195,6 +208,7 @@ class FuelReceptionController extends Controller
         // ✅ Étape 2 : Mise à jour de la fiche réception
         $reception->update([
             'date_reception' => $data['date_reception'],
+            'rotation' => $data['rotation'],
             'num_bl' => $data['num_bl'] ?? null,
             'transporter_id' => $data['transporter_id'] ?? null,
             'driver_id' => $data['driver_id'] ?? null,

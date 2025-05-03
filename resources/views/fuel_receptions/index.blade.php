@@ -16,11 +16,35 @@
 
         <div class="card-body">
             <div class="table-responsive">
+                <form method="GET" class="row mb-4">
+                    <div class="col-md-3">
+                        <label for="date">Date</label>
+                        <input type="date" name="date" value="{{ request('date') }}" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="rotation">Rotation</label>
+                        <select name="rotation" class="form-control">
+                            <option value="">-- Toutes les rotations --</option>
+                            <option value="6-14" {{ request('rotation') == '6-14' ? 'selected' : '' }}>6h - 14h</option>
+                            <option value="14-22" {{ request('rotation') == '14-22' ? 'selected' : '' }}>14h - 22h</option>
+                            <option value="22-6" {{ request('rotation') == '22-6' ? 'selected' : '' }}>22h - 6h</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <a href="{{ route('fuel-receptions.index') }}" class="btn btn-secondary w-100">Réinitialiser</a>
+                    </div>
+                </form>
+
                 <table class="table table-bordered" id="dataTable" width="100%">
                     <thead>
                         <tr>
                             <th>N°</th>
                             <th>Date</th>
+                            <th>Rotation</th>
+                            <th>Quantité totale (L)</th>
                             <th>BL</th>
                             <th>Transporteur</th>
                             <th>Chauffeur</th>
@@ -32,6 +56,10 @@
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ \Carbon\Carbon::parse($reception->date_reception)->format('d/m/Y') }}</td>
+                                <td>{{ $reception->rotation ?? '-' }}</td>
+                                <td>
+                                    {{ number_format($reception->lines->sum('reception_par_cuve'), 2, ',', ' ') }} L
+                                </td>
                                 <td>{{ $reception->num_bl ?? '-' }}</td>
                                 <td>{{ $reception->transporter->name ?? '-' }}</td>
                                 <td>{{ $reception->driver->name ?? '-' }}</td>

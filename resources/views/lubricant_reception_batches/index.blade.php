@@ -18,7 +18,7 @@
             <div class="table-responsive">
                 <form method="GET" action="{{ route('lubricant-receptions.batch.index') }}" class="mb-3">
                     <div class="row g-2 align-items-end">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="category" class="form-label">Filtrer par catégorie</label>
                             <select name="category" id="category" class="form-control" onchange="this.form.submit()">
                                 <option value="">-- Toutes les catégories --</option>
@@ -29,6 +29,22 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <div class="col-md-3">
+                            <label for="rotation" class="form-label">Filtrer par rotation</label>
+                            <select name="rotation" id="rotation" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Toutes les rotations --</option>
+                                <option value="6-14" {{ request('rotation') == '6-14' ? 'selected' : '' }}>6h - 14h</option>
+                                <option value="14-22" {{ request('rotation') == '14-22' ? 'selected' : '' }}>14h - 22h</option>
+                                <option value="22-6" {{ request('rotation') == '22-6' ? 'selected' : '' }}>22h - 6h</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="date" class="form-label">Filtrer par date</label>
+                            <input type="date" name="date" id="date" class="form-control"
+                                   value="{{ request('date') }}" onchange="this.form.submit()">
+                        </div>
                     </div>
                 </form>
 
@@ -36,7 +52,7 @@
                     <thead>
                         <tr>
                             <th>N°</th>
-                            <th>Date</th>
+                            <th>Date / Rotation</th>
                             <th>Fournisseur</th>
                             <th>Produits reçus</th>
                             <th>Action</th>
@@ -46,7 +62,11 @@
                         @foreach ($batches as $key => $batch)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ \Carbon\Carbon::parse($batch->date_reception)->format('d/m/Y') }}</td>
+                                <td>
+                                    {{ \Carbon\Carbon::parse($batch->date_reception)->format('d/m/Y') }}
+                                    <br>
+                                    <small class="text-muted">Rotation : {{ $batch->rotation ?? '—' }}</small>
+                                </td>
                                 <td>{{ $batch->supplier->name ?? '-' }}</td>
                                 <td>
                                     <ul class="mb-0">

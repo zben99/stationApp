@@ -2,9 +2,7 @@
     <x-slot name="header">Détail du Dépotage</x-slot>
 
     <div class="row">
-        <div class="col-1">
-
-        </div>
+        <div class="col-1"></div>
 
         <div class="col-7">
             <a href="{{ route('fuel-receptions.export.pdf', $reception->id) }}" class="btn btn-outline-danger">
@@ -13,19 +11,16 @@
             <a href="{{ route('fuel-receptions.export', $reception->id) }}" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel"></i> Exporter en Excel
             </a>
-
         </div>
 
-        <div class="col-4">
-
-
-        </div>
-
+        <div class="col-4"></div>
     </div>
+
     <div class="card shadow mb-4 p-4">
         <h5>Informations générales</h5>
         <table class="table table-bordered">
             <tr><th>Date réception</th><td>{{ \Carbon\Carbon::parse($reception->date_reception)->format('d/m/Y') }}</td></tr>
+            <tr><th>Rotation</th><td>{{ $reception->rotation ?? '-' }}</td></tr>
             <tr><th>Station</th><td>{{ $reception->station->name ?? '-' }}</td></tr>
             <tr><th>Transporteur</th><td>{{ $reception->transporter->name ?? '-' }}</td></tr>
             <tr><th>Chauffeur</th><td>{{ $reception->driver->name ?? '-' }}</td></tr>
@@ -64,7 +59,6 @@
                 @endforeach
             </tbody>
         </table>
-
 
         <a href="{{ route('fuel-receptions.index') }}" class="btn btn-secondary mt-3">Retour</a>
     </div>

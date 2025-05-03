@@ -18,10 +18,22 @@
         <div class="row">
 
 
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <label>Date de réception</label>
-                <input type="date" name="date_reception" class="form-control" required>
+
+                <input type="date" name="date_reception" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
             </div>
+
+            <div class="col-md-3 mb-3">
+                <label for="rotation">Rotation</label>
+                <select name="rotation" class="form-control" required>
+                    <option value="">-- Choisir une rotation --</option>
+                    <option value="6-14">6h - 14h</option>
+                    <option value="14-22">14h - 22h</option>
+                    <option value="22-6">22h - 6h</option>
+                </select>
+            </div>
+
 
             <div class="col-md-6">
                 <label>Numéro BL</label>
@@ -30,7 +42,7 @@
 
             <div class="col-md-6 mt-2">
                 <label>Transporteur</label>
-                <select name="transporter_id" class="form-control">
+                <select name="transporter_id" class="form-control" required>
                     <option value="">-- Sélectionner --</option>
                     @foreach ($transporters as $t)
                         <option value="{{ $t->id }}">{{ $t->name }}</option>
@@ -40,7 +52,7 @@
 
             <div class="col-md-6 mt-2">
                 <label>Chauffeur</label>
-                <select name="driver_id" class="form-control">
+                <select name="driver_id" class="form-control" required>
                     <option value="">-- Sélectionner --</option>
                     @foreach ($drivers as $d)
                         <option value="{{ $d->id }}">{{ $d->name }}</option>

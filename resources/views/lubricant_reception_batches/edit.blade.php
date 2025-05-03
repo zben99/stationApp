@@ -14,23 +14,38 @@
     <form method="POST" action="{{ route('lubricant-receptions.batch.update', $batch->id) }}">
         @csrf
         @method('PUT')
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label for="date_reception" class="form-label">Date de réception</label>
+                <input type="date" name="date_reception" class="form-control" value="{{ $batch->date_reception->format('Y-m-d') }}" required>
+            </div>
 
-        <div class="mb-3">
-            <label for="date_reception" class="form-label">Date de réception</label>
-            <input type="date" name="date_reception" class="form-control" value="{{ $batch->date_reception->format('Y-m-d') }}" required>
+            <div class="col-md-3 mb-3">
+                <label for="rotation">Rotation</label>
+                <select name="rotation" class="form-control" required>
+                    <option value="">-- Sélectionner --</option>
+                    <option value="6-14" {{ old('rotation', $batch->rotation ?? '') == '6-14' ? 'selected' : '' }}>6h - 14h</option>
+                    <option value="14-22" {{ old('rotation', $batch->rotation ?? '') == '14-22' ? 'selected' : '' }}>14h - 22h</option>
+                    <option value="22-6" {{ old('rotation', $batch->rotation ?? '') == '22-6' ? 'selected' : '' }}>22h - 6h</option>
+                </select>
+            </div>
+
+
+            <div class="col-md-3 mb-3">
+                <label for="supplier_id" class="form-label">Fournisseur</label>
+                <select name="supplier_id" class="form-control">
+                    <option value="">-- Sélectionner --</option>
+                    @foreach($suppliers as $supplier)
+                        <option value="{{ $supplier->id }}" {{ $batch->supplier_id == $supplier->id ? 'selected' : '' }}>
+                            {{ $supplier->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
         </div>
 
-        <div class="mb-3">
-            <label for="supplier_id" class="form-label">Fournisseur</label>
-            <select name="supplier_id" class="form-control">
-                <option value="">-- Sélectionner --</option>
-                @foreach($suppliers as $supplier)
-                    <option value="{{ $supplier->id }}" {{ $batch->supplier_id == $supplier->id ? 'selected' : '' }}>
-                        {{ $supplier->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+
 
 
         <div class="row">

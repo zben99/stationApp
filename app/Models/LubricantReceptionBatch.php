@@ -17,6 +17,7 @@ class LubricantReceptionBatch extends Model
         'station_id',
         'supplier_id',
         'date_reception',
+        'rotation',
         'num_bc',
         'num_bl',
     ];

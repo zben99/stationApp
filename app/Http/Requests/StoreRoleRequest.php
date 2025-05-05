@@ -28,17 +28,15 @@ class StoreRoleRequest extends FormRequest
         ];
     }
 
-
-public function messages()
-{
-    return [
-        'name.required' => 'Le nom du rôle est obligatoire.',
-        'name.unique' => 'Ce nom de rôle existe déjà.',
-        'permission.required' => 'Veuillez sélectionner au moins une permission.',
-        'permission.array' => 'Le format des permissions est invalide.',
-        'permission.*.integer' => 'Chaque permission doit être un identifiant valide.',
-        'permission.*.exists' => 'Une ou plusieurs permissions sélectionnées sont invalides.',
-    ];
-}
-
+    public function messages()
+    {
+        return [
+            'name.required' => 'Le nom du rôle est obligatoire.',
+            'name.unique' => 'Ce nom de rôle existe déjà.',
+            'permission.required' => 'Veuillez sélectionner au moins une permission.',
+            'permission.array' => 'Le format des permissions est invalide.',
+            'permission.*.integer' => 'Chaque permission doit être un identifiant valide.',
+            'permission.*.exists' => 'Une ou plusieurs permissions sélectionnées sont invalides.',
+        ];
+    }
 }

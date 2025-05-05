@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -18,7 +19,7 @@ class EnsureStationIsSet
             }
 
             // ✅ Si ce n'est pas un admin, injecter station_id s'il n'est pas déjà en session
-            if (!session()->has('selected_station_id') && $user->station_id) {
+            if (! session()->has('selected_station_id') && $user->station_id) {
                 session(['selected_station_id' => $user->station_id]);
             }
         }

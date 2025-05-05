@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Supplier;
-use App\Models\StationProduct;
-use App\Models\StationCategory;
-use App\Models\ProductPackaging;
 use App\Models\LubricantReception;
 use App\Models\LubricantReceptionBatch;
+use App\Models\ProductPackaging;
+use App\Models\StationCategory;
+use App\Models\StationProduct;
+use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class LubricantReceptionBatchController extends Controller
 {
-
-
     public function index(Request $request)
     {
         $stationId = session('selected_station_id');
@@ -25,10 +23,10 @@ class LubricantReceptionBatchController extends Controller
         $query = LubricantReceptionBatch::with([
             'receptions.product.stationCategory',
             'receptions.packaging.packaging',
-            'supplier'
+            'supplier',
         ])
-        ->where('station_id', $stationId)
-        ->orderByDesc('date_reception');
+            ->where('station_id', $stationId)
+            ->orderByDesc('date_reception');
 
         // 🔍 Filtrage par catégorie
         if ($request->filled('category')) {
@@ -52,8 +50,6 @@ class LubricantReceptionBatchController extends Controller
 
         return view('lubricant_reception_batches.index', compact('batches', 'categories'));
     }
-
-
 
     public function create()
     {
@@ -126,6 +122,7 @@ class LubricantReceptionBatchController extends Controller
     public function show(LubricantReceptionBatch $batch)
     {
         $batch->load('receptions.product', 'receptions.packaging.packaging', 'supplier');
+
         return view('lubricant_reception_batches.show', compact('batch'));
     }
 
@@ -165,7 +162,6 @@ class LubricantReceptionBatchController extends Controller
         ));
     }
 
-
     public function update(Request $request, LubricantReceptionBatch $batch)
     {
         $request->validate([
@@ -182,7 +178,6 @@ class LubricantReceptionBatchController extends Controller
             'products.*.prix_achat' => 'nullable|numeric|min:0',
             'products.*.observations' => 'nullable|string|max:1000',
         ]);
-
 
         // Mettre à jour les infos du batch
         $batch->update([
@@ -233,6 +228,7 @@ class LubricantReceptionBatchController extends Controller
         }
 
         $batch->delete();
+
         return redirect()->route('lubricant-receptions.batch.index')->with('success', 'Lot supprimé avec succès.');
     }
 

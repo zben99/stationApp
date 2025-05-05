@@ -30,4 +30,3 @@ class CategorieProduitRequest extends FormRequest
         ];
     }
 }
-

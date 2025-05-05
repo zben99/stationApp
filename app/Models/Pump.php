@@ -18,4 +18,3 @@ class Pump extends Model
         return $this->belongsTo(Tank::class);
     }
 }
-

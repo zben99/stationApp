@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\DailyProductSale;
 use App\Models\ProductPackaging;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class DailyProductSaleController extends Controller
 {
@@ -17,7 +16,7 @@ class DailyProductSaleController extends Controller
             ->orderByDesc('date')
             ->orderBy('rotation')
             ->get()
-            ->groupBy(fn($s) => $s->date->format('Y-m-d') . '|' . $s->rotation);
+            ->groupBy(fn ($s) => $s->date->format('Y-m-d').'|'.$s->rotation);
 
         return view('daily_product_sales.index', compact('sales'));
     }
@@ -30,7 +29,7 @@ class DailyProductSaleController extends Controller
         $products = ProductPackaging::with('product', 'packaging')
             ->whereHas('product.stationCategory', function ($q) use ($stationId) {
                 $q->where('station_id', $stationId)
-                  ->whereIn('type', ['lubrifiant', 'pea', 'gaz', 'lampe']);
+                    ->whereIn('type', ['lubrifiant', 'pea', 'gaz', 'lampe']);
             })->get();
 
         return view('daily_product_sales.create', compact('products'));
@@ -81,19 +80,18 @@ class DailyProductSaleController extends Controller
         return redirect()->route('daily-product-sales.index')->with('success', 'Recette enregistrée avec succès.');
     }
 
-
     public function show($date, $rotation)
     {
         $stationId = session('selected_station_id');
 
         $entries = DailyProductSale::with([
             'productPackaging.packaging',
-            'productPackaging.product'
+            'productPackaging.product',
         ])
-        ->where('station_id', $stationId)
-        ->where('date', $date)
-        ->where('rotation', $rotation)
-        ->get();
+            ->where('station_id', $stationId)
+            ->where('date', $date)
+            ->where('rotation', $rotation)
+            ->get();
 
         if ($entries->isEmpty()) {
             return redirect()->route('daily-product-sales.index')
@@ -103,8 +101,7 @@ class DailyProductSaleController extends Controller
         return view('daily_product_sales.show', [
             'entries' => $entries,
             'date' => $date,
-            'rotation' => $rotation
+            'rotation' => $rotation,
         ]);
     }
-
 }

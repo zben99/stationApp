@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class FuelIndex extends Model
 {
@@ -20,7 +21,7 @@ class FuelIndex extends Model
         'index_fin',
         'retour_en_cuve',
         'prix_unitaire',
-        'montant_declare'
+        'montant_declare',
     ];
 
     protected $casts = [
@@ -64,5 +65,4 @@ class FuelIndex extends Model
     {
         return round(($this->montant_declare ?? 0) - $this->montant_total, 2);
     }
-
 }

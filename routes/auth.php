@@ -7,7 +7,6 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,15 +30,12 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
-
-
 Route::middleware('auth')->group(function () {
 
     Route::get('/station/selection', [AuthenticatedSessionController::class, 'showSelectionPage'])
-    ->name('station.selection')
-    ->middleware(['auth']); // Protection si besoin
+        ->name('station.selection')
+        ->middleware(['auth']); // Protection si besoin
     Route::post('/station/select', [AuthenticatedSessionController::class, 'select'])->name('station.select');
-
 
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');

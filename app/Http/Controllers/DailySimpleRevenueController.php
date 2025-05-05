@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailySimpleRevenue;
-use App\Models\Station;
 use Illuminate\Http\Request;
 
 class DailySimpleRevenueController extends Controller
@@ -41,7 +40,7 @@ class DailySimpleRevenueController extends Controller
                 'station_id' => $stationId,
                 'date' => $data['date'],
                 'rotation' => $data['rotation'],
-                'type' => $type
+                'type' => $type,
             ])->exists();
 
             if ($exists) {
@@ -61,7 +60,6 @@ class DailySimpleRevenueController extends Controller
         return redirect()->route('daily-simple-revenues.index')->with('success', 'Recettes enregistrées avec succès.');
     }
 
-
     public function edit(DailySimpleRevenue $dailySimpleRevenue)
     {
         return view('daily_simple_revenues.edit', compact('dailySimpleRevenue'));
@@ -78,11 +76,11 @@ class DailySimpleRevenueController extends Controller
 
         // Si on change les champs clés, s'assurer de l'unicité
         $exists = DailySimpleRevenue::where([
-                'station_id' => $dailySimpleRevenue->station_id,
-                'date' => $data['date'],
-                'rotation' => $data['rotation'],
-                'type' => $data['type'],
-            ])
+            'station_id' => $dailySimpleRevenue->station_id,
+            'date' => $data['date'],
+            'rotation' => $data['rotation'],
+            'type' => $data['type'],
+        ])
             ->where('id', '!=', $dailySimpleRevenue->id)
             ->exists();
 
@@ -91,12 +89,14 @@ class DailySimpleRevenueController extends Controller
         }
 
         $dailySimpleRevenue->update($data);
+
         return redirect()->route('daily-simple-revenues.index')->with('success', 'Recette mise à jour.');
     }
 
     public function destroy(DailySimpleRevenue $dailySimpleRevenue)
     {
         $dailySimpleRevenue->delete();
+
         return back()->with('success', 'Recette supprimée.');
     }
 }

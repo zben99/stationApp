@@ -22,6 +22,7 @@ class CreditTopupController extends Controller
     public function create()
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();
+
         return view('credit_topups.create', compact('clients'));
     }
 
@@ -38,9 +39,7 @@ class CreditTopupController extends Controller
         $data['station_id'] = session('selected_station_id');
         $data['created_by'] = auth()->id();
 
-
         $topup = CreditTopup::create($data);
-
 
         return redirect()->route('credit-topups.index')->with('success', 'Crédit ajouté.');
     }
@@ -48,6 +47,7 @@ class CreditTopupController extends Controller
     public function edit(CreditTopup $creditTopup)
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();
+
         return view('credit_topups.edit', compact('creditTopup', 'clients'));
     }
 
@@ -63,7 +63,6 @@ class CreditTopupController extends Controller
 
         $oldAmount = $creditTopup->amount;
 
-
         $creditTopup->update($data);
 
         return redirect()->route('clients.topups', $creditTopup->client_id)->with('success', 'Recharge de crédit mise à jour.');
@@ -72,6 +71,7 @@ class CreditTopupController extends Controller
     public function destroy(CreditTopup $creditTopup)
     {
         $creditTopup->delete();
+
         return back()->with('success', 'Recharge de crédit supprimée.');
     }
 
@@ -81,7 +81,4 @@ class CreditTopupController extends Controller
 
         return view('credit_topups.show_client', compact('client'));
     }
-
-
 }
-

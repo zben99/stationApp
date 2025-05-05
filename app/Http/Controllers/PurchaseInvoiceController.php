@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PurchaseInvoice;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\PurchaseInvoicesExport;
+use App\Models\PurchaseInvoice;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PurchaseInvoiceController extends Controller
@@ -24,7 +24,7 @@ class PurchaseInvoiceController extends Controller
         }
 
         if ($request->filled('supplier')) {
-            $query->where('supplier_name', 'like', '%' . $request->supplier . '%');
+            $query->where('supplier_name', 'like', '%'.$request->supplier.'%');
         }
 
         $invoices = $query->orderByDesc('date')->paginate(15)->appends($request->query());
@@ -83,13 +83,20 @@ class PurchaseInvoiceController extends Controller
         $stationId = session('selected_station_id');
         $query = PurchaseInvoice::where('station_id', $stationId);
 
-        if ($request->filled('from')) $query->where('date', '>=', $request->from);
-        if ($request->filled('to')) $query->where('date', '<=', $request->to);
-        if ($request->filled('supplier')) $query->where('supplier_name', 'like', '%' . $request->supplier . '%');
+        if ($request->filled('from')) {
+            $query->where('date', '>=', $request->from);
+        }
+        if ($request->filled('to')) {
+            $query->where('date', '<=', $request->to);
+        }
+        if ($request->filled('supplier')) {
+            $query->where('supplier_name', 'like', '%'.$request->supplier.'%');
+        }
 
         $invoices = $query->orderBy('date')->get();
 
         $pdf = Pdf::loadView('exports.purchase_invoices_pdf', compact('invoices'));
+
         return $pdf->download('factures_achat_filtrées.pdf');
     }
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FuelIndex;
 use App\Models\DailyProductSale;
-use App\Models\DailySimpleRevenue;
 use App\Models\DailyRevenueReview;
+use App\Models\DailySimpleRevenue;
+use App\Models\FuelIndex;
 use Illuminate\Http\Request;
 
 class DailyRevenueReviewController extends Controller
@@ -34,7 +34,7 @@ class DailyRevenueReviewController extends Controller
             ->whereDate('date', $date)
             ->where('rotation', $rotation)
             ->get()
-            ->sum(fn($item) => $item->montant_total);
+            ->sum(fn ($item) => $item->montant_total);
 
         // 🔸 Total Produits (Lubrifiants, PEA, Gaz, Lampes)
         $productTotal = DailyProductSale::where('station_id', $stationId)
@@ -79,7 +79,7 @@ class DailyRevenueReviewController extends Controller
             ->whereDate('date', $date)
             ->where('rotation', $rotation)
             ->get()
-            ->sum(fn($item) => $item->montant_total);
+            ->sum(fn ($item) => $item->montant_total);
 
         $productTotal = DailyProductSale::where('station_id', $stationId)
             ->whereDate('date', $date)
@@ -92,13 +92,13 @@ class DailyRevenueReviewController extends Controller
             ->sum('amount');
 
         $review = DailyRevenueReview::create([
-            'station_id'     => $stationId,
-            'date'           => $date,
-            'rotation'       => $rotation,
-            'fuel_amount'    => $fuelTotal,
+            'station_id' => $stationId,
+            'date' => $date,
+            'rotation' => $rotation,
+            'fuel_amount' => $fuelTotal,
             'product_amount' => $productTotal,
-            'shop_amount'    => $shopTotal,
-            'total_amount'   => $fuelTotal + $productTotal + $shopTotal,
+            'shop_amount' => $shopTotal,
+            'total_amount' => $fuelTotal + $productTotal + $shopTotal,
         ]);
 
         // ✅ Corrigé : on passe bien l’ID
@@ -109,7 +109,7 @@ class DailyRevenueReviewController extends Controller
     public function show(DailyRevenueReview $daily_revenue_review)
     {
         return view('daily_revenue_reviews.show', [
-            'review' => $daily_revenue_review
+            'review' => $daily_revenue_review,
         ]);
     }
 }

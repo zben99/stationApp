@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Tank;
-use App\Models\FuelReception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class FuelReceptionLine extends Model
 {

@@ -21,7 +21,7 @@ class ClientCreditExport implements FromArray, WithHeadings
 
         foreach ($this->client->creditTopups()->with('payments')->get() as $credit) {
             $rows[] = [
-                'Crédit du ' . $credit->date,
+                'Crédit du '.$credit->date,
                 $credit->amount,
                 'Remboursé',
                 $credit->payments->sum('amount'),
@@ -31,12 +31,12 @@ class ClientCreditExport implements FromArray, WithHeadings
 
             foreach ($credit->payments as $payment) {
                 $rows[] = [
-                    '→ Paiement le ' . $payment->date,
+                    '→ Paiement le '.$payment->date,
                     '',
                     '',
                     $payment->amount,
                     '',
-                    ''
+                    '',
                 ];
             }
         }

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class DailyProductSale extends Model
 {
@@ -40,7 +40,6 @@ class DailyProductSale extends Model
     {
         return $this->productPackaging?->product;
     }
-
 
     // ✅ Montant total calculé dynamiquement (au cas où)
     public function getMontantCalculeAttribute()

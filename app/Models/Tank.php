@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Station;
-use App\Models\TankStock;
-use App\Models\FuelReception;
-use App\Models\StationProduct;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Tank extends Model
 {

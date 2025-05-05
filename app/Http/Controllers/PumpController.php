@@ -12,6 +12,7 @@ class PumpController extends Controller
     {
         $stationId = session('selected_station_id');
         $pumps = Pump::with('tank')->where('station_id', $stationId)->get();
+
         return view('pumps.index', compact('pumps'));
     }
 
@@ -19,6 +20,7 @@ class PumpController extends Controller
     {
         $stationId = session('selected_station_id');
         $tanks = Tank::where('station_id', $stationId)->get();
+
         return view('pumps.create', compact('tanks'));
     }
 
@@ -39,6 +41,7 @@ class PumpController extends Controller
     {
         $stationId = session('selected_station_id');
         $tanks = Tank::where('station_id', $stationId)->get();
+
         return view('pumps.edit', compact('pump', 'tanks'));
     }
 
@@ -57,7 +60,7 @@ class PumpController extends Controller
     public function destroy(Pump $pump)
     {
         $pump->delete();
+
         return back()->with('success', 'Pompe supprimée avec succès.');
     }
 }
-

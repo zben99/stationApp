@@ -63,7 +63,7 @@ class DailyRevenueValidation extends Model
 
     public function getRotationLabelAttribute()
     {
-        return match($this->rotation) {
+        return match ($this->rotation) {
             '6-14' => '6h - 14h',
             '14-22' => '14h - 22h',
             '22-6' => '22h - 6h',

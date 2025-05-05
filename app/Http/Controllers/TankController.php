@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tank;
 use App\Models\Station;
+use App\Models\StationProduct;
+use App\Models\Tank;
 use App\Models\TankStock;
 use Illuminate\Http\Request;
-use App\Models\StationProduct;
 use Illuminate\Validation\Rule;
-
 
 class TankController extends Controller
 {
     public function index()
     {
         $tanks = Tank::with(['station', 'product', 'stock'])->get();
+
         return view('tanks.index', compact('tanks'));
     }
 
@@ -36,17 +36,17 @@ class TankController extends Controller
                 'required',
                 'string',
                 'max:50',
-                Rule::unique('tanks')->where(function ($query) use ($request) {
+                Rule::unique('tanks')->where(function ($query) {
                     return $query->where('station_id', session('selected_station_id'));
                 }),
             ],
             'capacite' => 'required|numeric|min:0',
         ]);
 
-        //dd(session('selected_station_id'));
+        // dd(session('selected_station_id'));
 
-         // Injecter la station depuis la session
-         $data['station_id'] = session('selected_station_id');
+        // Injecter la station depuis la session
+        $data['station_id'] = session('selected_station_id');
 
         $tank = Tank::create($data);
 
@@ -70,13 +70,13 @@ class TankController extends Controller
 
     public function update(Request $request, Tank $tank)
     {
-        $data =   $request->validate([
+        $data = $request->validate([
             'station_product_id' => 'required|exists:station_products,id',
             'code' => [
                 'required',
                 'string',
                 'max:50',
-                Rule::unique('tanks')->where(function ($query) use ($request) {
+                Rule::unique('tanks')->where(function ($query) {
                     return $query->where('station_id', session('selected_station_id'));
                 })->ignore($tank->id),
             ],
@@ -94,6 +94,7 @@ class TankController extends Controller
     public function destroy(Tank $tank)
     {
         $tank->delete();
+
         return redirect()->route('tanks.index')->with('success', 'Cuve supprimée avec succès.');
     }
 }

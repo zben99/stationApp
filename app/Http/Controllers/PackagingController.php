@@ -67,6 +67,7 @@ class PackagingController extends Controller
     public function destroy(Packaging $packaging)
     {
         $packaging->delete();
+
         return redirect()->route('packagings.index')->with('success', 'Conditionnement supprimé.');
     }
 }

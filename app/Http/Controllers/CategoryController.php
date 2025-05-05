@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Station;
 use Illuminate\Http\Request;
 use App\Models\StationCategory;
 use App\Http\Requests\CategorieProduitRequest;
@@ -11,7 +12,6 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $stationId = session('selected_station_id'); // Assure-toi que ceci est bien stocké au moment de la sélection
-
 
         $data = StationCategory::where('station_id', $stationId)
             ->orderBy('name', 'asc') // Tri alphabétique
@@ -45,14 +45,16 @@ class CategoryController extends Controller
 
     public function update(CategorieProduitRequest $request, StationCategory $categorie)
     {
-       // dd($request->validated());
+        // dd($request->validated());
         $categorie->update($request->validated());
+
         return redirect()->route('categories.index')->with('success', 'Catégorie mise à jour.');
     }
 
     public function destroy(StationCategory $categorie)
     {
         $categorie->delete();
+
         return redirect()->route('categories.index')->with('success', 'Catégorie supprimée.');
     }
 
@@ -60,7 +62,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'station_id' => 'required|exists:stations,id',
-            'categories' => 'required|array'
+            'categories' => 'required|array',
         ]);
 
         $station = Station::find($request->station_id);

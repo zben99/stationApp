@@ -1,9 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\CreditPayment;
-use App\Models\CreditTopup;
 use Illuminate\Http\Request;
 
 class CreditPaymentController extends Controller
@@ -58,7 +58,6 @@ class CreditPaymentController extends Controller
         return redirect()->route('credit-topups.index')->with('success', 'Remboursement enregistré avec succès.');
     }
 
-
     public function edit(CreditPayment $creditPayment)
     {
         $stationId = session('selected_station_id');
@@ -93,7 +92,6 @@ class CreditPaymentController extends Controller
 
         return redirect()->route('clients.payments', $creditPayment->client_id)->with('success', 'Remboursement modifié avec succès.');
     }
-
 
     public function destroy(CreditPayment $creditPayment)
     {

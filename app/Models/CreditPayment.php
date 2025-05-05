@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use App\Models\Client;
-use App\Models\Station;
-use App\Models\CreditTopup;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class CreditPayment extends Model
 {
@@ -37,9 +33,4 @@ class CreditPayment extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-
-
-
-
 }
-

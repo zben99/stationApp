@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\LubricantStock;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductPackaging extends Model
@@ -39,4 +38,3 @@ class ProductPackaging extends Model
         return 0;
     }
 }
-

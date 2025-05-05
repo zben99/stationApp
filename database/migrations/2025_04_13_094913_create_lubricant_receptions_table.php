@@ -16,25 +16,25 @@ return new class extends Migration
 
             // Groupe de réception (batch)
             $table->foreignId('batch_id')
-                  ->nullable()
-                  ->constrained('lubricant_reception_batches')
-                  ->onDelete('cascade');
+                ->nullable()
+                ->constrained('lubricant_reception_batches')
+                ->onDelete('cascade');
 
             // Produit spécifique lié à une station
             $table->foreignId('station_product_id')
-                  ->constrained()
-                  ->onDelete('cascade');
+                ->constrained()
+                ->onDelete('cascade');
 
             // Conditionnement du produit
             $table->foreignId('product_packaging_id')
-                  ->constrained('station_product_packaging')
-                  ->onDelete('cascade');
+                ->constrained('station_product_packaging')
+                ->onDelete('cascade');
 
             // Fournisseur
             $table->foreignId('supplier_id')
-                  ->nullable()
-                  ->constrained()
-                  ->onDelete('set null');
+                ->nullable()
+                ->constrained()
+                ->onDelete('set null');
 
             $table->date('date_reception');
 
@@ -48,7 +48,6 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.

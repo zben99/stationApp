@@ -22,6 +22,7 @@ class BalanceUsageController extends Controller
     public function create()
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();
+
         return view('balance_usages.create', compact('clients'));
     }
 
@@ -46,6 +47,7 @@ class BalanceUsageController extends Controller
     public function edit(BalanceUsage $balanceUsage)
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();
+
         return view('balance_usages.edit', compact('balanceUsage', 'clients'));
     }
 
@@ -87,5 +89,4 @@ class BalanceUsageController extends Controller
 
         return view('balance_usages.client_index', compact('client', 'usages'));
     }
-
 }

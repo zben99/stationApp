@@ -2,12 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Supplier;
-use App\Models\StationProduct;
-use App\Models\ProductPackaging;
-use App\Models\LubricantStock; // tu avais oublié d'importer ce modèle ici
-use Illuminate\Database\Eloquent\Model;
+// tu avais oublié d'importer ce modèle ici
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class LubricantReception extends Model
 {
@@ -16,6 +13,7 @@ class LubricantReception extends Model
     protected $casts = [
         'date_reception' => 'datetime',
     ];
+
     protected $fillable = [
         'station_product_id',
         'batch_id',
@@ -63,5 +61,4 @@ class LubricantReception extends Model
         // Sauvegarder les changements
         $stock->save();
     }
-
 }

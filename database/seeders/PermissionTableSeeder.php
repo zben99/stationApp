@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
@@ -13,61 +12,61 @@ class PermissionTableSeeder extends Seeder
      */
     public function run(): void
     {
-       /* $permissions = [
-           'role-list',
-           'role-create',
-           'role-edit',
-           'role-delete',
-        ];
-
-        $permissions = [
-            'user-list',
-            'user-create',
-            'user-edit',
-            'user-delete',
-            'user-active',
-         ];
-
-
-         $permissions = [
-            'station-list',
-            'station-create',
-            'station-edit',
-            'station-delete',
-            'station-active',
-         ];
-
-
-         $permissions = [
-            'category-list',
-            'category-create',
-            'category-edit',
-            'category-delete',
-         ];
-
-
-         $permissions = [
-            'product-list',
-            'product-create',
-            'product-edit',
-            'product-delete',
-
+        /* $permissions = [
+            'role-list',
+            'role-create',
+            'role-edit',
+            'role-delete',
          ];
 
          $permissions = [
-            'suppliers-list',
-            'suppliers-create',
-            'suppliers-edit',
-            'suppliers-delete',
+             'user-list',
+             'user-create',
+             'user-edit',
+             'user-delete',
+             'user-active',
+          ];
 
-         ];
 
-         $permissions = [
-            'clients-list',
-            'clients-create',
-            'clients-edit',
-            'clients-delete',
-         ];
+          $permissions = [
+             'station-list',
+             'station-create',
+             'station-edit',
+             'station-delete',
+             'station-active',
+          ];
+
+
+          $permissions = [
+             'category-list',
+             'category-create',
+             'category-edit',
+             'category-delete',
+          ];
+
+
+          $permissions = [
+             'product-list',
+             'product-create',
+             'product-edit',
+             'product-delete',
+
+          ];
+
+          $permissions = [
+             'suppliers-list',
+             'suppliers-create',
+             'suppliers-edit',
+             'suppliers-delete',
+
+          ];
+
+          $permissions = [
+             'clients-list',
+             'clients-create',
+             'clients-edit',
+             'clients-delete',
+          ];
 
 
 
@@ -76,51 +75,42 @@ class PermissionTableSeeder extends Seeder
  ];
  */
 
+        $permissions = [
+            /*  //categories
+           'category-list',
+           'category-create',
+           'category-edit',
+           'category-delete',
 
+              //produits
+              'product-list',
+              'product-create',
+              'product-edit',
+              'product-delete',
 
- $permissions = [
-  /*  //categories
-    'category-list',
-    'category-create',
-    'category-edit',
-    'category-delete',
+               //fournisseurs
+              'supplier-list',
+              'supplier-create',
+              'supplier-edit',
+              'supplier-delete',
 
-       //produits
-       'product-list',
-       'product-create',
-       'product-edit',
-       'product-delete',
+                  //fournisseurs
+                  'client-list',
+                  'client-create',
+                  'client-view',
+                  'client-edit',
+                  'client-delete',*/
 
-        //fournisseurs
-       'supplier-list',
-       'supplier-create',
-       'supplier-edit',
-       'supplier-delete',
-
-           //fournisseurs
-           'client-list',
-           'client-create',
-           'client-view',
-           'client-edit',
-           'client-delete',*/
-
-
-            //Rubrique des Depenses
+            // Rubrique des Depenses
             'expense-category-list',
             'expense-category-create',
             'expense-category-edit',
             'expense-category-delete',
 
-
- ];
-
-
-
-
-
+        ];
 
         foreach ($permissions as $permission) {
-             Permission::create(['name' => $permission]);
+            Permission::create(['name' => $permission]);
         }
     }
 }

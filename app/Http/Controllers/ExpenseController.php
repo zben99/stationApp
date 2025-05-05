@@ -55,6 +55,7 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         $categories = ExpenseCategory::where('station_id', $expense->station_id)->where('is_active', true)->get();
+
         return view('expenses.edit', compact('expense', 'categories'));
     }
 

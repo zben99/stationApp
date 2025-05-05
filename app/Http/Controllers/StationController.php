@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Station;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreStationRequest;
 use App\Http\Requests\UpdateStationRequest;
+use App\Models\Station;
+use Illuminate\Http\Request;
 
 class StationController extends Controller
 {
@@ -13,7 +14,7 @@ class StationController extends Controller
 
         $data = Station::latest()->paginate(5);
 
-        return view('stations.index',compact('data'))
+        return view('stations.index', compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -28,8 +29,6 @@ class StationController extends Controller
 
         return redirect()->route('stations.index')->with('success', 'Station ajoutée avec succès.');
     }
-
-
 
     public function edit(Station $station)
     {
@@ -46,7 +45,7 @@ class StationController extends Controller
     public function destroy(Station $station)
     {
         $station->delete();
+
         return redirect()->route('stations.index')->with('success', 'Station supprimée.');
     }
 }
-

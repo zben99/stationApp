@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StationProduct;
 use App\Models\StationCategory;
+use App\Models\StationProduct;
 use Illuminate\Http\Request;
 
 class LubricantProductController extends Controller
@@ -31,15 +31,13 @@ class LubricantProductController extends Controller
             ->with('i', ($request->input('page', 1) - 1) * 10);
     }
 
-
-
     public function create()
     {
         $stationId = session('selected_station_id');
 
         $categories = StationCategory::where('station_id', $stationId)
-        ->whereIn("name", ["Lubrifiant", "Produits d'Entretien Auto (PEA)"])
-        ->get();
+            ->whereIn('name', ['Lubrifiant', "Produits d'Entretien Auto (PEA)"])
+            ->get();
 
         return view('lubricants.products.create', compact('categories'));
     }
@@ -69,12 +67,12 @@ class LubricantProductController extends Controller
         $stationId = session('selected_station_id');
 
         $categories = StationCategory::where('station_id', $stationId)
-        ->whereIn('type', ['lubrifiant', 'pea'])
+            ->whereIn('type', ['lubrifiant', 'pea'])
             ->get();
 
         return view('lubricants.products.edit', [
             'product' => $lubricantProduct,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -94,6 +92,7 @@ class LubricantProductController extends Controller
     public function destroy(StationProduct $lubricantProduct)
     {
         $lubricantProduct->delete();
+
         return redirect()->route('lubricant-products.index')->with('success', 'Lubrifiant supprimé.');
     }
 }

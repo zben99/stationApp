@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
-use App\Models\ShopSale;
-use App\Models\FuelIndex;
-use App\Models\CreditTopup;
 use App\Models\BalanceTopup;
 use App\Models\BalanceUsage;
-use Illuminate\Http\Request;
 use App\Models\CreditPayment;
+use App\Models\CreditTopup;
 use App\Models\DailyProductSale;
-use App\Models\DailySimpleRevenue;
-use Illuminate\Support\Facades\DB;
 use App\Models\DailyRevenueValidation;
+use App\Models\DailySimpleRevenue;
+use App\Models\Expense;
+use App\Models\FuelIndex;
+use Illuminate\Http\Request;
 
 class DailyRevenueValidationController extends Controller
 {
@@ -163,9 +161,6 @@ class DailyRevenueValidationController extends Controller
             ->with('success', 'Rotation validée avec succès.');
     }
 
-
-
-
     public function fetch(Request $request)
     {
         try {
@@ -173,9 +168,9 @@ class DailyRevenueValidationController extends Controller
             $date = $request->get('date');
             $rotation = $request->get('rotation');
 
-            if (!$date || !$rotation) {
+            if (! $date || ! $rotation) {
                 return response()->json([
-                    'message' => 'La date et la rotation sont requises.'
+                    'message' => 'La date et la rotation sont requises.',
                 ], 422);
             }
 
@@ -235,13 +230,8 @@ class DailyRevenueValidationController extends Controller
 
         } catch (\Throwable $e) {
             return response()->json([
-                'message' => 'Erreur serveur : ' . $e->getMessage()
+                'message' => 'Erreur serveur : '.$e->getMessage(),
             ], 500);
         }
     }
-
-
-
-
-
 }

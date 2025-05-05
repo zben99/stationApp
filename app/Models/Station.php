@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Tank;
-use App\Models\User;
-use App\Models\Product;
-use App\Models\StationCategory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Station extends Model
 {
@@ -30,9 +26,8 @@ class Station extends Model
         return $this->hasMany(StationCategory::class);
     }
 
-
     public function tanks()
-{
-    return $this->hasMany(Tank::class);
-}
+    {
+        return $this->hasMany(Tank::class);
+    }
 }

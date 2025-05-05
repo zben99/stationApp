@@ -1,11 +1,9 @@
 <?php
+
 namespace App\Models;
 
-use App\Models\CreditTopup;
-use App\Models\BalanceTopup;
-use App\Models\CreditPayment;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
@@ -50,7 +48,4 @@ class Client extends Model
     {
         return $this->hasMany(BalanceUsage::class);
     }
-
-
 }
-

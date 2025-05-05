@@ -19,7 +19,7 @@ class Packaging extends Model
     public function products()
     {
         return $this->belongsToMany(StationProduct::class, 'station_product_packaging')
-                    ->withPivot('price')
-                    ->withTimestamps();
+            ->withPivot('price')
+            ->withTimestamps();
     }
 }

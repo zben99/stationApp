@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Transporter;
@@ -11,6 +12,7 @@ class TransporterController extends Controller
         $stationId = session('selected_station_id');
 
         $transporters = Transporter::where('station_id', $stationId)->orderBy('name')->paginate(10);
+
         return view('transporters.index', compact('transporters'));
     }
 
@@ -28,10 +30,11 @@ class TransporterController extends Controller
             'address' => 'nullable|string|max:255',
         ]);
 
-         // Injecter la station depuis la session
-         $data['station_id'] = session('selected_station_id');
+        // Injecter la station depuis la session
+        $data['station_id'] = session('selected_station_id');
 
         Transporter::create($data);
+
         return redirect()->route('transporters.index')->with('success', 'Transporteur créé avec succès.');
     }
 
@@ -50,12 +53,14 @@ class TransporterController extends Controller
         ]);
 
         $transporter->update($request->all());
+
         return redirect()->route('transporters.index')->with('success', 'Transporteur modifié avec succès.');
     }
 
     public function destroy(Transporter $transporter)
     {
         $transporter->delete();
+
         return redirect()->route('transporters.index')->with('success', 'Transporteur supprimé avec succès.');
     }
 }

@@ -35,4 +35,3 @@ class DailyRevenueReview extends Model
         return \Carbon\Carbon::parse($this->date)->format('d/m/Y');
     }
 }
-

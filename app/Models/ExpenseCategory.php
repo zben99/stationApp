@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Expense;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ExpenseCategory extends Model
 {

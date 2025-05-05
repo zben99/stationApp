@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
 use App\Models\BalanceTopup;
+use App\Models\Client;
 use Illuminate\Http\Request;
 
 class BalanceTopupController extends Controller
@@ -22,6 +22,7 @@ class BalanceTopupController extends Controller
     public function create()
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();
+
         return view('balance_topups.create', compact('clients'));
     }
 
@@ -46,6 +47,7 @@ class BalanceTopupController extends Controller
     public function edit(BalanceTopup $balanceTopup)
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();
+
         return view('balance_topups.edit', compact('balanceTopup', 'clients'));
     }
 
@@ -62,12 +64,14 @@ class BalanceTopupController extends Controller
         $oldAmount = $balanceTopup->amount;
 
         $balanceTopup->update($data);
-        return redirect()->route('clients.balance.topups',$balanceTopup->client_id)->with('success', 'Recharge mise à jour.');
+
+        return redirect()->route('clients.balance.topups', $balanceTopup->client_id)->with('success', 'Recharge mise à jour.');
     }
 
     public function destroy(BalanceTopup $balanceTopup)
     {
         $balanceTopup->delete();
+
         return back()->with('success', 'Recharge supprimée.');
     }
 
@@ -88,4 +92,3 @@ class BalanceTopupController extends Controller
         return view('balance_topups.client_index', compact('client', 'topups'));
     }
 }
-

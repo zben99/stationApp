@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Packaging;
-use Illuminate\Http\Request;
 use App\Models\LubricantStock;
-use App\Models\StationProduct;
+use App\Models\Packaging;
 use App\Models\ProductPackaging;
-use App\Models\LubricantReception;
+use App\Models\StationProduct;
+use Illuminate\Http\Request;
 
 class ProductPackagingController extends Controller
 {
@@ -17,6 +16,7 @@ class ProductPackagingController extends Controller
 
         return view('product_packagings.index', compact('product'));
     }
+
     public function create($productId)
     {
         $product = StationProduct::findOrFail($productId);
@@ -33,7 +33,7 @@ class ProductPackagingController extends Controller
             'station_product_id' => 'required|exists:station_products,id',
             'packaging_id' => 'required|exists:packagings,id',
             'price' => 'nullable|numeric|min:0',
-            'stock' => 'nullable|integer|min:0'
+            'stock' => 'nullable|integer|min:0',
         ]);
 
         // Création du product-packaging
@@ -43,18 +43,15 @@ class ProductPackagingController extends Controller
             'price' => $request->price,
         ]);
 
-
-
-           // 2. Création du stock lié au product-packaging
+        // 2. Création du stock lié au product-packaging
         LubricantStock::create([
-            'station_product_id'    => $request->station_product_id,
-            'product_packaging_id'  => $packaging->id, // 👈 Ici la correction
-            'quantite_actuelle'     => $request->stock ?? 0,
+            'station_product_id' => $request->station_product_id,
+            'product_packaging_id' => $packaging->id, // 👈 Ici la correction
+            'quantite_actuelle' => $request->stock ?? 0,
         ]);
 
-
         return redirect()->route('product-packagings.index', $request->station_product_id)
-                         ->with('success', 'Conditionnement associé avec succès.');
+            ->with('success', 'Conditionnement associé avec succès.');
     }
 
     public function edit(ProductPackaging $productPackaging)
@@ -73,7 +70,7 @@ class ProductPackagingController extends Controller
         ]);
 
         return redirect()->route('product-packagings.index', $productPackaging->station_product_id)
-                         ->with('success', 'Conditionnement mis à jour.');
+            ->with('success', 'Conditionnement mis à jour.');
     }
 
     public function destroy(ProductPackaging $productPackaging)
@@ -82,6 +79,6 @@ class ProductPackagingController extends Controller
         $productPackaging->delete();
 
         return redirect()->route('product-packagings.index', $productId)
-                         ->with('success', 'Conditionnement supprimé.');
+            ->with('success', 'Conditionnement supprimé.');
     }
 }

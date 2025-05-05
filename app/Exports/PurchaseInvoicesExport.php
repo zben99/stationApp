@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Exports;
 
 use App\Models\PurchaseInvoice;
@@ -8,9 +9,10 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class PurchaseInvoicesExport implements FromCollection, WithHeadings
 {
-
     protected $from;
+
     protected $to;
+
     protected $supplier;
 
     public function __construct($from = null, $to = null, $supplier = null)
@@ -26,9 +28,15 @@ class PurchaseInvoicesExport implements FromCollection, WithHeadings
 
         $query = PurchaseInvoice::where('station_id', $stationId);
 
-        if ($this->from) $query->where('date', '>=', $this->from);
-        if ($this->to) $query->where('date', '<=', $this->to);
-        if ($this->supplier) $query->where('supplier_name', 'like', '%' . $this->supplier . '%');
+        if ($this->from) {
+            $query->where('date', '>=', $this->from);
+        }
+        if ($this->to) {
+            $query->where('date', '<=', $this->to);
+        }
+        if ($this->supplier) {
+            $query->where('supplier_name', 'like', '%'.$this->supplier.'%');
+        }
 
         $invoices = $query->select('date', 'invoice_number', 'supplier_name', 'amount_ht', 'amount_ttc')->get();
 

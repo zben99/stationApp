@@ -32,7 +32,6 @@ class LoginRequest extends FormRequest
         ];
     }
 
-
     /**
      * Attempt to authenticate the request's credentials.
      *
@@ -65,7 +64,7 @@ class LoginRequest extends FormRequest
         }
 
         // Pour les non-admins, on vérifie qu'ils sont associés à une station
-        if (!$user->station_id) {
+        if (! $user->station_id) {
             Auth::logout();
 
             throw ValidationException::withMessages([
@@ -76,7 +75,6 @@ class LoginRequest extends FormRequest
         // Sinon, on peut stocker directement la station dans la session par exemple
         session(['selected_station_id' => $user->station_id]);
     }
-
 
     /**
      * Ensure the login request is not rate limited.

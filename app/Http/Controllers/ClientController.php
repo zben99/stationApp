@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\ClientCreditExport;
+use App\Models\Client;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ClientController extends Controller
@@ -12,8 +13,6 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         $stationId = session('selected_station_id');
-
-
 
         $clients = Client::where('station_id', $stationId)
             ->orderBy('name', 'asc')
@@ -37,7 +36,7 @@ class ClientController extends Controller
             'address' => 'nullable|string',
             'credit_balance' => 'nullable|numeric',
             'is_active' => 'boolean',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
         ]);
 
         $data['station_id'] = session('selected_station_id');
@@ -47,13 +46,10 @@ class ClientController extends Controller
         return redirect()->route('clients.index')->with('success', 'Client ajouté avec succès.');
     }
 
-
     public function show(Client $client)
     {
         return view('clients.show', compact('client'));
     }
-
-
 
     public function edit(Client $client)
     {
@@ -64,12 +60,12 @@ class ClientController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'phone' => 'required|string|unique:clients,phone,' . $client->id,
-            'email' => 'nullable|email|unique:clients,email,' . $client->id,
+            'phone' => 'required|string|unique:clients,phone,'.$client->id,
+            'email' => 'nullable|email|unique:clients,email,'.$client->id,
             'address' => 'nullable|string',
             'credit_balance' => 'nullable|numeric',
             'is_active' => 'boolean',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
         ]);
 
         $client->update($request->all());
@@ -84,19 +80,17 @@ class ClientController extends Controller
         return redirect()->route('clients.index')->with('success', 'Client supprimé avec succès.');
     }
 
-
-        public function exportCreditHistoryPdf(Client $client)
+    public function exportCreditHistoryPdf(Client $client)
     {
         $creditTopups = $client->creditTopups()->with('payments')->get();
 
         $pdf = Pdf::loadView('exports.client_credit_pdf', compact('client', 'creditTopups'));
-        return $pdf->download('historique_credit_' . $client->name . '.pdf');
+
+        return $pdf->download('historique_credit_'.$client->name.'.pdf');
     }
 
     public function exportCreditHistoryExcel(Client $client)
     {
-        return Excel::download(new ClientCreditExport($client), 'historique_credit_' . $client->name . '.xlsx');
+        return Excel::download(new ClientCreditExport($client), 'historique_credit_'.$client->name.'.xlsx');
     }
-
-
 }

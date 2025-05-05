@@ -1,16 +1,18 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pump;
 use App\Models\FuelIndex;
 use Illuminate\Http\Request;
 use App\Models\DailyRevenueReview;
+use Illuminate\Support\Facades\DB;
 
 class FuelIndexController extends Controller
 {
     public function index()
     {
-        //dd('');
+        // dd('');
         $stationId = session('selected_station_id');
         $fuelIndexes = FuelIndex::with('pump', 'user')
             ->where('station_id', $stationId)
@@ -20,8 +22,6 @@ class FuelIndexController extends Controller
 
         return view('fuel_indexes.index', compact('fuelIndexes'));
     }
-
-
 
     public function create()
     {
@@ -34,7 +34,8 @@ class FuelIndexController extends Controller
             ->get()
             ->sortBy(function ($pump) {
                 $productName = strtolower($pump->tank->product->name ?? '');
-                return str_contains($productName, 'super') ? '0_' . $pump->name : '1_' . $pump->name;
+
+                return str_contains($productName, 'super') ? '0_'.$pump->name : '1_'.$pump->name;
             })
             ->values();
 
@@ -55,14 +56,14 @@ class FuelIndexController extends Controller
                     $query->where(function ($q) use ($date, $rotationOrder, $currentRotationIndex) {
                         // Rotation du même jour, antérieure
                         $q->whereDate('date', $date)
-                          ->whereIn('rotation', array_slice($rotationOrder, 0, $currentRotationIndex));
+                            ->whereIn('rotation', array_slice($rotationOrder, 0, $currentRotationIndex));
                     })->orWhere(function ($q) use ($date) {
                         // Rotation du jour précédent
                         $q->whereDate('date', '<', $date);
                     });
                 })
                 ->orderByDesc('date')
-                ->orderByDesc(\DB::raw("FIELD(rotation, '6-14', '14-22', '22-6')"))
+                ->orderByDesc(DB::raw("FIELD(rotation, '6-14', '14-22', '22-6')"))
                 ->first();
 
             $lastIndexes[$pump->id] = $lastFuelIndex->index_fin ?? null;
@@ -70,8 +71,6 @@ class FuelIndexController extends Controller
 
         return view('fuel_indexes.create', compact('pumps', 'lastIndexes', 'rotation', 'date'));
     }
-
-
 
     public function store(Request $request)
     {
@@ -97,110 +96,101 @@ class FuelIndexController extends Controller
 
         if ($existing) {
             return back()->withErrors([
-                'rotation' => 'Un relevé pour cette date et cette rotation existe déjà.'
+                'rotation' => 'Un relevé pour cette date et cette rotation existe déjà.',
             ])->withInput();
         }
 
         // ✅ Enregistre les relevés pour chaque pompe
         foreach ($request->pumps as $pumpData) {
             FuelIndex::create([
-                'station_id'      => $stationId,
-                'pump_id'         => $pumpData['pump_id'],
-                'user_id'         => $userId,
-                'date'            => $request->date,
-                'rotation'        => $request->rotation,
-                'index_debut'     => $pumpData['index_debut'],
-                'index_fin'       => $pumpData['index_fin'],
-                'retour_en_cuve'  => $pumpData['retour_en_cuve'] ?? 0,
-                'prix_unitaire'   => $pumpData['prix_unitaire'],
+                'station_id' => $stationId,
+                'pump_id' => $pumpData['pump_id'],
+                'user_id' => $userId,
+                'date' => $request->date,
+                'rotation' => $request->rotation,
+                'index_debut' => $pumpData['index_debut'],
+                'index_fin' => $pumpData['index_fin'],
+                'retour_en_cuve' => $pumpData['retour_en_cuve'] ?? 0,
+                'prix_unitaire' => $pumpData['prix_unitaire'],
             ]);
         }
 
         return redirect()->route('fuel-indexes.index')->with('success', 'Relevés journaliers enregistrés avec succès.');
     }
 
-
-
-
     public function details($date, $rotation)
-{
-    $stationId = session('selected_station_id');
+    {
+        $stationId = session('selected_station_id');
 
-    $entries = FuelIndex::with('pump.tank.product', 'user')
-        ->where('station_id', $stationId)
-        ->whereDate('date', $date)
-        ->where('rotation', $rotation)
-        ->get();
+        $entries = FuelIndex::with('pump.tank.product', 'user')
+            ->where('station_id', $stationId)
+            ->whereDate('date', $date)
+            ->where('rotation', $rotation)
+            ->get();
 
-    return view('fuel_indexes.details', compact('entries', 'date', 'rotation'));
-}
-
-
-public function edit(FuelIndex $fuelIndex)
-{
-    $stationId = $fuelIndex->station_id;
-
-    $isValidated = DailyRevenueReview::where('station_id', $fuelIndex->station_id)
-    ->whereDate('date', $fuelIndex->date)
-    ->where('rotation', $fuelIndex->rotation)
-    ->exists();
-
-    if ($isValidated) {
-        return redirect()->route('fuel-indexes.details', [
-            'date' => $fuelIndex->date->format('Y-m-d'),
-            'rotation' => $fuelIndex->rotation
-        ])->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
+        return view('fuel_indexes.details', compact('entries', 'date', 'rotation'));
     }
 
-    return view('fuel_indexes.edit', compact('fuelIndex'));
-}
+    public function edit(FuelIndex $fuelIndex)
+    {
+        $stationId = $fuelIndex->station_id;
 
+        $isValidated = DailyRevenueReview::where('station_id', $fuelIndex->station_id)
+            ->whereDate('date', $fuelIndex->date)
+            ->where('rotation', $fuelIndex->rotation)
+            ->exists();
 
-public function update(Request $request, FuelIndex $fuelIndex)
-{
-    // Vérifie que la rotation n’est pas validée
-    $isValidated = \App\Models\DailyRevenueReview::where('station_id', $fuelIndex->station_id)
-        ->whereDate('date', $fuelIndex->date)
-        ->where('rotation', $fuelIndex->rotation)
-        ->exists();
+        if ($isValidated) {
+            return redirect()->route('fuel-indexes.details', [
+                'date' => $fuelIndex->date->format('Y-m-d'),
+                'rotation' => $fuelIndex->rotation,
+            ])->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
+        }
 
-    if ($isValidated) {
-        return redirect()->route('fuel-indexes.details', [
-            'date' => $fuelIndex->date->format('Y-m-d'),
-            'rotation' => $fuelIndex->rotation
-        ])->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
+        return view('fuel_indexes.edit', compact('fuelIndex'));
     }
 
-    // Valide uniquement les champs modifiables
-    $request->validate([
-        'index_debut' => 'required|numeric|min:0',
-        'index_fin' => 'required|numeric|gte:index_debut',
-        'retour_en_cuve' => 'nullable|numeric|min:0',
-    ]);
+    public function update(Request $request, FuelIndex $fuelIndex)
+    {
+        // Vérifie que la rotation n’est pas validée
+        $isValidated = \App\Models\DailyRevenueReview::where('station_id', $fuelIndex->station_id)
+            ->whereDate('date', $fuelIndex->date)
+            ->where('rotation', $fuelIndex->rotation)
+            ->exists();
 
-    // Met à jour sans toucher au prix unitaire
-    $fuelIndex->update([
-        'index_debut' => $request->index_debut,
-        'index_fin' => $request->index_fin,
-        'retour_en_cuve' => $request->retour_en_cuve ?? 0,
-    ]);
+        if ($isValidated) {
+            return redirect()->route('fuel-indexes.details', [
+                'date' => $fuelIndex->date->format('Y-m-d'),
+                'rotation' => $fuelIndex->rotation,
+            ])->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
+        }
 
-    return redirect()->route('fuel-indexes.details', [
-        'date' => $fuelIndex->date->format('Y-m-d'),
-        'rotation' => $fuelIndex->rotation
-    ])->with('success', 'Relevé mis à jour avec succès.');
-}
+        // Valide uniquement les champs modifiables
+        $request->validate([
+            'index_debut' => 'required|numeric|min:0',
+            'index_fin' => 'required|numeric|gte:index_debut',
+            'retour_en_cuve' => 'nullable|numeric|min:0',
+        ]);
 
+        // Met à jour sans toucher au prix unitaire
+        $fuelIndex->update([
+            'index_debut' => $request->index_debut,
+            'index_fin' => $request->index_fin,
+            'retour_en_cuve' => $request->retour_en_cuve ?? 0,
+        ]);
 
+        return redirect()->route('fuel-indexes.details', [
+            'date' => $fuelIndex->date->format('Y-m-d'),
+            'rotation' => $fuelIndex->rotation,
+        ])->with('success', 'Relevé mis à jour avec succès.');
+    }
 
-private function getPreviousRotation($rotation)
-{
-    return match ($rotation) {
-        '6-14' => '22-6',
-        '14-22' => '6-14',
-        '22-6' => '14-22',
-    };
-}
-
-
+    private function getPreviousRotation($rotation)
+    {
+        return match ($rotation) {
+            '6-14' => '22-6',
+            '14-22' => '6-14',
+            '22-6' => '14-22',
+        };
+    }
 }

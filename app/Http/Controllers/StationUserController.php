@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Station;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class StationUserController extends Controller
 {
@@ -41,4 +40,3 @@ class StationUserController extends Controller
         return redirect()->route('stations.associate')->with('success', 'Utilisateur dissocié de la station.');
     }
 }
-

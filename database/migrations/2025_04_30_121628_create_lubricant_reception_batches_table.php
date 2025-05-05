@@ -22,4 +22,3 @@ return new class extends Migration
         Schema::dropIfExists('lubricant_reception_batches');
     }
 };
-

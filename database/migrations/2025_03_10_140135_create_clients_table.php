@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-            // Clients
-            Schema::create('clients', function (Blueprint $table) {
-                $table->id();
-                $table->foreignId('station_id')->constrained()->onDelete('cascade');
-                $table->string('name');
-                $table->string('phone')->unique();
-                $table->string('email')->nullable()->unique();
-                $table->text('address')->nullable();
-                $table->boolean('is_active')->default(true);
-                $table->text('notes')->nullable();
-                $table->timestamps();
-            });
+        // Clients
+        Schema::create('clients', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('station_id')->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->string('phone')->unique();
+            $table->string('email')->nullable()->unique();
+            $table->text('address')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->text('notes')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

@@ -24,7 +24,4 @@ class LubricantStock extends Model
     {
         return $this->belongsTo(ProductPackaging::class);
     }
-
-
-
 }

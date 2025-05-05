@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Station;
-use Illuminate\Http\Request;
-use App\Models\StationProduct;
 use App\Models\StationCategory;
+use App\Models\StationProduct;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -21,7 +22,6 @@ class ProductController extends Controller
             ->with('i', ($request->input('page', 1) - 1) * 10);
     }
 
-
     public function create()
     {
         $categories = StationCategory::all();
@@ -34,7 +34,7 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'category_id' => 'required',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
         ]);
 
         // Injecter la station depuis la session
@@ -44,8 +44,6 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Produit ajouté avec succès.');
     }
-
-
 
     public function edit(StationProduct $product)
     {
@@ -59,7 +57,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required',
             'category_id' => 'required',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
         ]);
 
         $product->update($request->all());

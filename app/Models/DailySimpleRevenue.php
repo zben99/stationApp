@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use App\Models\Station;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class DailySimpleRevenue extends Model
 {
@@ -38,4 +36,3 @@ class DailySimpleRevenue extends Model
         return $this->type === 'boutique' ? 'Recette Boutique' : 'Recette Lavage';
     }
 }
-

@@ -12,6 +12,7 @@ class DriverController extends Controller
         $stationId = session('selected_station_id');
 
         $drivers = Driver::where('station_id', $stationId)->orderBy('name')->paginate(10);
+
         return view('drivers.index', compact('drivers'));
     }
 
@@ -28,11 +29,10 @@ class DriverController extends Controller
             'permis' => 'nullable|string|max:100',
         ]);
 
+        // Injecter la station depuis la session
+        $data['station_id'] = session('selected_station_id');
 
-         // Injecter la station depuis la session
-         $data['station_id'] = session('selected_station_id');
-
-         Driver::create($data);
+        Driver::create($data);
 
         return redirect()->route('drivers.index')->with('success', 'Chauffeur ajouté avec succès.');
     }
@@ -51,12 +51,14 @@ class DriverController extends Controller
         ]);
 
         $driver->update($request->all());
+
         return redirect()->route('drivers.index')->with('success', 'Chauffeur modifié avec succès.');
     }
 
     public function destroy(Driver $driver)
     {
         $driver->delete();
+
         return redirect()->route('drivers.index')->with('success', 'Chauffeur supprimé avec succès.');
     }
 }

@@ -1,12 +1,9 @@
 <?php
+
 namespace App\Models;
 
-use App\Models\Driver;
-use App\Models\Station;
-use App\Models\Transporter;
-use App\Models\FuelReceptionLine;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class FuelReception extends Model
 {
@@ -26,11 +23,9 @@ class FuelReception extends Model
         'remarques',
     ];
 
-
     protected $casts = [
         'date_reception' => 'date',
     ];
-
 
     public function station()
     {
@@ -46,6 +41,7 @@ class FuelReception extends Model
     {
         return $this->hasMany(FuelReceptionLine::class);
     }
+
     public function driver()
     {
         return $this->belongsTo(Driver::class);

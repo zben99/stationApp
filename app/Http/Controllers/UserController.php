@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use DB;
-use Hash;
 use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -25,7 +24,7 @@ class UserController extends Controller
     {
         $data = User::latest()->paginate(5);
 
-        return view('users.index',compact('data'))
+        return view('users.index', compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -36,8 +35,9 @@ class UserController extends Controller
      */
     public function create(): View
     {
-        $roles = Role::pluck('name','name')->all();
-        return view('users.create',compact('roles'));
+        $roles = Role::pluck('name', 'name')->all();
+
+        return view('users.create', compact('roles'));
     }
 
     /**
@@ -55,7 +55,7 @@ class UserController extends Controller
         $user->assignRole($request->input('roles'));
 
         return redirect()->route('users.index')
-                         ->with('success', 'Utilisateur créé avec succès');
+            ->with('success', 'Utilisateur créé avec succès');
     }
 
     /**
@@ -67,10 +67,10 @@ class UserController extends Controller
     public function edit($id): View
     {
         $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
-        $userRole = $user->roles->pluck('name','name')->all();
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $user->roles->pluck('name', 'name')->all();
 
-        return view('users.edit',compact('user','roles','userRole'));
+        return view('users.edit', compact('user', 'roles', 'userRole'));
     }
 
     /**
@@ -80,26 +80,25 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function update(UserUpdateRequest $request, $id): RedirectResponse
+    {
+        $input = $request->validated(); // Récupère uniquement les données validées
 
-     public function update(UserUpdateRequest $request, $id): RedirectResponse
-     {
-         $input = $request->validated(); // Récupère uniquement les données validées
+        if (! empty($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        } else {
+            $input = Arr::except($input, ['password']);
+        }
 
-         if (!empty($input['password'])) {
-             $input['password'] = Hash::make($input['password']);
-         } else {
-             $input = Arr::except($input, ['password']);
-         }
+        $user = User::findOrFail($id);
+        $user->update($input);
 
-         $user = User::findOrFail($id);
-         $user->update($input);
+        DB::table('model_has_roles')->where('model_id', $id)->delete();
+        $user->assignRole($request->input('roles'));
 
-         DB::table('model_has_roles')->where('model_id', $id)->delete();
-         $user->assignRole($request->input('roles'));
-
-         return redirect()->route('users.index')
-                          ->with('success', 'Mise à jour de l\'utilisateur réussie');
-     }
+        return redirect()->route('users.index')
+            ->with('success', 'Mise à jour de l\'utilisateur réussie');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -110,7 +109,8 @@ class UserController extends Controller
     public function destroy($id): RedirectResponse
     {
         User::find($id)->delete();
+
         return redirect()->route('users.index')
-                        ->with('success','L\'utilisateur a été supprimé avec succès');
+            ->with('success', 'L\'utilisateur a été supprimé avec succès');
     }
 }

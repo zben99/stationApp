@@ -3,8 +3,8 @@
 namespace App\Exports;
 
 use App\Models\FuelReception;
-use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
 class FuelReceptionExport implements FromView
 {
@@ -20,7 +20,7 @@ class FuelReceptionExport implements FromView
         $this->reception->load('station', 'transporter', 'driver', 'lines.tank');
 
         return view('exports.reception', [
-            'reception' => $this->reception
+            'reception' => $this->reception,
         ]);
     }
 }

@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use DB;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
-
-
     /**
      * Display a listing of the resource.
      *
@@ -23,8 +20,9 @@ class RoleController extends Controller
      */
     public function index(Request $request): View
     {
-        $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('roles.index',compact('roles'))
+        $roles = Role::orderBy('id', 'DESC')->paginate(5);
+
+        return view('roles.index', compact('roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -36,7 +34,8 @@ class RoleController extends Controller
     public function create(): View
     {
         $permission = Permission::get();
-        return view('roles.create',compact('permission'));
+
+        return view('roles.create', compact('permission'));
     }
 
     /**
@@ -51,7 +50,7 @@ class RoleController extends Controller
 
         if ($role) {
             $role->syncPermissions(
-                array_map(fn($value) => (int) $value, $request->input('permission', []))
+                array_map(fn ($value) => (int) $value, $request->input('permission', []))
             );
 
             return redirect()->route('roles.index')->with('success', 'Rôle créé avec succès.');
@@ -59,7 +58,6 @@ class RoleController extends Controller
 
         return redirect()->back()->with('error', 'Échec de la création du rôle. Veuillez réessayer.');
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -71,11 +69,11 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $permission = Permission::get();
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
-            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
+        $rolePermissions = DB::table('role_has_permissions')->where('role_has_permissions.role_id', $id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
             ->all();
 
-        return view('roles.edit',compact('role','permission','rolePermissions'));
+        return view('roles.edit', compact('role', 'permission', 'rolePermissions'));
     }
 
     /**
@@ -85,13 +83,12 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
     public function update(UpdateRoleRequest $request, $id): RedirectResponse
     {
         // Validation déjà effectuée par UpdateRoleRequest
         $role = Role::find($id);
 
-        if (!$role) {
+        if (! $role) {
             return redirect()->route('roles.index')->with('error', 'Rôle non trouvé.');
         }
 
@@ -99,14 +96,14 @@ class RoleController extends Controller
         $role->save();
 
         // Synchronisation des permissions
-        $permissionsID = array_map(function($value) {
-            return (int)$value;
+        $permissionsID = array_map(function ($value) {
+            return (int) $value;
         }, $request->input('permission'));
 
         $role->syncPermissions($permissionsID);
 
         return redirect()->route('roles.index')
-                        ->with('success', 'Rôle mis à jour avec succès.');
+            ->with('success', 'Rôle mis à jour avec succès.');
     }
 
     /**
@@ -117,8 +114,9 @@ class RoleController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
-        DB::table("roles")->where('id',$id)->delete();
+        DB::table('roles')->where('id', $id)->delete();
+
         return redirect()->route('roles.index')
-                        ->with('success','Rôle supprimé avec succès');
+            ->with('success', 'Rôle supprimé avec succès');
     }
 }

@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\Station;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Station;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -18,7 +17,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-
 
         return view('auth.login');
     }
@@ -34,7 +32,7 @@ class AuthenticatedSessionController extends Controller
 
             return redirect()->route('station.selection');
 
-        }else {
+        } else {
 
             $request->session()->regenerate();
 
@@ -42,24 +40,24 @@ class AuthenticatedSessionController extends Controller
 
         }
 
-
     }
 
     public function showSelectionPage()
     {
         $user = Auth::user();
-        if (!$user->hasRole('Admin')) {
+        if (! $user->hasRole('Admin')) {
             return redirect()->route('dashboard');
         }
 
         $stations = Station::all();
+
         return view('auth.select-station', compact('stations'));
     }
 
     public function select(Request $request)
     {
         $user = Auth::user();
-        if (!$user->hasRole('Admin')) {
+        if (! $user->hasRole('Admin')) {
             return redirect()->route('dashboard');
         }
 

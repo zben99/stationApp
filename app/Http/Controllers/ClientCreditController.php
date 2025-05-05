@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
-use App\Models\CreditTopup;
 use App\Models\CreditPayment;
+use App\Models\CreditTopup;
 use Illuminate\Http\Request;
 
 class ClientCreditController extends Controller
@@ -44,10 +44,11 @@ class ClientCreditController extends Controller
         $data = $request->validate([
             'amount' => 'required|numeric|min:0.01',
             'date' => 'required|date',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
         ]);
 
         $topup->update($data);
+
         return redirect()->route('clients.topups', $topup->client_id)->with('success', 'Crédit mis à jour.');
     }
 
@@ -62,10 +63,11 @@ class ClientCreditController extends Controller
         $data = $request->validate([
             'amount' => 'required|numeric|min:0.01',
             'date' => 'required|date',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
         ]);
 
         $payment->update($data);
+
         return redirect()->route('clients.payments', $payment->client_id)->with('success', 'Remboursement mis à jour.');
     }
 
@@ -73,12 +75,14 @@ class ClientCreditController extends Controller
     public function destroyTopup(CreditTopup $topup)
     {
         $topup->delete();
+
         return back()->with('success', 'Crédit supprimé.');
     }
 
     public function destroyPayment(CreditPayment $payment)
     {
         $payment->delete();
+
         return back()->with('success', 'Remboursement supprimé.');
     }
 }

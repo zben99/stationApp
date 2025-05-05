@@ -3,6 +3,17 @@
 
     <div class="card">
         <div class="card-body">
+
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                <strong>Whoops!</strong> Il y a eu quelques problèmes avec votre saisie.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                </div>
+            @endif
             <form action="{{ route('expenses.store') }}" method="POST" enctype="multipart/form-data">
                 @include('expenses._form')
             </form>

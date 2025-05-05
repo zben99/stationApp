@@ -6,8 +6,16 @@
         Valider une rotation
     </x-slot>
 
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
+
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+          <strong>Whoops!</strong> Il y a eu quelques problèmes avec votre saisie.<br><br>
+          <ul>
+             @foreach ($errors->all() as $error)
+               <li>{{ $error }}</li>
+             @endforeach
+          </ul>
+        </div>
     @endif
 
     <form method="POST" action="{{ route('daily-revenue-validations.store') }}">

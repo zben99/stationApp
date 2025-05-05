@@ -23,6 +23,7 @@
 
     <div class="card">
         <div class="card-body">
+
             <form action="{{ route('tanks.store') }}" method="POST">
                 @include('tanks._form')
             </form>

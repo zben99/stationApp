@@ -2,6 +2,18 @@
 <x-app-layout>
     <x-slot name="header">Modifier Recette</x-slot>
 
+
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+          <strong>Whoops!</strong> Il y a eu quelques problèmes avec votre saisie.<br><br>
+          <ul>
+             @foreach ($errors->all() as $error)
+               <li>{{ $error }}</li>
+             @endforeach
+          </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('daily-simple-revenues.update', $dailySimpleRevenue) }}">
         @csrf @method('PUT')
 

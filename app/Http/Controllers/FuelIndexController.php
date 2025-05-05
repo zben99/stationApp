@@ -82,7 +82,6 @@ class FuelIndexController extends Controller
             'pumps.*.index_debut' => 'required|numeric|min:0',
             'pumps.*.index_fin' => 'required|numeric|gte:pumps.*.index_debut',
             'pumps.*.retour_en_cuve' => 'nullable|numeric|min:0',
-            'pumps.*.prix_unitaire' => 'required|numeric|min:0',
         ]);
 
         $stationId = session('selected_station_id');
@@ -99,6 +98,7 @@ class FuelIndexController extends Controller
                 'rotation' => 'Un relevé pour cette date et cette rotation existe déjà.',
             ])->withInput();
         }
+
 
         // ✅ Enregistre les relevés pour chaque pompe
         foreach ($request->pumps as $pumpData) {

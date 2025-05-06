@@ -300,7 +300,7 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     ]);
 
     Route::resource('daily-revenue-validations', DailyRevenueValidationController::class)->only([
-        'index', 'create', 'store',
+        'index', 'create', 'store', 'show'
     ]);
 
     Route::get('/daily-revenue-validations/fetch', [App\Http\Controllers\DailyRevenueValidationController::class, 'fetch'])->name('daily-revenue-validations.fetch');

@@ -112,6 +112,7 @@ class FuelIndexController extends Controller
                 'index_fin' => $pumpData['index_fin'],
                 'retour_en_cuve' => $pumpData['retour_en_cuve'] ?? 0,
                 'prix_unitaire' => $pumpData['prix_unitaire'],
+                'montant_recette'=> (($pumpData['index_fin']-$pumpData['index_debut'])-$pumpData['retour_en_cuve'] ?? 0)*$pumpData['prix_unitaire']
             ]);
         }
 
@@ -177,6 +178,7 @@ class FuelIndexController extends Controller
             'index_debut' => $request->index_debut,
             'index_fin' => $request->index_fin,
             'retour_en_cuve' => $request->retour_en_cuve ?? 0,
+            'montant_recette'=> (($pumpData['index_fin']-$pumpData['index_debut'])-$pumpData['retour_en_cuve'] ?? 0)*$pumpData['prix_unitaire']
         ]);
 
         return redirect()->route('fuel-indexes.details', [

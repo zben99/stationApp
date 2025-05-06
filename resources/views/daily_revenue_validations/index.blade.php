@@ -1,70 +1,69 @@
 <x-app-layout>
-    <x-slot name="header">Historique des validations de rotation</x-slot>
+    <x-slot name="header">📋 Historique des validations</x-slot>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="mb-3">
+    <div class="mb-3 d-flex justify-content-end">
         <a href="{{ route('daily-revenue-validations.create') }}" class="btn btn-success">
-            + Nouvelle Validation
+            ➕ Nouvelle validation
         </a>
     </div>
 
     <div class="card shadow-sm">
         <div class="card-body table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover align-middle text-center">
                 <thead class="table-light">
                     <tr>
-                        <th>Date</th>
-                        <th>Rotation</th>
-                        <th>Carburant</th>
-                        <th>Produits</th>
-                        <th>Boutique</th>
-                        <th>OM</th>
-                        <th>TPE</th>
-                        <th>Avoir perçu</th>
-                        <th>Avoir servi</th>
-                        <th>Crédit reçu</th>
-                        <th>Remboursement</th>
-                        <th>Dépenses</th>
-                        <th><strong>Net à verser</strong></th>
+                        <th>Date / Rotation</th>
+                        <th>Encaissement</th>
+                        <th>Décaissement</th>
+                        <th>Mouv. TPE / OM</th>
+                        <th class="text-primary">💰 Net à verser</th>
                         <th>Validé par</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($validations as $val)
+                        @php
+                            $encaissement = $val->fuel_amount + $val->product_amount + $val->shop_amount + $val->credit_repaid + $val->balance_received;
+                            $decaissement = $val->expenses + $val->credit_received + $val->balance_used;
+                            $electronic = $val->tpe_amount + $val->om_amount;
+                        @endphp
                         <tr>
-                            <td>{{ \Carbon\Carbon::parse($val->date)->format('d/m/Y') }}</td>
-                            <td>{{ $val->rotation }}</td>
-                            <td>{{ number_format($val->fuel_amount, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->product_amount, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->shop_amount, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->om_amount, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->tpe_amount, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->balance_received, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->balance_used, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->credit_received, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->credit_repaid, 0, ',', ' ') }} F</td>
-                            <td>{{ number_format($val->expenses, 0, ',', ' ') }} F</td>
-                            <td><strong>{{ number_format($val->net_to_deposit, 0, ',', ' ') }} F</strong></td>
-                            <td>{{ $val->user->name ?? '—' }} <br>
-                                <small class="text-muted">{{ $val->validated_at ? \Carbon\Carbon::parse($val->validated_at)->format('d/m/Y H:i') : '' }}</small>
+                            <td>
+                                <strong>{{ $val->formatted_date }}</strong><br>
+                                <span class="badge bg-dark">{{ $val->rotation_label }}</span>
+                            </td>
+                            <td>{{ number_format($encaissement, 0, ',', ' ') }} F</td>
+                            <td>{{ number_format($decaissement, 0, ',', ' ') }} F</td>
+                            <td>{{ number_format($electronic, 0, ',', ' ') }} F</td>
+                            <td class="fw-bold text-primary">
+                                {{ number_format($val->net_to_deposit, 0, ',', ' ') }} F
                             </td>
                             <td>
-                                {{-- Si besoin, ajoute un bouton pour show ou delete --}}
+                                <small>{{ $val->validator->name ?? '—' }}</small><br>
+                                <small class="text-muted">{{ $val->validated_at?->format('d/m H:i') }}</small>
+                            </td>
+                            <td>
+                                <a href="{{ route('daily-revenue-validations.show', $val) }}" class="btn btn-sm btn-outline-primary">
+                                    Détails
+                                </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="15" class="text-center">Aucune validation enregistrée.</td>
+                            <td colspan="7" class="text-center text-muted">Aucune validation enregistrée.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
-            {{ $validations->links('pagination::bootstrap-5') }}
+            <div class="mt-3">
+                {{ $validations->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 </x-app-layout>

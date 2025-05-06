@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BalanceTopup;
-use App\Models\BalanceUsage;
-use App\Models\CreditPayment;
-use App\Models\CreditTopup;
-use App\Models\DailyProductSale;
-use App\Models\DailyRevenueValidation;
-use App\Models\DailySimpleRevenue;
 use App\Models\Expense;
 use App\Models\FuelIndex;
+use App\Models\CreditTopup;
+use App\Models\BalanceTopup;
+use App\Models\BalanceUsage;
 use Illuminate\Http\Request;
+use App\Models\CreditPayment;
+use App\Models\DailyProductSale;
+use App\Models\DailyRevenueReview;
+use App\Models\DailySimpleRevenue;
+use App\Models\DailyRevenueValidation;
 
 class DailyRevenueValidationController extends Controller
 {
@@ -28,72 +29,6 @@ class DailyRevenueValidationController extends Controller
 
     public function create()
     {
-        /*
-        $stationId = session('selected_station_id');
-        $date = "2025-05-03";
-        $rotation = "6-14";
-
-        if (!$date || !$rotation) {
-            return response()->json([
-                'message' => 'La date et la rotation sont requises.'
-            ], 422);
-        }
-
-        $fuel = FuelIndex::where('station_id', $stationId)
-            ->where('date', $date)
-            ->where('rotation', $rotation)
-            ->sum('montant_declare');
-
-        $product = DailyProductSale::where('station_id', $stationId)
-            ->where('date', $date)
-            ->where('rotation', $rotation)
-            ->sum('total_price');
-
-        $shop = DailySimpleRevenue::where('station_id', $stationId)
-            ->where('date', $date)
-            ->where('rotation', $rotation)
-            ->whereIn('type', ['boutique', 'lavage'])
-            ->sum('amount');
-
-        $balanceReceived = BalanceTopup::where('station_id', $stationId)
-            ->where('date', $date)
-            ->where('rotation', $rotation)
-            ->sum('amount');
-
-        $balanceUsed = BalanceUsage::where('station_id', $stationId)
-            ->where('date', $date)
-            ->where('rotation', $rotation)
-            ->sum('amount');
-
-        $creditReceived = CreditTopup::where('station_id', $stationId)
-            ->where('date', $date)
-            ->where('rotation', $rotation)
-            ->sum('amount');
-
-        $creditRepaid = CreditPayment::where('station_id', $stationId)
-            ->where('date', $date)
-            ->where('rotation', $rotation)
-            ->sum('amount');
-
-        $expenses = Expense::where('station_id', $stationId)
-            ->where('date_depense', $date)
-            ->where('rotation', $rotation)
-            ->sum('montant');
-
-        return response()->json([
-            'fuel_amount' => $fuel,
-            'product_amount' => $product,
-            'shop_amount' => $shop,
-            'balance_received' => $balanceReceived,
-            'balance_used' => $balanceUsed,
-            'credit_received' => $creditReceived,
-            'credit_repaid' => $creditRepaid,
-            'expenses' => $expenses,
-            'om_amount' => 0,
-            'tpe_amount' => 0,
-        ]);
-*/
-
         return view('daily_revenue_validations.create');
     }
 
@@ -118,10 +53,11 @@ class DailyRevenueValidationController extends Controller
 
             'expenses' => 'nullable|numeric|min:0',
             'net_to_deposit' => 'nullable|numeric|min:0',
+            'cash_amount' => 'nullable|numeric|min:0',
         ]);
 
         // Vérifie s'il y a déjà une validation pour cette date et rotation
-        $exists = \App\Models\DailyRevenueValidation::where('station_id', $stationId)
+        $exists = DailyRevenueValidation::where('station_id', $stationId)
             ->where('date', $data['date'])
             ->where('rotation', $data['rotation'])
             ->exists();
@@ -131,16 +67,7 @@ class DailyRevenueValidationController extends Controller
         }
 
         // Enregistre dans DailyRevenueValidation
-        \App\Models\DailyRevenueValidation::create([
-            'station_id' => $stationId,
-            'date' => $data['date'],
-            'rotation' => $data['rotation'],
-            'validated_by' => auth()->id(),
-            'validated_at' => now(),
-        ]);
-
-        // Enregistre dans DailyRevenueReview
-        \App\Models\DailyRevenueReview::create([
+        DailyRevenueValidation::create([
             'station_id' => $stationId,
             'date' => $data['date'],
             'rotation' => $data['rotation'],
@@ -152,13 +79,26 @@ class DailyRevenueValidationController extends Controller
             'balance_received' => $data['balance_received'] ?? 0,
             'balance_used' => $data['balance_used'] ?? 0,
             'credit_received' => $data['credit_received'] ?? 0,
-            'credit_repaid' => $data['credit_repaid'] ?? 0,
+            'credit_refunded' => $data['credit_repaid'] ?? 0,
             'expenses' => $data['expenses'] ?? 0,
+            'cash_amount' => $data['cash_amount'] ?? 0,
             'net_to_deposit' => $data['net_to_deposit'] ?? 0,
+            'validated_by' => auth()->id(),
+            'validated_at' => now(),
         ]);
+
+
 
         return redirect()->route('daily-revenue-validations.index')
             ->with('success', 'Rotation validée avec succès.');
+    }
+
+
+    public function show(DailyRevenueValidation $dailyRevenueValidation)
+    {
+        return view('daily_revenue_validations.show', [
+            'validation' => $dailyRevenueValidation
+        ]);
     }
 
     public function fetch(Request $request)
@@ -177,7 +117,7 @@ class DailyRevenueValidationController extends Controller
             $fuel = FuelIndex::where('station_id', $stationId)
                 ->where('date', $date)
                 ->where('rotation', $rotation)
-                ->sum('montant_declare');
+                ->sum('montant_recette');
 
             $product = DailyProductSale::where('station_id', $stationId)
                 ->where('date', $date)

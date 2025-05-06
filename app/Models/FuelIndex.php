@@ -21,7 +21,7 @@ class FuelIndex extends Model
         'index_fin',
         'retour_en_cuve',
         'prix_unitaire',
-        'montant_declare',
+        'montant_recette',
     ];
 
     protected $casts = [
@@ -31,7 +31,7 @@ class FuelIndex extends Model
         'index_fin' => 'decimal:2',
         'retour_en_cuve' => 'decimal:2',
         'prix_unitaire' => 'decimal:2',
-        'montant_declare' => 'decimal:2',
+        'montant_recette' => 'decimal:2',
     ];
 
     // Relations

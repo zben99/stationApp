@@ -25,7 +25,7 @@
             <tr><th>Transporteur</th><td>{{ $reception->transporter->name ?? '-' }}</td></tr>
             <tr><th>Chauffeur</th><td>{{ $reception->driver->name ?? '-' }}</td></tr>
             <tr><th>Numéro BL</th><td>{{ $reception->num_bl ?? '-' }}</td></tr>
-            <tr><th>Remarques</th><td>{{ $reception->remarques ?? '-' }}</td></tr>
+            <tr><th>Commentaire</th><td>{{ $reception->remarques ?? '-' }}</td></tr>
         </table>
 
         <h5 class="mt-4">Détails par cuve</h5>

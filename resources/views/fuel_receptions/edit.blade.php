@@ -48,7 +48,7 @@
             </div>
 
             <div class="col-md-12 mt-3">
-                <label>Remarques</label>
+                <label>Commentaire</label>
                 <textarea name="remarques" class="form-control">{{ $reception->remarques }}</textarea>
             </div>
         </div>

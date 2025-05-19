@@ -16,12 +16,12 @@
         @csrf
 
         <div class="row mb-3">
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <label for="date_reception" class="form-label">Date de réception</label>
                 <input type="date" name="date_reception" class="form-control" required>
             </div>
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-6 mb-3">
                 <label for="rotation">Rotation</label>
                 <select name="rotation" class="form-control" required>
                     <option value="">-- Sélectionner --</option>
@@ -32,7 +32,11 @@
             </div>
 
 
-            <div class="col-md-6">
+
+        </div>
+
+        <div class="row">
+                <div class="col-md-6">
                 <label for="supplier_id" class="form-label">Fournisseur</label>
                 <select name="supplier_id" class="form-control">
                     <option value="">-- Sélectionner --</option>
@@ -41,17 +45,11 @@
                     @endforeach
                 </select>
             </div>
-        </div>
-
-        <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="num_bc" class="form-label">N° Bon de Commande (BC)</label>
                 <input type="text" name="num_bc" class="form-control" value="{{ old('num_bc', $batch->num_bc ?? '') }}">
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="num_bl" class="form-label">N° Bon de Livraison (BL)</label>
-                <input type="text" name="num_bl" class="form-control" value="{{ old('num_bl', $batch->num_bl ?? '') }}">
-            </div>
+
         </div>
 
 

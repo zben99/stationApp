@@ -7,7 +7,6 @@
             <p><strong>Rotation :</strong> {{ $batch->rotation ?? '-' }}</p>
             <p><strong>Fournisseur :</strong> {{ $batch->supplier->name ?? 'N/A' }}</p>
             <p><strong>N° BC :</strong> {{ $batch->num_bc ?? '-' }}</p>
-            <p><strong>N° BL :</strong> {{ $batch->num_bl ?? '-' }}</p>
         </div>
     </div>
 

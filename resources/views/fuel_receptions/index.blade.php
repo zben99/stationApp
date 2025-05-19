@@ -43,11 +43,10 @@
                         <tr>
                             <th>N°</th>
                             <th>Date</th>
-                            <th>Rotation</th>
-                            <th>Quantité totale (L)</th>
+                            <th>Qté totale (L)</th>
                             <th>BL</th>
                             <th>Transporteur</th>
-                            <th>Chauffeur</th>
+                            <th>Immatriculation</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -55,14 +54,20 @@
                         @foreach ($receptions as $key => $reception)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ \Carbon\Carbon::parse($reception->date_reception)->format('d/m/Y') }}</td>
-                                <td>{{ $reception->rotation ?? '-' }}</td>
+                                <td>
+                                    {{ \Carbon\Carbon::parse($reception->date_reception)->format('d/m/Y') }} <br>
+                                    Rotation : {{ $reception->rotation ?? '-' }}
+                                </td>
+
                                 <td>
                                     {{ number_format($reception->lines->sum('reception_par_cuve'), 2, ',', ' ') }} L
                                 </td>
                                 <td>{{ $reception->num_bl ?? '-' }}</td>
                                 <td>{{ $reception->transporter->name ?? '-' }}</td>
-                                <td>{{ $reception->driver->name ?? '-' }}</td>
+                                <td>
+                                    {{ $reception->vehicle_registration ?? '-' }} <br>
+                                    Chauffeur : {{ $reception->driver->name ?? '-' }}
+                                </td>
                                 <td>
                                     <a class="btn btn-sm btn-info" href="{{ route('fuel-receptions.show', $reception->id) }}">
                                         <i class="bi bi-eye"></i> Détails

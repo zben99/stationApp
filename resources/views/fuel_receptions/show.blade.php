@@ -23,6 +23,8 @@
             <tr><th>Rotation</th><td>{{ $reception->rotation ?? '-' }}</td></tr>
             <tr><th>Station</th><td>{{ $reception->station->name ?? '-' }}</td></tr>
             <tr><th>Transporteur</th><td>{{ $reception->transporter->name ?? '-' }}</td></tr>
+             <tr><th>Immatriculation Vehicule</th><td>{{ $reception->vehicle_registration ?? '-' }}</td></tr>
+
             <tr><th>Chauffeur</th><td>{{ $reception->driver->name ?? '-' }}</td></tr>
             <tr><th>Numéro BL</th><td>{{ $reception->num_bl ?? '-' }}</td></tr>
             <tr><th>Commentaire</th><td>{{ $reception->remarques ?? '-' }}</td></tr>

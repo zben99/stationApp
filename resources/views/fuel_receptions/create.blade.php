@@ -18,13 +18,13 @@
         <div class="row">
 
 
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label>Date de réception</label>
 
                 <input type="date" name="date_reception" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
             </div>
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="rotation">Rotation</label>
                 <select name="rotation" class="form-control" required>
                     <option value="">-- Choisir une rotation --</option>
@@ -35,29 +35,47 @@
             </div>
 
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label>Numéro BL</label>
                 <input type="text" name="num_bl" class="form-control">
             </div>
 
-            <div class="col-md-6 mt-2">
+            {{-- Transporteur --}}
+            <div class="col-md-4 mt-2">
                 <label>Transporteur</label>
-                <select name="transporter_id" class="form-control" required>
-                    <option value="">-- Sélectionner --</option>
+                <select id="transporterSelect"
+                        name="transporter_id"        {{-- on garde ce name --}}
+                        class="form-control select2-tag"
+                        required>
+                    <option value="">-- Sélectionner ou taper --</option>
                     @foreach ($transporters as $t)
                         <option value="{{ $t->id }}">{{ $t->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="col-md-6 mt-2">
+            {{-- Chauffeur --}}
+            <div class="col-md-4 mt-2">
                 <label>Chauffeur</label>
-                <select name="driver_id" class="form-control" required>
-                    <option value="">-- Sélectionner --</option>
+                <select id="driverSelect"
+                        name="driver_id"
+                        class="form-control select2-tag"
+                        required>
+                    <option value="">-- Sélectionner ou taper --</option>
                     @foreach ($drivers as $d)
                         <option value="{{ $d->id }}">{{ $d->name }}</option>
                     @endforeach
                 </select>
+            </div>
+
+
+            <div class="col-md-4 mt-2">
+                <label>Immatriculation du véhicule</label>
+                <input type="text"
+                       name="vehicle_registration"
+                       class="form-control"
+                       placeholder="Ex. : 11-AA-1234"
+                       value="{{ old('vehicle_registration') }}">
             </div>
 
             <div class="col-md-12 mt-3">
@@ -134,4 +152,22 @@
             $(button).closest('tr').remove();
         }
     </script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    $('.select2-tag').select2({
+        theme: 'bootstrap-5',       // optionnel si tu as bootstrap-select2
+        tags: true,                 // autorise la saisie libre
+        placeholder: '-- Sélectionner ou taper --',
+        width: '100%',
+        language: {
+            noResults: () => 'Aucun résultat',
+            inputTooShort: () => 'Tape au moins 1 caractère'
+        }
+    });
+});
+</script>
+
 </x-app-layout>

@@ -27,7 +27,7 @@
                 <input type="text" name="num_bl" class="form-control" value="{{ $reception->num_bl }}">
             </div>
 
-            <div class="col-md-6 mt-2">
+            <div class="col-md-4 mt-2">
                 <label>Transporteur</label>
                 <select name="transporter_id" class="form-control">
                     <option value="">-- Sélectionner --</option>
@@ -37,7 +37,7 @@
                 </select>
             </div>
 
-            <div class="col-md-6 mt-2">
+            <div class="col-md-4 mt-2">
                 <label>Chauffeur</label>
                 <select name="driver_id" class="form-control">
                     <option value="">-- Sélectionner --</option>
@@ -45,6 +45,15 @@
                         <option value="{{ $d->id }}" {{ $reception->driver_id == $d->id ? 'selected' : '' }}>{{ $d->name }}</option>
                     @endforeach
                 </select>
+            </div>
+
+            <div class="col-md-4 mt-2">
+                <label>Immatriculation du véhicule</label>
+                <input type="text"
+                       name="vehicle_registration"
+                       class="form-control"
+                       placeholder="Ex. : 11-AA-1234"
+                       value="{{ old('vehicle_registration', $reception->vehicle_registration) }}">
             </div>
 
             <div class="col-md-12 mt-3">

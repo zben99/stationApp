@@ -16,6 +16,7 @@ class FuelReception extends Model
         'num_bl',
         'transporter_id',
         'driver_id',
+        'vehicle_registration',
         'contre_plein_litre',
         'contre_plein_valeur',
         'observation_type',

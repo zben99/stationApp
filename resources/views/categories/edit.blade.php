@@ -39,7 +39,7 @@
                 <strong>Type :</strong>
                 <select name="type" class="form-control">
                     <option value=""></option>
-                    <option value="fuel" {{ $categorie->type=='fuel' ? 'selected' : '' }}>Fuel</option>
+                    <option value="fuel" {{ $categorie->type=='fuel' ? 'selected' : '' }}>Carburant</option>
                     <option value="lubrifiant" {{ $categorie->type=='lubrifiant' ? 'selected' : '' }}>Lubrifiant</option>
                     <option value="boutique" {{ $categorie->type=='boutique' ? 'selected' : '' }}>Boutique</option>
 

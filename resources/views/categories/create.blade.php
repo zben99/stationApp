@@ -35,7 +35,7 @@
                 <strong>Type :</strong>
                 <select name="type" class="form-control">
                     <option value=""></option>
-                    <option value="fuel">Fuel</option>
+                    <option value="fuel">Carburant</option>
                     <option value="lubrifiant">Lubrifiant</option>
                     <option value="boutique">Boutique</option>
                 </select>

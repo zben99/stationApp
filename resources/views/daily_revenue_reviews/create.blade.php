@@ -34,7 +34,7 @@
 
         <ul class="list-group mb-3">
             <li class="list-group-item d-flex justify-content-between">
-                <span>Fuel</span>
+                <span>Carburant</span>
                 <strong>{{ number_format($fuelTotal, 0, ',', ' ') }} F</strong>
             </li>
             <li class="list-group-item d-flex justify-content-between">

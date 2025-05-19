@@ -131,7 +131,7 @@
                 <a class="collapse-item" href="{{route('drivers.index')}}">Gestion des Chauffeurs</a>
 
 
-                <a class="collapse-item" href="{{route('fuel-receptions.index')}}">Dépotage Fuel</a>
+                <a class="collapse-item" href="{{route('fuel-receptions.index')}}">Dépotage Carburant</a>
 
             </div>
         </div>
@@ -213,7 +213,7 @@
         </a>
         <div id="collapse8" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{route('fuel-indexes.index')}}">Relevés Fuel</a>
+                <a class="collapse-item" href="{{route('fuel-indexes.index')}}">Relevés Carburant</a>
 
                 <a class="collapse-item" href="{{route('daily-product-sales.index')}}">LUB/PEA/GAZ/LAMPES</a>
 

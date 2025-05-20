@@ -20,11 +20,13 @@
 
 
                     <div class="card shadow mb-4">
+                         {{--
                         <div class="card-header py-3">
                             <div class="pull-right">
                                 <a class="btn btn-success mb-2" href="{{ route('categories.create') }}"><i class="fa fa-plus"></i> Nouvelle Catégorie</a>
                             </div>
                         </div>
+                        --}}
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -43,8 +45,15 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             <td>{{ $categorie->name }}</td>
-                                            <td>{{ $categorie->type }}
-
+                                           {{-- Affichage du type de catégorie --}}
+                                            <td>
+                                                @if (Str::lower($categorie->type) === 'lubrifiant')
+                                                    Produits Non Carburants
+                                                @elseif (Str::lower($categorie->type) === 'fuel')
+                                                    Carburant
+                                                @else
+                                                    {{ $categorie->type }}
+                                                @endif
                                             </td>
                                             <td>
                                                 @if ($categorie->is_active==1)
@@ -57,7 +66,7 @@
                                             <td>
 
 
-
+                                                    {{--
                                                   @can('category-edit')
                                                         <a class="btn btn-primary btn-sm" href="{{ route('categories.edit',$categorie->id) }}">
                                                             <i class="bi bi-pencil-square"></i> Modifier
@@ -73,6 +82,7 @@
                                                             </button>
                                                         </form>
                                                     @endcan
+                                                     --}}
 
                                             </td>
                                         </tr>

@@ -94,9 +94,7 @@
                 @can('category-list')
                     <a class="collapse-item" href="{{route('categories.index')}}">Gestion des catégories</a>
                 @endcan
-                @can('product-list')
-                    <a class="collapse-item" href="{{route('products.index')}}">Gestion des produits</a>
-                @endcan
+
 
                 @can('supplier-list')
                     <a class="collapse-item" href="{{route('suppliers.index')}}">Gestion des fournisseurs</a>

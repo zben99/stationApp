@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StationCategory;
-use App\Models\StationProduct;
 use Illuminate\Http\Request;
+use App\Models\StationProduct;
+use App\Models\StationCategory;
+use Illuminate\Validation\Rule;
 
 class LubricantProductController extends Controller
 {
@@ -27,6 +28,7 @@ class LubricantProductController extends Controller
 
         $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])->get();
 
+
         return view('lubricants.products.index', compact('products', 'categories'))
             ->with('i', ($request->input('page', 1) - 1) * 10);
     }
@@ -35,9 +37,8 @@ class LubricantProductController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        $categories = StationCategory::where('station_id', $stationId)
-            ->whereIn('name', ['Lubrifiant', "Produits d'Entretien Auto (PEA)"])
-            ->get();
+         $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])->get();
+
 
         return view('lubricants.products.create', compact('categories'));
     }
@@ -46,29 +47,41 @@ class LubricantProductController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        $request->validate([
-            'category_id' => 'required|exists:station_categories,id',
-            'name' => 'required|string|max:255',
-            'price' => 'nullable|numeric|min:0',
+        /* ───── Validation ───── */
+        $validated = $request->validate([
+            'category_id' => ['required', 'exists:station_categories,id'],
+            'code'        => [
+                'required', 'string', 'max:30',
+                // unique PAR station
+                Rule::unique('station_products')->where(fn ($q) =>
+                    $q->where('station_id', $stationId)
+                ),
+            ],
+            'name'        => ['required', 'string', 'max:255'],
+            'price'       => ['nullable', 'numeric', 'min:0'],
         ]);
 
+        /* ───── Création ───── */
         StationProduct::create([
-            'station_id' => $stationId,
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'price' => $request->price,
+            'station_id'  => $stationId,
+            'category_id' => $validated['category_id'],
+            'code'        => $validated['code'],
+            'name'        => $validated['name'],
+            'price'       => $validated['price'] ?? 0,
         ]);
 
-        return redirect()->route('lubricant-products.index')->with('success', 'Lubrifiant ajouté.');
+        return redirect()
+            ->route('lubricant-products.index')
+            ->with('success', 'Produit ajouté avec succès.');
     }
+
 
     public function edit(StationProduct $lubricantProduct)
     {
         $stationId = session('selected_station_id');
 
-        $categories = StationCategory::where('station_id', $stationId)
-            ->whereIn('type', ['lubrifiant', 'pea'])
-            ->get();
+        $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])->get();
+
 
         return view('lubricants.products.edit', [
             'product' => $lubricantProduct,
@@ -80,11 +93,18 @@ class LubricantProductController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:station_categories,id',
+            'code'        => [
+                'required', 'string', 'max:30',
+                // unique PAR station
+                Rule::unique('station_products')->where(fn ($q) =>
+                    $q->where('station_id', $stationId)
+                ),
+            ],
             'name' => 'required|string|max:255',
             'price' => 'nullable|numeric|min:0',
         ]);
 
-        $lubricantProduct->update($request->only('category_id', 'name', 'price'));
+        $lubricantProduct->update($request->only('category_id', 'name', 'code', 'price'));
 
         return redirect()->route('lubricant-products.index')->with('success', 'Lubrifiant modifié.');
     }

@@ -44,6 +44,7 @@
                                     <thead>
                                         <tr>
                                             <th>N°</th>
+                                             <th>Code</th>
                                             <th>Produit</th>
                                             <th>Catégorie</th>
                                             <th >Action</th>
@@ -54,6 +55,7 @@
                                         @foreach ($products as $key => $product)
                                         <tr>
                                             <td>{{++$i}}</td>
+                                            <td>{{ $product->code }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $product->stationCategory->name }}</td>
 

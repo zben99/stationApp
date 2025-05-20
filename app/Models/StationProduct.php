@@ -9,7 +9,7 @@ class StationProduct extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['station_id', 'name', 'category_id', 'price'];
+    protected $fillable = ['station_id', 'name', 'category_id', 'code', 'price'];
 
     public function station()
     {

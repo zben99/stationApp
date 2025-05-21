@@ -18,6 +18,8 @@ class FuelReceptionLine extends Model
         'ecart_reception',
         'ecart_stock',
         'ecart',
+        'contre_plein_litre',
+        'contre_plein_valeur',
         'sonabhy_d',
         'sonabhy_t',
         'sonabhy_d15',

@@ -3,12 +3,12 @@
 
     @if (count($errors) > 0)
         <div class="alert alert-danger">
-        <strong>Whoops!</strong> Il y a eu quelques problèmes avec votre saisie.<br><br>
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+            <strong>Whoops!</strong> Il y a eu quelques problèmes avec votre saisie.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
@@ -16,12 +16,10 @@
         @csrf
 
         <div class="row">
-
-
             <div class="col-md-4">
                 <label>Date de réception</label>
-
-                <input type="date" name="date_reception" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
+                <input type="date" name="date_reception" class="form-control"
+                       value="{{ old('date_reception', date('Y-m-d')) }}" required>
             </div>
 
             <div class="col-md-4 mb-3">
@@ -34,7 +32,6 @@
                 </select>
             </div>
 
-
             <div class="col-md-4">
                 <label>Numéro BL</label>
                 <input type="text" name="num_bl" class="form-control">
@@ -44,7 +41,7 @@
             <div class="col-md-4 mt-2">
                 <label>Transporteur</label>
                 <select id="transporterSelect"
-                        name="transporter_id"        {{-- on garde ce name --}}
+                        name="transporter_id"
                         class="form-control select2-tag"
                         required>
                     <option value="">-- Sélectionner ou taper --</option>
@@ -67,7 +64,6 @@
                     @endforeach
                 </select>
             </div>
-
 
             <div class="col-md-4 mt-2">
                 <label>Immatriculation du véhicule</label>
@@ -94,6 +90,7 @@
                     <th>Jauge Avant</th>
                     <th>Quantité Reçue</th>
                     <th>Jauge Après</th>
+                    <th>Contre-plein&nbsp;(L)</th>   {{-- nouvelle colonne --}}
                     <th></th>
                 </tr>
             </thead>
@@ -107,10 +104,10 @@
                             @endforeach
                         </select>
                     </td>
-
                     <td><input type="number" step="0.01" name="tanks[0][jauge_avant]" class="form-control"></td>
                     <td><input type="number" step="0.01" name="tanks[0][reception_par_cuve]" class="form-control"></td>
                     <td><input type="number" step="0.01" name="tanks[0][jauge_apres]" class="form-control"></td>
+                    <td><input type="number" step="0.01" name="tanks[0][contre_plein_litre]" class="form-control"></td> {{-- nouvel input --}}
                     <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button></td>
                 </tr>
             </tbody>
@@ -132,16 +129,17 @@
             const row = `
             <tr>
                 <td>
-                    <select name="tanks[${index}][tank_id]" class="form-control" required>
+                    <select name="tanks[\${index}][tank_id]" class="form-control" required>
                         <option value="">-- Cuve --</option>
                         @foreach ($tanks as $tank)
                             <option value="{{ $tank->id }}">{{ $tank->code }} ( {{ $tank->product->name }} )</option>
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" step="0.01" name="tanks[${index}][jauge_avant]" class="form-control"></td>
-                <td><input type="number" step="0.01" name="tanks[${index}][reception_par_cuve]" class="form-control"></td>
-                <td><input type="number" step="0.01" name="tanks[${index}][jauge_apres]" class="form-control"></td>
+                <td><input type="number" step="0.01" name="tanks[\${index}][jauge_avant]" class="form-control"></td>
+                <td><input type="number" step="0.01" name="tanks[\${index}][reception_par_cuve]" class="form-control"></td>
+                <td><input type="number" step="0.01" name="tanks[\${index}][jauge_apres]" class="form-control"></td>
+                <td><input type="number" step="0.01" name="tanks[\${index}][contre_plein_litre]" class="form-control"></td>
                 <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button></td>
             </tr>`;
             $('#cuvesTable tbody').append(row);
@@ -153,21 +151,18 @@
         }
     </script>
 
-
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    $('.select2-tag').select2({
-        theme: 'bootstrap-5',       // optionnel si tu as bootstrap-select2
-        tags: true,                 // autorise la saisie libre
-        placeholder: '-- Sélectionner ou taper --',
-        width: '100%',
-        language: {
-            noResults: () => 'Aucun résultat',
-            inputTooShort: () => 'Tape au moins 1 caractère'
-        }
-    });
-});
-</script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            $('.select2-tag').select2({
+                theme: 'bootstrap-5',
+                tags: true,
+                placeholder: '-- Sélectionner ou taper --',
+                width: '100%',
+                language: {
+                    noResults: () => 'Aucun résultat',
+                    inputTooShort: () => 'Tape au moins 1 caractère'
+                }
+            });
+        });
+    </script>
 </x-app-layout>

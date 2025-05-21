@@ -14,7 +14,6 @@ return new class extends Migration
           Schema::table('station_products', function (Blueprint $table) {
             $table->string('code', 30)
                   ->after('category_id');      // position facultative
-            $table->unique(['station_id', 'code']);
         });
     }
 
@@ -24,7 +23,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('station_products', function (Blueprint $table) {
-            $table->dropUnique(['station_id', 'code']);
             $table->dropColumn('code');
         });
     }

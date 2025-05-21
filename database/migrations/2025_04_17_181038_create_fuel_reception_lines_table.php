@@ -19,7 +19,14 @@ return new class extends Migration
             $table->decimal('jauge_avant', 10, 2)->nullable();
             $table->decimal('reception_par_cuve', 10, 2)->nullable();
             $table->decimal('jauge_apres', 10, 2)->nullable();
+
+
+            $table->decimal('ecart_reception', 10, 2)->nullable();
+            $table->decimal('ecart_stock', 10, 2)->nullable();
             $table->decimal('ecart', 10, 2)->nullable();
+
+            $table->decimal('contre_plein_litre', 10, 2)->nullable();
+            $table->decimal('contre_plein_valeur', 12, 2)->nullable();
 
             $table->decimal('sonabhy_d', 8, 4)->nullable();
             $table->decimal('sonabhy_t', 5, 2)->nullable();

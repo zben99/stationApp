@@ -15,16 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->date('date_reception');
+            $table->string('rotation')->nullable();
             $table->string('num_bl')->nullable();
 
             $table->foreignId('transporter_id')->constrained()->onDelete('set null')->nullable();
             $table->foreignId('driver_id')->nullable()->constrained()->onDelete('set null');
-
-            $table->decimal('contre_plein_litre', 10, 2)->nullable();
-            $table->decimal('contre_plein_valeur', 12, 2)->nullable();
-
+             $table->string('vehicle_registration', 30)->nullable();
             $table->enum('observation_type', ['prêt', 'remboursement'])->nullable();
             $table->decimal('observation_litre', 10, 2)->nullable();
+
 
             $table->text('remarques')->nullable();
             $table->timestamps();

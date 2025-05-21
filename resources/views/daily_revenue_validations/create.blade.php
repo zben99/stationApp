@@ -85,7 +85,7 @@
             <div class="card-header bg-light fw-bold">IV. Récapitulatif</div>
             <div class="card-body row g-3">
                 <div class="col-md-4">
-                    <label class="form-label">Montant en caisse</label>
+                    <label class="form-label">montant à verser</label>
                     <input type="number" step="0.01" name="cash_amount" id="cash_amount" class="form-control" value="{{ old('cash_amount', 0) }}">
                 </div>
                 <div class="col-md-4">

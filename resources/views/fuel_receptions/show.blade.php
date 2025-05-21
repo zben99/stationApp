@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">Détail du Dépotage</x-slot>
 
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-1"></div>
 
         <div class="col-7">
@@ -17,28 +17,31 @@
     </div>
 
     <div class="card shadow mb-4 p-4">
+        {{-- Informations générales --}}
         <h5>Informations générales</h5>
         <table class="table table-bordered">
             <tr><th>Date réception</th><td>{{ \Carbon\Carbon::parse($reception->date_reception)->format('d/m/Y') }}</td></tr>
             <tr><th>Rotation</th><td>{{ $reception->rotation ?? '-' }}</td></tr>
             <tr><th>Station</th><td>{{ $reception->station->name ?? '-' }}</td></tr>
             <tr><th>Transporteur</th><td>{{ $reception->transporter->name ?? '-' }}</td></tr>
-             <tr><th>Immatriculation Vehicule</th><td>{{ $reception->vehicle_registration ?? '-' }}</td></tr>
-
+            <tr><th>Immatriculation véhicule</th><td>{{ $reception->vehicle_registration ?? '-' }}</td></tr>
             <tr><th>Chauffeur</th><td>{{ $reception->driver->name ?? '-' }}</td></tr>
             <tr><th>Numéro BL</th><td>{{ $reception->num_bl ?? '-' }}</td></tr>
             <tr><th>Commentaire</th><td>{{ $reception->remarques ?? '-' }}</td></tr>
         </table>
 
+        {{-- Détails par cuve --}}
         <h5 class="mt-4">Détails par cuve</h5>
         <table class="table table-striped table-bordered">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th>Cuve</th>
                     <th>Produit</th>
                     <th>Jauge avant</th>
                     <th>Quantité reçue</th>
                     <th>Jauge après</th>
+                    <th>Contre-plein&nbsp;(L)</th>
+                    <th>Valeur&nbsp;contre-plein</th>
                     <th>Écart réception</th>
                     <th>Écart stock</th>
                 </tr>
@@ -46,11 +49,17 @@
             <tbody>
                 @foreach ($reception->lines as $line)
                     <tr>
-                        <td>{{ $line->tank->code ?? '-' }}</td>
-                        <td>{{ $line->tank->product->name ?? '-' }}</td>
+                        <td>{{ $line->tank->code ?? '—' }}</td>
+                        <td>{{ $line->tank->product->name ?? '—' }}</td>
                         <td>{{ $line->jauge_avant ?? '—' }}</td>
                         <td>{{ $line->reception_par_cuve ?? '—' }}</td>
                         <td>{{ $line->jauge_apres ?? '—' }}</td>
+                        <td>{{ $line->contre_plein_litre ?? '—' }}</td>
+                        <td>
+                            {{ $line->contre_plein_valeur !== null
+                                ? number_format($line->contre_plein_valeur, 0, ',', ' ').' F'
+                                : '—' }}
+                        </td>
                         <td class="{{ abs($line->ecart_reception) > 20 ? 'text-danger' : 'text-success' }}">
                             {{ $line->ecart_reception ?? '—' }} L
                         </td>

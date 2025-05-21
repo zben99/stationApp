@@ -299,12 +299,13 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
         'index', 'create', 'store', 'show',
     ]);
 
-    Route::resource('daily-revenue-validations', DailyRevenueValidationController::class)->only([
-        'index', 'create', 'store', 'show'
-    ]);
+
 
     Route::get('/daily-revenue-validations/fetch', [App\Http\Controllers\DailyRevenueValidationController::class, 'fetch'])->name('daily-revenue-validations.fetch');
 
+        Route::resource('daily-revenue-validations', DailyRevenueValidationController::class)->only([
+        'index', 'create', 'store', 'show'
+    ]);
 });
 
 require __DIR__.'/auth.php';

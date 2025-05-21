@@ -8,36 +8,52 @@ class CreateDailyRevenueValidationsTable extends Migration
 {
     public function up()
     {
-        Schema::create('daily_revenue_validations', function (Blueprint $table) {
-            $table->id();
+      Schema::create('daily_revenue_validations', function (Blueprint $table) {
+    $table->id();
 
-            $table->foreignId('station_id')->constrained()->onDelete('cascade');
-            $table->date('date');
-            $table->enum('rotation', ['6-14', '14-22', '22-6']);
+    $table->foreignId('station_id')->constrained()->onDelete('cascade');
+    $table->date('date');
+    $table->enum('rotation', ['6-14', '14-22', '22-6']);
 
-            $table->decimal('fuel_amount', 12, 2)->default(0);            // Vente de carburant
-            $table->decimal('product_amount', 12, 2)->default(0);         // Vente de lubrifiants, etc.
-            $table->decimal('shop_amount', 12, 2)->default(0);            // Boutique (si gérée séparément)
+    /* === Carburants === */
+    $table->decimal('fuel_super_amount', 12, 2)->default(0);
+    $table->decimal('fuel_gazoil_amount', 12, 2)->default(0);
 
-            $table->decimal('credit_received', 12, 2)->default(0);        // Crédits reçus
-            $table->decimal('credit_refunded', 12, 2)->default(0);        // Remboursements de crédit
+    /* === Produits par famille === */
+    $table->decimal('lub_amount',      12, 2)->default(0);
+    $table->decimal('pea_amount',      12, 2)->default(0);
+    $table->decimal('gaz_amount',      12, 2)->default(0);
+    $table->decimal('lampes_amount',   12, 2)->default(0);
+    $table->decimal('lavage_amount',   12, 2)->default(0);
+    $table->decimal('boutique_amount', 12, 2)->default(0);
 
-            $table->decimal('balance_received', 12, 2)->default(0);       // Avoirs perçus
-            $table->decimal('balance_used', 12, 2)->default(0);           // Avoirs servis
+    /* === Crédits & avoirs === */
+    $table->decimal('credit_received', 12, 2)->default(0);
+    $table->decimal('credit_repaid',   12, 2)->default(0);
+    $table->decimal('balance_received',12, 2)->default(0);
+    $table->decimal('balance_used',    12, 2)->default(0);
 
-            $table->decimal('tpe_amount', 12, 2)->default(0);             // Paiements TPE
-            $table->decimal('om_amount', 12, 2)->default(0);              // Paiements Orange Money
-            $table->decimal('cash_amount', 12, 2)->default(0);            // Espèces
+    /* === Mouvements électroniques === */
+    $table->decimal('tpe_amount', 12, 2)->default(0);
+    $table->decimal('om_amount',  12, 2)->default(0);
 
-            $table->decimal('expenses', 12, 2)->default(0);               // Dépenses
+    /* === Décaissements : dépenses espèces === */
+    $table->decimal('expenses', 12, 2)->default(0);
 
-            $table->decimal('net_to_deposit', 12, 2)->default(0);         // Montant à reverser
+    /* === Cash déclaré & net calculé === */
+    $table->decimal('cash_amount',    12, 2)->default(0);   // montant effectivement remis
+    $table->decimal('net_to_deposit', 12, 2)->default(0);   // calcul appli
 
-            $table->foreignId('validated_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->timestamp('validated_at')->nullable();
+    $table->foreignId('validated_by')->nullable()
+          ->constrained('users')->nullOnDelete();
+    $table->timestamp('validated_at')->nullable();
 
-            $table->timestamps();
-        });
+    $table->timestamps();
+
+    /* Unicité d’une validation par station+date+rotation */
+    $table->unique(['station_id','date','rotation']);
+});
+
     }
 
     public function down()

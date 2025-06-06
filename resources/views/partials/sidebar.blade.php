@@ -10,16 +10,22 @@
 
     </a>
     @if(session('selected_station_id'))
-    @php
-        $station = \App\Models\Station::find(session('selected_station_id'));
-    @endphp
-    @if($station)
-        <div class="text-center text-white small bg-primary bg-opacity-75 p-2 mx-3 my-2 rounded">
-            <i class="fas fa-map-marker-alt me-1 text-warning"></i>
-            <strong class="text-warning"> {{ $station->name }} - {{ $station->location }}</strong>
-        </div>
+        @php
+            $station = \App\Models\Station::find(session('selected_station_id'));
+        @endphp
+        @if($station)
+            <div class="text-center text-white bg-primary bg-opacity-75 p-2 mx-3 my-2 rounded">
+                <i class="fas fa-map-marker-alt me-1 text-warning"></i>
+                <strong class="fs-5">
+                    <a href="{{ route('station.selection', $station->id) }}" class="text-warning text-decoration-underline">
+                        {{ $station->name }} - {{ $station->location }}
+                    </a>
+                </strong>
+            </div>
+        @endif
     @endif
-@endif
+
+
 
 
 
@@ -190,6 +196,8 @@
         </a>
         <div id="collapse7" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{route('clients.index')}}">Gestion des clients</a>
+
                 <a class="collapse-item" href="{{route('balances.summary')}}">Gestion des Avoirs</a>
 
                 <a class="collapse-item" href="{{route('credit-topups.index')}}">Gestion des crédits</a>

@@ -29,10 +29,7 @@
                 <input type="email" name="email" class="form-control">
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Crédit</label>
-                <input type="number" step="0.01" name="credit_balance" class="form-control" value="0">
-            </div>
+
 
             <div class="col-md-6 mb-3">
                 <label class="form-label">Adresse</label>

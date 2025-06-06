@@ -32,10 +32,7 @@
                 <label class="form-label">Email</label>
                 <input type="email" name="email" class="form-control" value="{{ $client->email }}">
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Crédit</label>
-                <input type="number" step="0.01" name="credit_balance" class="form-control" value="{{ $client->credit_balance }}">
-            </div>
+
 
             <div class="col-md-6 mb-3">
                 <label class="form-label">Adresse</label>

@@ -233,7 +233,7 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
 
     // Recharges de crédit
     Route::resource('credit-topups', CreditTopupController::class);
-   // Route::get('/credit-topups/client/{client}', [CreditTopupController::class, 'show'])->name('credit-topups.show');
+    Route::get('/credit-topups/client/{client}', [CreditTopupController::class, 'show'])->name('credit-topups.show');
 
     Route::get('clients/{client}/credits', [ClientCreditController::class, 'topups'])->name('clients.topups');
     Route::get('clients/{client}/remboursements', [ClientCreditController::class, 'payments'])->name('clients.payments');

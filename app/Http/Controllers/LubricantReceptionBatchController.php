@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LubricantReception;
-use App\Models\LubricantReceptionBatch;
-use App\Models\ProductPackaging;
-use App\Models\StationCategory;
-use App\Models\StationProduct;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\StationProduct;
+use App\Models\StationCategory;
+use App\Models\ProductPackaging;
+use App\Models\LubricantReception;
+use Illuminate\Support\Facades\DB;
+use App\Models\LubricantReceptionBatch;
 
 class LubricantReceptionBatchController extends Controller
 {
@@ -68,13 +69,15 @@ class LubricantReceptionBatchController extends Controller
         return view('lubricant_reception_batches.create', compact('stationProducts', 'suppliers'));
     }
 
+
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'date_reception' => 'required|date',
             'rotation' => 'required|in:6-14,14-22,22-6',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'supplier_id' => ['nullable','string','max:255'],
             'num_bc' => 'nullable|string|max:255',
+            'num_bl' => 'nullable|string|max:255',
             'products' => 'required|array|min:1',
             'products.*.station_product_id' => 'required|exists:station_products,id',
             'products.*.product_packaging_id' => 'required|exists:station_product_packaging,id',
@@ -85,38 +88,70 @@ class LubricantReceptionBatchController extends Controller
         ]);
 
         $stationId = session('selected_station_id');
+        $supplierId = $this->resolveEntityId(
+            Supplier::class, $request->supplier_id, $stationId
+        );
 
-        $batch = LubricantReceptionBatch::create([
-            'station_id' => $stationId,
-            'supplier_id' => $request->supplier_id,
-            'date_reception' => $request->date_reception,
-            'rotation' => $request->rotation,
-            'num_bc' => $request->num_bc,
-            'num_bl' => $request->num_bl,
-        ]);
-
-        foreach ($request->products as $prod) {
-            LubricantReception::create([
-                'batch_id' => $batch->id,
-                'station_product_id' => $prod['station_product_id'],
-                'product_packaging_id' => $prod['product_packaging_id'],
-                'supplier_id' => $request->supplier_id,
+        DB::beginTransaction();
+        try {
+            $batch = LubricantReceptionBatch::create([
+                'station_id' => $stationId,
+                'supplier_id' => $supplierId,
                 'date_reception' => $request->date_reception,
-                'quantite' => $prod['quantite'],
-                'prix_achat' => $prod['prix_achat'] ?? null,
-                'prix_vente' => $prod['prix_vente'] ?? null,
-                'observations' => $prod['observations'] ?? null,
+                'rotation' => $request->rotation,
+                'num_bc' => $request->num_bc,
+                'num_bl' => $request->num_bl,
             ]);
 
-            LubricantReception::updateOrCreateStock(
-                $prod['station_product_id'],
-                $prod['product_packaging_id'],
-                $prod['quantite']
-            );
+            foreach ($data['products'] as $prod) {
+                LubricantReception::create([
+                    'batch_id' => $batch->id,
+                    'station_product_id' => $prod['station_product_id'],
+                    'product_packaging_id' => $prod['product_packaging_id'],
+                    'supplier_id' => $supplierId,
+                    'date_reception' => $request->date_reception,
+                    'quantite' => $prod['quantite'],
+                    'prix_achat' => $prod['prix_achat'] ?? null,
+                    'prix_vente' => $prod['prix_vente'] ?? null,
+                    'observations' => $prod['observations'] ?? null,
+                ]);
+
+                LubricantReception::updateOrCreateStock(
+                    $prod['station_product_id'],
+                    $prod['product_packaging_id'],
+                    $prod['quantite']
+                );
+            }
+
+            DB::commit();
+            return redirect()->route('lubricant-receptions.batch.index')->with('success', 'Réception enregistrée avec succès.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Erreur : '.$e->getMessage()])->withInput();
+        }
+    }
+
+
+
+        private function resolveEntityId(string $model, ?string $value, int $stationId): ?int
+    {
+        if (empty($value)) {
+            return null;
         }
 
-        return redirect()->route('lubricant-receptions.batch.index')->with('success', 'Réception enregistrée avec succès.');
+        // Id numérique existant
+        if (is_numeric($value)) {
+            return $model::findOrFail((int) $value)->id;
+        }
+
+        // Nouveau nom : on cherche d’abord dans la même station
+        $record = $model::firstOrCreate(
+            ['station_id' => $stationId, 'name' => trim($value)]
+        );
+
+        return $record->id;
     }
+
 
     public function show(LubricantReceptionBatch $batch)
     {

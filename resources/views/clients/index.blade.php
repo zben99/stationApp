@@ -22,7 +22,6 @@
                             <th>Nom</th>
                             <th>Téléphone</th>
                             <th>Email</th>
-                            <th>Crédit</th>
                             <th>Statut</th>
                             <th>Action</th>
                         </tr>
@@ -34,16 +33,14 @@
                                 <td>{{ $client->name }}</td>
                                 <td>{{ $client->phone }}</td>
                                 <td>{{ $client->email ?? '-' }}</td>
-                                <td>{{ number_format($client->credit_balance, 2) }}</td>
+
                                 <td>
                                     <span class="badge bg-{{ $client->is_active ? 'success' : 'danger' }}">
                                         {{ $client->is_active ? 'Actif' : 'Inactif' }}
                                     </span>
                                 </td>
                                 <td>
-                                    <a class="btn btn-info btn-sm" href="{{ route('clients.show', $client->id) }}">
-                                        <i class="bi bi-eye"></i> Afficher
-                                    </a>
+
 
                                     <a class="btn btn-primary btn-sm" href="{{ route('clients.edit', $client->id) }}">
                                         <i class="bi bi-pencil-square"></i> Modifier

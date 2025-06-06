@@ -36,10 +36,14 @@
         </div>
 
         <div class="row">
-                <div class="col-md-6">
-                <label for="supplier_id" class="form-label">Fournisseur</label>
-                <select name="supplier_id" class="form-control">
-                    <option value="">-- Sélectionner --</option>
+
+            <div class="col-md-6">
+                <label  for="supplier_id" class="form-label">Fournisseur</label>
+                <select id="driverSelect"
+                        name="supplier_id"
+                        class="form-control select2-tag"
+                        required>
+                    <option value="">-- Sélectionner ou taper --</option>
                     @foreach($suppliers as $supplier)
                         <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                     @endforeach
@@ -138,4 +142,19 @@
         }
     });
 </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            $('.select2-tag').select2({
+                theme: 'bootstrap-5',
+                tags: true,
+                placeholder: '-- Sélectionner ou taper --',
+                width: '100%',
+                language: {
+                    noResults: () => 'Aucun résultat',
+                    inputTooShort: () => 'Tape au moins 1 caractère'
+                }
+            });
+        });
+    </script>
 </x-app-layout>

@@ -26,7 +26,9 @@ class LubricantProductController extends Controller
 
         $products = $query->orderBy('name')->paginate(10);
 
-        $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])->get();
+        $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])
+        ->where('station_id', $stationId)
+        ->get();
 
 
         return view('lubricants.products.index', compact('products', 'categories'))

@@ -9,7 +9,10 @@ class PackagingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Packaging::orderBy('label');
+         $stationId = session('selected_station_id');
+
+        $query = Packaging::where('station_id', $stationId)
+                ->orderBy('label');
 
         if ($request->filled('type')) {
             $query->where('type', $request->type);
@@ -30,14 +33,17 @@ class PackagingController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+
+         $data = $request->validate([
             'label' => 'required|string|max:50',
             'quantity' => 'required|numeric|min:0.01',
             'unit' => 'required|string|in:L,kg,u',
             'type' => 'nullable|string|max:50',
         ]);
+        // Injecter la station depuis la session
+        $data['station_id'] = session('selected_station_id');
 
-        Packaging::create($request->only('label', 'quantity', 'unit', 'type'));
+        Packaging::create($data);
 
         return redirect()->route('packagings.index')->with('success', 'Conditionnement ajouté.');
     }

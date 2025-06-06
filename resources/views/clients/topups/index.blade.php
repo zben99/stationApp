@@ -1,12 +1,12 @@
 <x-app-layout>
-    <x-slot name="header">Avoirs perçus de {{ $client->name }}</x-slot>
+    <x-slot name="header">Crédits de {{ $client->name }}</x-slot>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     <div class="mb-3 d-flex justify-content-between">
-        <a href="{{ route('clients.balance', $client->id) }}" class="btn btn-secondary">
+        <a href="{{ route('credit-topups.show', $client->id) }}" class="btn btn-secondary">
             ← Retour à la fiche client
         </a>
 

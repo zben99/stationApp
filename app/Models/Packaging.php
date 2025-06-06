@@ -10,6 +10,7 @@ class Packaging extends Model
     use HasFactory;
 
     protected $fillable = [
+        'station_id',
         'label',
         'quantity',
         'unit',
@@ -21,5 +22,10 @@ class Packaging extends Model
         return $this->belongsToMany(StationProduct::class, 'station_product_packaging')
             ->withPivot('price')
             ->withTimestamps();
+    }
+
+        public function station()
+    {
+        return $this->belongsTo(Station::class);
     }
 }

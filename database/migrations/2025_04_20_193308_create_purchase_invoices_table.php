@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->string('invoice_number');
             $table->date('date');
+             $table->enum('rotation', ['6-14', '14-22', '22-6']);
             $table->string('supplier_name');
             $table->decimal('amount_ht', 10, 2);
             $table->decimal('amount_ttc', 10, 2);

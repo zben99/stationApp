@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->foreignId('expense_category_id')->constrained()->onDelete('cascade');
             $table->date('date_depense');
+            $table->enum('rotation', ['6-14', '14-22', '22-6']);
             $table->string('description')->nullable();
             $table->decimal('montant', 12, 2);
             $table->string('piece_jointe')->nullable(); // si tu veux uploader un justificatif

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('fuel_receptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('station_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supplier_id')->nullable()->constrained()->onDelete('set null');
             $table->date('date_reception');
             $table->string('rotation')->nullable();
             $table->string('num_bl')->nullable();

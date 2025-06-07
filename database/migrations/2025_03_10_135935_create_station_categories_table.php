@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->enum('type', ['fuel', 'stock']);
+            $table->enum('type', ['fuel', 'lubrifiant', 'boutique']);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

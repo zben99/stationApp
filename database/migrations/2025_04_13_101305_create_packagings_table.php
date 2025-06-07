@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('packagings', function (Blueprint $table) {
             $table->id();
+              $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->string('label'); // Ex : "1L", "5L", "20L", "Fût", etc.
-            $table->decimal('volume_litre', 8, 2); // Ex : 1.00, 5.00, etc.
+             $table->string('type')->nullable(); // Ex : lubrifiant, gaz, lavage
+            $table->decimal('quantity', 8, 2)->nullable();; // Ex : 1.00, 5.00, etc.
+             $table->string('unit')->default('L')->nullable(); // Exemple : L, kg, unité
             $table->timestamps();
         });
 

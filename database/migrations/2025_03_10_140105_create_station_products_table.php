@@ -14,6 +14,7 @@ return new class extends Migration
         // Produits - Stations Association (Stock Management)
         Schema::create('station_products', function (Blueprint $table) {
             $table->id();
+             $table->string('code', 30);
             $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('name');

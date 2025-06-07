@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">Nouvelle recette journalière ((Lubrifiant / PEA / GAZ / Lampes))</x-slot>
+    <x-slot name="header">Nouvelle recette journalière (Lubrifiant / PEA / GAZ / Lampes)</x-slot>
 
     @if (count($errors) > 0)
         <div class="alert alert-danger">

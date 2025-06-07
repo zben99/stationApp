@@ -92,7 +92,7 @@ class StationController extends Controller
             // Création ou récupération des packagings
             $createdPackagings = [];
             foreach ($packagings as $data) {
-                 $data['station_id'] = session('selected_station_id');
+                 $data['station_id'] =  $station->id;
                 $createdPackagings[$data['label']] = Packaging::firstOrCreate($data);
             }
 
@@ -192,6 +192,56 @@ class StationController extends Controller
                 ]);
             }
         }
+
+        // 10. Création des produits GAZ (bouteilles) avec packagings : charge + consignation
+    $gazCategory = $station->categories()->where('name', 'GAZ')->first();
+
+     $gazProducts = [
+    'Bouteille 6 Kg' => [
+        ['label' => 'Charge 6 Kg', 'price' => 2000, 'quantity' => 6],
+        ['label' => 'Consignation Bouteille 6 Kg', 'price' => 13500, 'quantity' => 0],
+        ],
+        'Bouteille 12,5 Kg' => [
+            ['label' => 'Charge 12,5 Kg', 'price' => 5500, 'quantity' => 12.5],
+            ['label' => 'Consignation Bouteille 12,5 Kg', 'price' => 16500, 'quantity' => 0],
+        ],
+        'Bouteille 38 Kg' => [
+            ['label' => 'Charge 38 Kg', 'price' => 34200, 'quantity' => 38],
+            ['label' => 'Consignation Bouteille 38 Kg', 'price' => 18000, 'quantity' => 0],
+        ],
+        'TELIMAGAZ' => [
+            ['label' => 'TELIMAGAZ', 'price' => 25500, 'quantity' => 0],
+        ],
+    ];
+
+    foreach ($gazProducts as $productName => $packagingsData) {
+        // Création du produit principal
+        $product = StationProduct::create([
+            'station_id' => $station->id,
+            'name' => $productName,
+            'category_id' => $gazCategory->id,
+            'price' => $packagingsData[0]['price'], // Prix de la charge comme prix par défaut
+            'code' => strtoupper(Str::slug($productName, '_')),
+            'is_active' => true,
+        ]);
+
+        // Création et association des conditionnements
+        foreach ($packagingsData as $data) {
+            $packaging = Packaging::firstOrCreate([
+                'station_id' => $station->id,
+                'label' => $data['label'],
+            ], [
+                'quantity' => $data['quantity'],
+                'unit' => 'Kg',
+                'type' => 'gaz',
+            ]);
+
+            // Lier le packaging au produit avec le prix
+            $product->packagings()->attach($packaging->id, ['price' => $data['price']]);
+        }
+    }
+
+
 
         return redirect()->route('stations.index')->with('success', 'Station ajoutée avec succès.');
     }

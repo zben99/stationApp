@@ -39,7 +39,9 @@ class LubricantProductController extends Controller
     {
         $stationId = session('selected_station_id');
 
-         $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])->get();
+         $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])
+          ->where('station_id', $stationId)
+         ->get();
 
 
         return view('lubricants.products.create', compact('categories'));
@@ -82,7 +84,9 @@ class LubricantProductController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])->get();
+        $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])
+         ->where('station_id', $stationId)
+         ->get();
 
 
         return view('lubricants.products.edit', [

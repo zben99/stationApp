@@ -29,6 +29,7 @@ class PermissionTableSeeder extends Seeder
             'station-create',
             'station-edit',
             'station-delete',
+            'station-associate',
 
             // Clients Credit
             'client-credit',

@@ -27,4 +27,15 @@
 
 
 
+<script>
+  $(document).ready(function() {
+    // On cible tous les collapse de la sidebar
+    $('#accordionSidebar .collapse').on('shown.bs.collapse', function() {
+      // On fait défiler la page entière jusqu'en bas
+      $('html, body').animate({
+        scrollTop: $(document).height()
+      }, 300); // ajustez 300 (ms) selon la vitesse souhaitée
+    });
+  });
+</script>
 

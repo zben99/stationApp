@@ -65,6 +65,7 @@ public function store(Request $request)
 
         /* Électronique */
         'tpe_amount' => 'nullable|numeric|min:0',
+         'tpe_recharge_amount' => 'nullable|numeric|min:0',
         'om_amount'  => 'nullable|numeric|min:0',
 
         /* Dépenses & caisse */
@@ -95,6 +96,7 @@ public function store(Request $request)
         + ($data['boutique_amount']    ?? 0)
         + ($data['credit_repaid']      ?? 0)
         + ($data['balance_received']   ?? 0)
+         + ($data['tpe_recharge_amount'] ?? 0)
     );
 
     $totalOut = (
@@ -129,6 +131,7 @@ public function store(Request $request)
         'balance_used'      => $data['balance_used']      ?? 0,
 
         'tpe_amount' => $data['tpe_amount'] ?? 0,
+        'tpe_recharge_amount' => $data['tpe_recharge_amount'] ?? 0,
         'om_amount'  => $data['om_amount']  ?? 0,
 
         'expenses'      => $data['expenses']    ?? 0,

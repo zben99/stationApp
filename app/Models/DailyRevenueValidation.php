@@ -35,6 +35,7 @@ class DailyRevenueValidation extends Model
 
         /* Mouvements électroniques */
         'tpe_amount',
+        'tpe_recharge_amount',
         'om_amount',
 
         /* Dépenses & liquidités */
@@ -72,6 +73,7 @@ class DailyRevenueValidation extends Model
 
         /* Électronique + autres */
         'tpe_amount'   => 'decimal:2',
+        'tpe_recharge_amount'   => 'decimal:2',
         'om_amount'    => 'decimal:2',
         'expenses'     => 'decimal:2',
         'cash_amount'  => 'decimal:2',

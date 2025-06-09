@@ -86,8 +86,10 @@
             <div class="card-header bg-light fw-bold">III. Mouvements électroniques</div>
             <div class="card-body row g-3">
                 @foreach ([
-                    'tpe_amount' => 'Recharge TPE',
-                    'om_amount'  => 'Recharge OM'
+                    'tpe_amount' => 'Vente TPE',
+                    'om_amount'  => 'Vente OM',
+                    'tpe_recharge_amount' => 'Recharge TPE'
+
                 ] as $name => $label)
                     <div class="col-md-4">
                         <label class="form-label">{{ $label }}</label>

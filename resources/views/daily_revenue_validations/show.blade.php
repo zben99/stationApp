@@ -91,8 +91,12 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
-                            Recharge TPE :
+                            Vente TPE :
                             <strong>{{ number_format($validation->tpe_amount, 0, ',', ' ') }} F</strong>
+                        </li>
+                        <li class="list-group-item">
+                                Recharges TPE :
+                                <strong>{{ number_format($validation->tpe_recharge_amount, 2, ',', ' ') }} FCFA</strong>
                         </li>
                         <li class="list-group-item">
                             Recharge OM :

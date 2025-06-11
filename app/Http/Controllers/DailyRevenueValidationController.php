@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Models\Expense;
 use App\Models\FuelIndex;
 use App\Models\CreditTopup;
@@ -33,6 +34,7 @@ class DailyRevenueValidationController extends Controller
 
     public function create()
     {
+
         return view('daily_revenue_validations.create');
     }
 
@@ -65,8 +67,11 @@ public function store(Request $request)
 
         /* Électronique */
         'tpe_amount' => 'nullable|numeric|min:0',
-         'tpe_recharge_amount' => 'nullable|numeric|min:0',
+        'tpe_recharge_amount' => 'nullable|numeric|min:0',
+        'om_recharge_amount' => 'nullable|numeric|min:0',
         'om_amount'  => 'nullable|numeric|min:0',
+
+
 
         /* Dépenses & caisse */
         'expenses'      => 'nullable|numeric|min:0',
@@ -96,8 +101,10 @@ public function store(Request $request)
         + ($data['boutique_amount']    ?? 0)
         + ($data['credit_repaid']      ?? 0)
         + ($data['balance_received']   ?? 0)
-         + ($data['tpe_recharge_amount'] ?? 0)
+        + ($data['tpe_recharge_amount'] ?? 0)
+        + ($data['om_recharge_amount'] ?? 0)
     );
+
 
     $totalOut = (
           ($data['expenses']        ?? 0)
@@ -132,6 +139,7 @@ public function store(Request $request)
 
         'tpe_amount' => $data['tpe_amount'] ?? 0,
         'tpe_recharge_amount' => $data['tpe_recharge_amount'] ?? 0,
+        'om_recharge_amount' => $data['om_recharge_amount'] ?? 0,
         'om_amount'  => $data['om_amount']  ?? 0,
 
         'expenses'      => $data['expenses']    ?? 0,
@@ -182,10 +190,10 @@ public function fetch(Request $request)
 
         $gazoilId = StationProduct::where('station_id', $stationId)
                       ->where(function ($q) {
-                          $q->where('name', 'like', '%Gazoil%')
-                            ->orWhere('name', 'like', '%Diesel%');
+                          $q->where('name', 'like', '%GASOIL%');
                       })
                       ->value('id');
+
 
         /* -----------------------------------------------------------------
         | 3. Sommes recettes FUEL : Super & Gazoil séparés
@@ -310,6 +318,8 @@ public function fetch(Request $request)
             // placeholders (mobile money / TPE)
             'om_amount'           => 0,
             'tpe_amount'          => 0,
+            'tpe_recharge_amount'          => 0,
+            'tpe_recharge_amount'          => 0,
         ]);
 
     } catch (\Throwable $e) {

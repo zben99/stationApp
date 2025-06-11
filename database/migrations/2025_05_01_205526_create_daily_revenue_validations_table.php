@@ -35,7 +35,8 @@ class CreateDailyRevenueValidationsTable extends Migration
 
     /* === Mouvements électroniques === */
     $table->decimal('tpe_amount', 12, 2)->default(0);
-      $table->decimal('tpe_recharge_amount', 12, 2)->default(0)->comment('Montant des recharges TPE');
+    $table->decimal('tpe_recharge_amount', 12, 2)->default(0)->comment('Montant des recharges TPE');
+    $table->decimal('om_recharge_amount', 12, 2)->default(0)->comment('Montant des recharges OM');
     $table->decimal('om_amount',  12, 2)->default(0);
 
     /* === Décaissements : dépenses espèces === */

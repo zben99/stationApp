@@ -94,14 +94,19 @@
                             Vente TPE :
                             <strong>{{ number_format($validation->tpe_amount, 0, ',', ' ') }} F</strong>
                         </li>
+                         <li class="list-group-item">
+                            Vente OM :
+                            <strong>{{ number_format($validation->om_amount, 0, ',', ' ') }} F</strong>
+                        </li>
+                         <li class="list-group-item">
+                            Recharge OM :
+                            <strong>{{ number_format($validation->om__recharge_amount, 0, ',', ' ') }} F</strong>
+                        </li>
                         <li class="list-group-item">
                                 Recharges TPE :
                                 <strong>{{ number_format($validation->tpe_recharge_amount, 2, ',', ' ') }} FCFA</strong>
                         </li>
-                        <li class="list-group-item">
-                            Recharge OM :
-                            <strong>{{ number_format($validation->om_amount, 0, ',', ' ') }} F</strong>
-                        </li>
+
                     </ul>
                 </div>
             </div>

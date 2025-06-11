@@ -138,7 +138,7 @@ public function store(Request $request)
                 'contre_plein_litre'  => $contreLitres,
                 'contre_plein_valeur' => $contreValeur,
                 'jauge_apres'         => $jaugeApres ?: null,
-                'ecart_reception'     => ($jaugeApres - $jaugeAvant) - ($qteReception - $contreLitres),
+                'ecart_reception'     => ($jaugeApres - $jaugeAvant) - ($qteReception),
                 'ecart_stock'         => $jaugeAvant - $stockActuel,
             ]);
 
@@ -226,147 +226,66 @@ public function store(Request $request)
         return view('fuel_receptions.edit', compact('reception', 'tanks', 'transporters', 'drivers'));
     }
 
-public function update(Request $request, $id)
+public function update(Request $request, FuelReception $reception)
 {
-    $reception = FuelReception::with('lines')->findOrFail($id);
-
-    /* 1. VALIDATION ------------------------------------------------- */
-    $data = $request->validate([
-        'date_reception'     => 'required|date',
-        'rotation'           => 'required|in:6-14,14-22,22-6',
-        'num_bl'             => 'nullable|string',
-        'transporter_id'     => 'nullable|exists:transporters,id',
-        'driver_id'          => 'nullable|exists:drivers,id',
-        'vehicle_registration' => ['nullable','string','max:30'],
-        'remarques'            => 'nullable|string',
-
-        'tanks.*.tank_id'            => 'required|exists:tanks,id',
-        'tanks.*.jauge_avant'        => 'nullable|numeric',
-        'tanks.*.reception_par_cuve' => 'nullable|numeric',
-        'tanks.*.jauge_apres'        => 'nullable|numeric',
-        'tanks.*.contre_plein_litre' => 'nullable|numeric|min:0',
+    $request->validate([
+        'cuve_id.*' => 'required',
+        'jauge_avant.*' => 'required|numeric',
+        'jauge_apres.*' => 'required|numeric',
+        'reception_par_cuve.*' => 'required|numeric',
+        'contre_plein.*' => 'nullable|numeric',
     ]);
 
-    /* 2. CUVE UNIQUE ------------------------------------------------ */
-    $tankIds = array_column($data['tanks'], 'tank_id');
-    if (count($tankIds) !== count(array_unique($tankIds))) {
-        return back()->withErrors(['error'=>'Une même cuve ne peut pas apparaître plusieurs fois.']);
-    }
-
     DB::beginTransaction();
+
     try {
-        /* 3. BUFFER LIGNES ---------------------------------------- */
-        $tempLines   = [];
-        $newContre   = 0;            // total contre-plein valeur nouvelle
-        foreach ($data['tanks'] as $line) {
-            $tank = Tank::with('product')->findOrFail($line['tank_id']);
-
-            $jAvant   = $line['jauge_avant']        ?? 0;
-            $jApres   = $line['jauge_apres']        ?? 0;
-            $qteRec   = $line['reception_par_cuve'] ?? 0;
-            $cpl      = $line['contre_plein_litre'] ?? 0;
-            $uPrice   = $tank->product->price;
-            $cplVal   = $cpl * $uPrice;
-
-            if ($jApres > $tank->capacite) {
-                throw new \Exception("La jauge après dépasse la capacité de {$tank->code}");
-            }
-
-            $tempLines[] = [
-                'tank'             => $tank,
-                'jauge_avant'      => $jAvant,
-                'jauge_apres'      => $jApres,
-                'quantite'         => $qteRec,
-                'contre_litres'    => $cpl,
-                'contre_valeur'    => $cplVal,
-                'ecart_reception'  => ($jApres - $jAvant) - ($qteRec - $cpl),
-                'ecart_stock'      => $jAvant - ($tank->stock->quantite_actuelle ?? 0),
-            ];
-            $newContre += $cplVal;
+        // Supprimer les anciennes lignes et remettre à jour le stock
+        foreach ($reception->lines as $old) {
+            $stock = TankStock::firstOrNew(['tank_id' => $old->tank_id]);
+            $netOld = ($old->reception_par_cuve ?? 0) - ($old->contre_plein_litre ?? 0);
+            $stock->quantite_actuelle = max($stock->quantite_actuelle - $netOld, 0);
+            $stock->save();
         }
 
-        /* 4. MÀJ ENTÊTE RÉCEPTION -------------------------------- */
+        $reception->lines()->delete();
+
         $reception->update([
-            'date_reception'       => $data['date_reception'],
-            'rotation'             => $data['rotation'],
-            'num_bl'               => $data['num_bl']           ?? null,
-            'transporter_id'       => $data['transporter_id']   ?? null,
-            'driver_id'            => $data['driver_id']        ?? null,
-            'vehicle_registration' => $data['vehicle_registration'] ?? null,
-            'remarques'            => $data['remarques']        ?? null,
+            'date_reception' => $request->date_reception,
+            'rotation' => $request->rotation,
+            'updated_by' => Auth::id(),
         ]);
 
-        /* 5. RESTAURE STOCK & SUPPR ANCIENNES LIGNES -------------- */
-        $oldContre = 0;                                   // total contre-plein valeur ancien
-        foreach ($reception->lines as $old) {
-            $stock = TankStock::firstOrNew(['tank_id'=>$old->tank_id]);
-            $netOld = ($old->reception_par_cuve ?? 0) - ($old->contre_plein_litre ?? 0);
-            $stock->quantite_actuelle = max($stock->quantite_actuelle - $netOld,0);
-            $stock->save();
+        foreach ($request->cuve_id as $index => $cuve_id) {
+            $jAvant = $request->jauge_avant[$index];
+            $jApres = $request->jauge_apres[$index];
+            $qteRec = $request->reception_par_cuve[$index];
+            $cpl = $request->contre_plein[$index] ?? 0;
 
-            $oldContre += ($old->contre_plein_valeur ?? 0);
-            $old->delete();
-        }
+            $variation = $jApres - $jAvant;
+            $livreNet = $qteRec + $cpl;
+            $ecart = $livreNet - $variation;
 
-        /* 6. INSÈRE NOUVELLES LIGNES + STOCK ---------------------- */
-        foreach ($tempLines as $l) {
             $reception->lines()->create([
-                'tank_id'             => $l['tank']->id,
-                'jauge_avant'         => $l['jauge_avant'],
-                'reception_par_cuve'  => $l['quantite'],
-                'contre_plein_litre'  => $l['contre_litres'],
-                'contre_plein_valeur' => $l['contre_valeur'],
-                'jauge_apres'         => $l['jauge_apres'],
-                'ecart_reception'     => $l['ecart_reception'],
-                'ecart_stock'         => $l['ecart_stock'],
+                'tank_id' => $cuve_id,
+                'jauge_avant' => $jAvant,
+                'jauge_apres' => $jApres,
+                'reception_par_cuve' => $qteRec,
+                'contre_plein_litre' => $cpl,
+                'ecart_reception' => $ecart,
             ]);
 
-            TankStock::updateOrCreate(
-                ['tank_id'=>$l['tank']->id],
-                ['quantite_actuelle'=>$l['jauge_apres']]
-            );
-        }
-
-        /* 7. MÀJ / CRÉE CREDIT TOPUP ------------------------------ */
-        $note = 'Contre-plein (réception #'.$reception->id.')';
-        $credit = CreditTopup::where('station_id',$reception->station_id)
-                  ->where('notes',$note)->first();
-
-        if ($newContre > 0) {
-            // client transporteur
-            $transporter = Transporter::find($reception->transporter_id);
-            $client = Client::firstOrCreate(
-                ['station_id'=>$reception->station_id,'name'=>$transporter->name],
-                ['phone'=>$transporter->phone ?? null,
-                 'email'=>$transporter->email ?? null,
-                 'address'=>$transporter->address ?? null,
-                 'is_active'=>true,
-                 'notes'=>'Client généré depuis dépotage (contre-plein)']
-            );
-
-            if ($credit) {
-                $credit->update(['client_id'=>$client->id,'amount'=>$newContre,'date'=>$reception->date_reception]);
-            } else {
-                CreditTopup::create([
-                    'station_id'=>$reception->station_id,
-                    'client_id' =>$client->id,
-                    'amount'    =>$newContre,
-                    'date'      =>$reception->date_reception,
-                    'notes'     =>$note,
-                    'created_by'=>auth()->id(),
-                ]);
-            }
-        } elseif ($credit) {
-            // plus de contre-plein : on supprime la créance
-            $credit->delete();
+            // Mise à jour du stock
+            $stock = TankStock::firstOrNew(['tank_id' => $cuve_id]);
+            $net = $qteRec - $cpl;
+            $stock->quantite_actuelle = $stock->quantite_actuelle + $net;
+            $stock->save();
         }
 
         DB::commit();
-        return redirect()->route('fuel-receptions.index')
-                         ->with('success','Dépotage mis à jour avec succès.');
-    } catch (\Throwable $e) {
+        return redirect()->route('fuel-receptions.index')->with('success', 'Réception modifiée avec succès');
+    } catch (\Throwable $th) {
         DB::rollBack();
-        return back()->withErrors(['error'=>$e->getMessage()]);
+        return back()->with('error', 'Erreur: ' . $th->getMessage());
     }
 }
 

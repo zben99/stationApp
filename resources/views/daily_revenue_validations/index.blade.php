@@ -43,6 +43,8 @@
                               + $val->boutique_amount       // Boutique
                               + $val->credit_repaid         // Remboursement crédit
                               + $val->balance_received      // Avoir perçu
+                              + $val->tpe_recharge_amount
+                              + $val->om_recharge_amount
                             );
 
                             $decaissement = (

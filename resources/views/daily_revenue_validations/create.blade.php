@@ -88,10 +88,11 @@
                 @foreach ([
                     'tpe_amount' => 'Vente TPE',
                     'om_amount'  => 'Vente OM',
+                    'om_recharge_amount'  => 'Recharge OM',
                     'tpe_recharge_amount' => 'Recharge TPE'
 
                 ] as $name => $label)
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">{{ $label }}</label>
                         <input type="number" step="0.01" class="form-control"
                                name="{{ $name }}" id="{{ $name }}" value="{{ old($name, 0) }}">
@@ -136,7 +137,7 @@
             'fuel_super_amount','fuel_gazoil_amount',
             'lub_amount','pea_amount','gaz_amount','lampes_amount',
             'lavage_amount','boutique_amount',
-            'credit_repaid','balance_received'
+            'credit_repaid','balance_received','tpe_recharge_amount','om_recharge_amount'
         ];
         const expenseIds = [
             'expenses','credit_received','balance_used',

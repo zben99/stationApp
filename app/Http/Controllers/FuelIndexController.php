@@ -7,6 +7,7 @@ use App\Models\FuelIndex;
 use Illuminate\Http\Request;
 use App\Models\DailyRevenueReview;
 use Illuminate\Support\Facades\DB;
+use App\Models\DailyRevenueValidation;
 
 class FuelIndexController extends Controller
 {
@@ -136,7 +137,7 @@ class FuelIndexController extends Controller
     {
         $stationId = $fuelIndex->station_id;
 
-        $isValidated = DailyRevenueReview::where('station_id', $fuelIndex->station_id)
+        $isValidated = DailyRevenueValidation::where('station_id', $fuelIndex->station_id)
             ->whereDate('date', $fuelIndex->date)
             ->where('rotation', $fuelIndex->rotation)
             ->exists();
@@ -154,7 +155,7 @@ class FuelIndexController extends Controller
     public function update(Request $request, FuelIndex $fuelIndex)
     {
         // Vérifie que la rotation n’est pas validée
-        $isValidated = \App\Models\DailyRevenueReview::where('station_id', $fuelIndex->station_id)
+        $isValidated = DailyRevenueValidation::where('station_id', $fuelIndex->station_id)
             ->whereDate('date', $fuelIndex->date)
             ->where('rotation', $fuelIndex->rotation)
             ->exists();
@@ -167,7 +168,7 @@ class FuelIndexController extends Controller
         }
 
         // Valide uniquement les champs modifiables
-        $request->validate([
+       $pumpData = $request->validate([
             'index_debut' => 'required|numeric|min:0',
             'index_fin' => 'required|numeric|gte:index_debut',
             'retour_en_cuve' => 'nullable|numeric|min:0',
@@ -178,7 +179,7 @@ class FuelIndexController extends Controller
             'index_debut' => $request->index_debut,
             'index_fin' => $request->index_fin,
             'retour_en_cuve' => $request->retour_en_cuve ?? 0,
-            'montant_recette'=> (($pumpData['index_fin']-$pumpData['index_debut'])-$pumpData['retour_en_cuve'] ?? 0)*$pumpData['prix_unitaire']
+            'montant_recette'=> (($pumpData['index_fin']-$pumpData['index_debut'])-$pumpData['retour_en_cuve'] ?? 0)*$fuelIndex->prix_unitaire
         ]);
 
         return redirect()->route('fuel-indexes.details', [

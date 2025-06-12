@@ -29,7 +29,7 @@ class BalanceTopupController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'client_id' => 'required|exists:clients,id',
+            'client_id' =>  ['nullable','string','max:255'],
             'amount' => 'required|numeric|min:0',
             'date' => 'required|date',
             'rotation' => 'required|in:6-14,14-22,22-6',
@@ -39,11 +39,35 @@ class BalanceTopupController extends Controller
         $data['station_id'] = session('selected_station_id');
         $data['created_by'] = auth()->id();
 
+         $data['client_id'] = $this->resolveEntityId(
+            Client::class, $request->client_id, $data['station_id']
+        );
+
         $topup = BalanceTopup::create($data);
 
         return redirect()->route('balances.summary')->with('success', 'Recharge ajoutée.');
     }
 
+
+
+            private function resolveEntityId(string $model, ?string $value, int $stationId): ?int
+            {
+                if (empty($value)) {
+                    return null;
+                }
+
+                // Id numérique existant
+                if (is_numeric($value)) {
+                    return $model::findOrFail((int) $value)->id;
+                }
+
+                // Nouveau nom : on cherche d’abord dans la même station
+                $record = $model::firstOrCreate(
+                    ['station_id' => $stationId, 'name' => trim($value)]
+                );
+
+                return $record->id;
+            }
     public function edit(BalanceTopup $balanceTopup)
     {
         $clients = Client::where('station_id', session('selected_station_id'))->get();

@@ -39,7 +39,7 @@
 
             <div class="col-md-6">
                 <label  for="supplier_id" class="form-label">Fournisseur</label>
-                <select id="driverSelect"
+                <select id="supplierSelect"
                         name="supplier_id"
                         class="form-control select2-tag"
                         required>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('station_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('phone')->unique();
+            $table->string('phone')->nullable()->unique();
             $table->string('email')->nullable()->unique();
             $table->text('address')->nullable();
             $table->boolean('is_active')->default(true);

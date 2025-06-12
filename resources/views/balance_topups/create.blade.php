@@ -16,15 +16,19 @@
     <form action="{{ route('balance-topups.store') }}" method="POST">
         @csrf
 
-        <div class="mb-3">
-            <label for="client_id">Client</label>
-            <select name="client_id" id="client_id" class="form-control" required>
-                <option value="">-- Sélectionner --</option>
-                @foreach($clients as $client)
-                    <option value="{{ $client->id }}">{{ $client->name }}</option>
-                @endforeach
-            </select>
-        </div>
+
+            <div class="mb-3">
+                <label  for="client_id" class="form-label">Client</label>
+                <select id="clientSelect"
+                        name="client_id"
+                        class="form-control select2-tag"
+                        required>
+                    <option value="">-- Sélectionner ou taper --</option>
+                    @foreach($clients as $client)
+                        <option value="{{ $client->id }}">{{ $client->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
         <div class="mb-3">
             <label for="amount">Montant (F CFA)</label>
@@ -54,4 +58,20 @@
         <button class="btn btn-success">Enregistrer</button>
         <a href="{{ route('balances.summary') }}" class="btn btn-secondary">Annuler</a>
     </form>
+
+
+            <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            $('.select2-tag').select2({
+                theme: 'bootstrap-5',
+                tags: true,
+                placeholder: '-- Sélectionner ou taper --',
+                width: '100%',
+                language: {
+                    noResults: () => 'Aucun résultat',
+                    inputTooShort: () => 'Tape au moins 1 caractère'
+                }
+            });
+        });
+    </script>
 </x-app-layout>

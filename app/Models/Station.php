@@ -17,10 +17,6 @@ class Station extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
 
     public function categories()
     {
@@ -35,5 +31,10 @@ class Station extends Model
         public function packagings()
     {
         return $this->hasMany(Packaging::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 }

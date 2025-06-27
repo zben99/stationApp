@@ -29,9 +29,8 @@
 
             <div class="col-md-5">
                 <div class="form-group">
-                    <strong>Station :</strong>
-                    <select name="station_id" class="form-control">
-                        <option value="">Sélectionner une station</option>
+                    <strong>Stations :</strong>
+                    <select name="station_id[]" class="form-control" multiple>
                         @foreach($stations as $station)
                             <option value="{{ $station->id }}">{{ $station->name }} - {{ $station->location }}</option>
                         @endforeach
@@ -57,22 +56,27 @@
         </thead>
         <tbody>
             @foreach($users as $user)
-                @if($user->station)
-                    <tr>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->station->name }}</td>
-                        <td>
-                            <form method="POST" action="{{ route('stations.associate.detach', $user->id) }}">
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-link-45deg"></i> Dissocier
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                @if($user->stations->isNotEmpty())
+                    @foreach($user->stations as $station)
+                        <tr>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $station->name }}</td>
+                            <td>
+                                <form method="POST" action="{{ route('stations.associate.detach') }}">
+                                    @csrf
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                    <input type="hidden" name="station_id" value="{{ $station->id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-link-45deg"></i> Dissocier
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
                 @endif
             @endforeach
+
         </tbody>
     </table>
 </x-app-layout>

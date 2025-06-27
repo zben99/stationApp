@@ -55,7 +55,7 @@ class LoginRequest extends FormRequest
         $user = Auth::user();
 
         // Vérification du rôle
-        if ($user->hasRole('Admin')) {
+        if ($user->hasRole('Admin') or $user->hasRole('Super Gestionnaire') or $user->hasRole('Gestionnaire Multi-Sites') ) {
             // Pour un admin, tu peux stocker un flag ou rediriger vers une page pour choisir la station
             session(['needs_station_selection' => true]);
 
@@ -63,8 +63,8 @@ class LoginRequest extends FormRequest
             return;
         }
 
-        // Pour les non-admins, on vérifie qu'ils sont associés à une station
-        if (! $user->station_id) {
+        // Pour les non-admins, on vérifie qu'ils sont associés à au moins une station
+        if (! $user->stations()->exists()) {
             Auth::logout();
 
             throw ValidationException::withMessages([
@@ -72,8 +72,9 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        // Sinon, on peut stocker directement la station dans la session par exemple
-        session(['selected_station_id' => $user->station_id]);
+        // Si oui, on peut stocker la première station associée dans la session
+        $firstStationId = $user->stations()->first()->id ?? null;
+        session(['selected_station_id' => $firstStationId]);
     }
 
     /**

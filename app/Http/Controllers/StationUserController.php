@@ -18,25 +18,36 @@ class StationUserController extends Controller
         return view('stations.associate', compact('stations', 'users'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => ['required', 'exists:users,id'],
-            'station_id' => ['required', 'exists:stations,id'],
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'station_id' => 'required|array',
+        'station_id.*' => 'exists:stations,id',
+    ]);
 
-        $user = User::findOrFail($request->user_id);
-        $user->station_id = $request->station_id;
-        $user->save();
+    $user = User::findOrFail($request->user_id);
 
-        return redirect()->route('stations.associate')->with('success', 'Utilisateur associé à la station avec succès.');
+    foreach ($request->station_id as $stationId) {
+        $user->stations()->syncWithoutDetaching([$stationId]);
     }
 
-    public function detach(User $user)
-    {
-        $user->station_id = null;
-        $user->save();
+    return redirect()->route('stations.associate')->with('success', 'Utilisateur associé aux stations avec succès.');
+}
 
-        return redirect()->route('stations.associate')->with('success', 'Utilisateur dissocié de la station.');
-    }
+
+
+public function detach(Request $request)
+{
+    $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'station_id' => 'required|exists:stations,id',
+    ]);
+
+    $user = User::findOrFail($request->user_id);
+    $user->stations()->detach($request->station_id);
+
+    return redirect()->route('stations.associate')->with('success', 'Utilisateur dissocié de la station.');
+}
+
 }

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        Recharges de crédit
+        Gestion de crédit
     </x-slot>
 
     @session('success')
@@ -43,12 +43,7 @@
                                     <a href="{{ route('credit-topups.show', $client->id) }}" class="btn btn-sm btn-info">
                                         Voir détail
                                     </a>
-                                    <a href="{{ route('clients.topups', ['client' => $client->id]) }}" class="btn btn-sm btn-danger">
-                                        Voir crédits
-                                    </a>
-                                    <a href="{{ route('clients.payments', ['client' => $client->id]) }}" class="btn btn-sm btn-success">
-                                        Voir remboursements
-                                    </a>
+
                                 </td>
                             </tr>
                         @endforeach

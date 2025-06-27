@@ -8,16 +8,21 @@ use Illuminate\Http\Request;
 
 class CreditTopupController extends Controller
 {
-    public function index()
-    {
-        $stationId = session('selected_station_id');
+public function index()
+{
+    $stationId = session('selected_station_id');
 
-        $clients = Client::with('creditTopups', 'creditPayments')
-            ->where('station_id', $stationId)
-            ->get();
+    $clients = Client::with(['creditTopups', 'creditPayments'])
+        ->where('station_id', $stationId)
+        ->get()
+        ->filter(function ($client) {
+            $totalCredit = $client->creditTopups->sum('amount');
+            $totalRembourse = $client->creditPayments->sum('amount');
+            return $totalCredit > $totalRembourse;
+        });
 
-        return view('credit_topups.index', compact('clients'));
-    }
+    return view('credit_topups.index', compact('clients'));
+}
 
     public function create()
     {

@@ -13,21 +13,27 @@ class TankController extends Controller
 {
     public function index()
     {
-        $tanks = Tank::with(['station', 'product', 'stock'])->get();
+        $stationId = session('selected_station_id');
+
+        $tanks = Tank::with(['station', 'product', 'stock'])
+            ->where('station_id', $stationId)
+            ->get();
 
         return view('tanks.index', compact('tanks'));
     }
 
     public function create()
     {
-        $stations = Station::all();
-        $products = StationProduct::whereHas('stationCategory', function ($q) {
-            $q->where('type', 'fuel');
-        })->get();
+        $stationId = session('selected_station_id');
 
-        return view('tanks.create', compact('stations', 'products'));
+        $products = StationProduct::where('station_id', $stationId)
+            ->whereHas('stationCategory', function ($q) {
+                $q->where('type', 'fuel');
+            })
+            ->get();
+
+        return view('tanks.create', compact('products'));
     }
-
     public function store(Request $request)
     {
         $data = $request->validate([

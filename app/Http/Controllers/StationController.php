@@ -593,15 +593,7 @@ public function store(StoreStationRequest $request)
 
     foreach ($productsData as $prod) {
         $category = $station->categories()->where('name', $prod['category'])->first();
-
-        if (!$category) {
-            $category = $station->categories()->create([
-                'name' => $prod['category'],
-                'type' => 'lubrifiant',
-                'is_active' => true,
-            ]);
-        }
-
+        //dd($category);
         $product = StationProduct::create([
             'station_id' => $station->id,
             'name' => $prod['name'],
@@ -610,6 +602,7 @@ public function store(StoreStationRequest $request)
             'price' => $prod['variants'][0]['price'] ?? 0,
             'is_active' => true,
         ]);
+
 
         foreach ($prod['variants'] as $variant) {
             $packaging = Packaging::firstOrCreate(
@@ -632,6 +625,9 @@ public function store(StoreStationRequest $request)
 
     return redirect()->route('stations.index')->with('success', 'Station ajoutée avec succès.');
 }
+
+
+
 
 
 

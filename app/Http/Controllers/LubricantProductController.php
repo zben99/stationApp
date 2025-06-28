@@ -17,8 +17,10 @@ class LubricantProductController extends Controller
         $query = StationProduct::with('stationCategory', 'station')
             ->where('station_id', $stationId)
             ->whereHas('stationCategory', function ($q) {
-                $q->whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes']);
+                $q->whereIn('name', ['LUBRIFIANTS', 'Produits d\'entretien auto', 'GAZ', 'LAMPES SOLAIRES','DIVERS']);
             });
+
+
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);
@@ -26,7 +28,7 @@ class LubricantProductController extends Controller
 
         $products = $query->orderBy('name')->paginate(10);
 
-        $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])
+        $categories = StationCategory::whereIn('name', ['LUBRIFIANTS', 'Produits d\'entretien auto', 'GAZ', 'LAMPES SOLAIRES','DIVERS'])
         ->where('station_id', $stationId)
         ->get();
 
@@ -39,7 +41,7 @@ class LubricantProductController extends Controller
     {
         $stationId = session('selected_station_id');
 
-         $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])
+         $categories = StationCategory::whereIn('name', ['LUBRIFIANTS', 'Produits d\'entretien auto', 'GAZ', 'LAMPES SOLAIRES','DIVERS'])
           ->where('station_id', $stationId)
          ->get();
 
@@ -84,7 +86,7 @@ class LubricantProductController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        $categories = StationCategory::whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])
+        $categories = StationCategory::whereIn('name', ['LUBRIFIANTS', 'Produits d\'entretien auto', 'GAZ', 'LAMPES SOLAIRES','DIVERS'])
          ->where('station_id', $stationId)
          ->get();
 

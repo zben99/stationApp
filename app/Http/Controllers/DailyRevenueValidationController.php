@@ -306,7 +306,7 @@ class DailyRevenueValidationController extends Controller
                 'om_amount' => 0,
                 'tpe_amount' => 0,
                 'tpe_recharge_amount' => 0,
-                'tpe_recharge_amount' => 0,
+                'om_recharge_amount' => 0,
             ]);
 
         } catch (\Throwable $e) {

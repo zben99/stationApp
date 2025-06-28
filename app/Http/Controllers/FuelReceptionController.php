@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\FuelReceptionExport;
-use App\Models\Client;
-use App\Models\CreditTopup;
-use App\Models\Driver;
-use App\Models\FuelReception;
-use App\Models\FuelReceptionLine;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Tank;
+use App\Models\Client;
+use App\Models\Driver;
 use App\Models\TankStock;
+use App\Models\CreditTopup;
 use App\Models\Transporter;
-use Barryvdh\DomPDF\Facade\Pdf;
-use DB;
 use Illuminate\Http\Request;
+use App\Models\FuelReception;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\FuelReceptionLine;
+use Illuminate\Support\Facades\DB;
+use App\Exports\FuelReceptionExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FuelReceptionController extends Controller

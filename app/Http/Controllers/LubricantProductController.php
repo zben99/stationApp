@@ -92,6 +92,7 @@ class LubricantProductController extends Controller
 
     public function update(Request $request, StationProduct $lubricantProduct)
     {
+         $stationId = session('selected_station_id');
         $request->validate([
             'category_id' => 'required|exists:station_categories,id',
             'code' => [

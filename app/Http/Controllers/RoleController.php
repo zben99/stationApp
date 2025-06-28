@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+
 
 class RoleController extends Controller
 {
@@ -18,6 +19,7 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index(Request $request): View
     {
         $roles = Role::orderBy('id', 'DESC')->paginate(5);

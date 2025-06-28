@@ -289,8 +289,8 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     Route::get('purchase-invoices/export/pdf', [PurchaseInvoiceController::class, 'exportPdf'])->name('purchase-invoices.export.pdf')->middleware('can:purchase-invoice-export');
     Route::get('purchase-invoices/export/excel', [PurchaseInvoiceController::class, 'exportExcel'])->name('purchase-invoices.export.excel')->middleware('can:purchase-invoice-export');
 
-    //product-packagings
-        Route::get('product-packagings/{product}/', [ProductPackagingController::class, 'index'])
+    // product-packagings
+    Route::get('product-packagings/{product}/', [ProductPackagingController::class, 'index'])
         ->name('product-packagings.index')
         ->middleware('can:view-product-packagings');
 
@@ -314,11 +314,11 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
         ->name('product-packagings.destroy')
         ->middleware('can:delete-product-packagings');
 
-    //lubricant-products
+    // lubricant-products
 
     Route::get('lubricant-products', [LubricantProductController::class, 'index'])
-    ->name('lubricant-products.index')
-    ->middleware('can:view-lubricant-products');
+        ->name('lubricant-products.index')
+        ->middleware('can:view-lubricant-products');
 
     Route::get('lubricant-products/create', [LubricantProductController::class, 'create'])
         ->name('lubricant-products.create')
@@ -344,7 +344,7 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
         ->name('lubricant-products.destroy')
         ->middleware('can:delete-lubricant-products');
 
-    //transporters
+    // transporters
     Route::get('transporters', [TransporterController::class, 'index'])->name('transporters.index')->middleware('can:view-transporters');
     Route::get('transporters/create', [TransporterController::class, 'create'])->name('transporters.create')->middleware('can:create-transporters');
     Route::post('transporters', [TransporterController::class, 'store'])->name('transporters.store')->middleware('can:create-transporters');
@@ -353,7 +353,7 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     Route::put('transporters/{transporter}', [TransporterController::class, 'update'])->name('transporters.update')->middleware('can:edit-transporters');
     Route::delete('transporters/{transporter}', [TransporterController::class, 'destroy'])->name('transporters.destroy')->middleware('can:delete-transporters');
 
-    //transporters
+    // transporters
 
     Route::get('drivers', [DriverController::class, 'index'])->name('drivers.index')->middleware('can:view-drivers');
     Route::get('drivers/create', [DriverController::class, 'create'])->name('drivers.create')->middleware('can:create-drivers');
@@ -363,12 +363,12 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     Route::put('drivers/{driver}', [DriverController::class, 'update'])->name('drivers.update')->middleware('can:edit-drivers');
     Route::delete('drivers/{driver}', [DriverController::class, 'destroy'])->name('drivers.destroy')->middleware('can:delete-drivers');
 
-    //Conditionnements d’un produit
+    // Conditionnements d’un produit
 
     Route::get('/product/{product}/packagings', [LubricantReceptionController::class, 'getPackagings'])
-    ->middleware('can:view-product-packagings');
+        ->middleware('can:view-product-packagings');
 
-    //pumps
+    // pumps
 
     Route::get('pumps', [PumpController::class, 'index'])->name('pumps.index')->middleware('can:view-pumps');
     Route::get('pumps/create', [PumpController::class, 'create'])->name('pumps.create')->middleware('can:create-pumps');
@@ -378,8 +378,7 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     Route::put('pumps/{pump}', [PumpController::class, 'update'])->name('pumps.update')->middleware('can:edit-pumps');
     Route::delete('pumps/{pump}', [PumpController::class, 'destroy'])->name('pumps.destroy')->middleware('can:delete-pumps');
 
-
-    //fuel-indexes
+    // fuel-indexes
 
     Route::get('fuel-indexes', [FuelIndexController::class, 'index'])->name('fuel-indexes.index')->middleware('can:view-fuel-indexes');
     Route::get('fuel-indexes/create', [FuelIndexController::class, 'create'])->name('fuel-indexes.create')->middleware('can:create-fuel-indexes');
@@ -392,14 +391,14 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
         ->name('fuel-indexes.details')
         ->middleware('can:view-fuel-index-details');
 
-    //daily-product-sales
+    // daily-product-sales
 
     Route::get('daily-product-sales', [DailyProductSaleController::class, 'index'])->name('daily-product-sales.index')->middleware('can:view-daily-product-sales');
     Route::get('daily-product-sales/create', [DailyProductSaleController::class, 'create'])->name('daily-product-sales.create')->middleware('can:create-daily-product-sales');
     Route::post('daily-product-sales', [DailyProductSaleController::class, 'store'])->name('daily-product-sales.store')->middleware('can:create-daily-product-sales');
     Route::get('daily-product-sales/{date}/{rotation}', [DailyProductSaleController::class, 'show'])->name('daily-product-sales.show')->middleware('can:view-daily-product-sales');
 
-    //recettes-simples
+    // recettes-simples
     Route::get('recettes-simples', [DailySimpleRevenueController::class, 'index'])->name('daily-simple-revenues.index')->middleware('can:view-daily-simple-revenues');
     Route::get('recettes-simples/create', [DailySimpleRevenueController::class, 'create'])->name('daily-simple-revenues.create')->middleware('can:create-daily-simple-revenues');
     Route::post('recettes-simples', [DailySimpleRevenueController::class, 'store'])->name('daily-simple-revenues.store')->middleware('can:create-daily-simple-revenues');
@@ -407,17 +406,17 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     Route::put('recettes-simples/{dailySimpleRevenue}', [DailySimpleRevenueController::class, 'update'])->name('daily-simple-revenues.update')->middleware('can:edit-daily-simple-revenues');
     Route::delete('recettes-simples/{dailySimpleRevenue}', [DailySimpleRevenueController::class, 'destroy'])->name('daily-simple-revenues.destroy')->middleware('can:delete-daily-simple-revenues');
 
-    //daily-revenue-review
+    // daily-revenue-review
     Route::get('daily-revenue-review', [DailyRevenueReviewController::class, 'index'])->name('daily-revenue-review.index')->middleware('can:view-daily-revenue-review');
     Route::get('daily-revenue-review/create', [DailyRevenueReviewController::class, 'create'])->name('daily-revenue-review.create')->middleware('can:create-daily-revenue-review');
     Route::post('daily-revenue-review', [DailyRevenueReviewController::class, 'store'])->name('daily-revenue-review.store')->middleware('can:create-daily-revenue-review');
     Route::get('daily-revenue-review/{dailyRevenueReview}', [DailyRevenueReviewController::class, 'show'])->name('daily-revenue-review.show')->middleware('can:view-daily-revenue-review');
 
-    //daily-revenue-validations
+    // daily-revenue-validations
 
     Route::get('daily-revenue-validations/fetch', [DailyRevenueValidationController::class, 'fetch'])
-    ->name('daily-revenue-validations.fetch')
-    ->middleware('can:view-daily-revenue-validations');
+        ->name('daily-revenue-validations.fetch')
+        ->middleware('can:view-daily-revenue-validations');
 
     Route::get('daily-revenue-validations', [DailyRevenueValidationController::class, 'index'])
         ->name('daily-revenue-validations.index')
@@ -434,7 +433,6 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     Route::get('daily-revenue-validations/{dailyRevenueValidation}', [DailyRevenueValidationController::class, 'show'])
         ->name('daily-revenue-validations.show')
         ->middleware('can:view-daily-revenue-validations');
-
 
 });
 

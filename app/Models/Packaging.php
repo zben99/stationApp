@@ -24,7 +24,7 @@ class Packaging extends Model
             ->withTimestamps();
     }
 
-        public function station()
+    public function station()
     {
         return $this->belongsTo(Station::class);
     }

@@ -8,21 +8,22 @@ use Illuminate\Http\Request;
 
 class CreditTopupController extends Controller
 {
-public function index()
-{
-    $stationId = session('selected_station_id');
+    public function index()
+    {
+        $stationId = session('selected_station_id');
 
-    $clients = Client::with(['creditTopups', 'creditPayments'])
-        ->where('station_id', $stationId)
-        ->get()
-        ->filter(function ($client) {
-            $totalCredit = $client->creditTopups->sum('amount');
-            $totalRembourse = $client->creditPayments->sum('amount');
-            return $totalCredit > $totalRembourse;
-        });
+        $clients = Client::with(['creditTopups', 'creditPayments'])
+            ->where('station_id', $stationId)
+            ->get()
+            ->filter(function ($client) {
+                $totalCredit = $client->creditTopups->sum('amount');
+                $totalRembourse = $client->creditPayments->sum('amount');
 
-    return view('credit_topups.index', compact('clients'));
-}
+                return $totalCredit > $totalRembourse;
+            });
+
+        return view('credit_topups.index', compact('clients'));
+    }
 
     public function create()
     {
@@ -35,7 +36,7 @@ public function index()
     {
         $data = $request->validate([
 
-            'client_id' => ['nullable','string','max:255'],
+            'client_id' => ['nullable', 'string', 'max:255'],
             'amount' => 'required|numeric|min:0',
             'date' => 'required|date',
             'rotation' => 'required|in:6-14,14-22,22-6',
@@ -45,7 +46,7 @@ public function index()
         $data['station_id'] = session('selected_station_id');
         $data['created_by'] = auth()->id();
 
-       $data['client_id'] = $this->resolveEntityId(
+        $data['client_id'] = $this->resolveEntityId(
             Client::class, $request->client_id, $data['station_id']
         );
 
@@ -54,26 +55,24 @@ public function index()
         return redirect()->route('credit-topups.index')->with('success', 'Crédit ajouté.');
     }
 
+    private function resolveEntityId(string $model, ?string $value, int $stationId): ?int
+    {
+        if (empty($value)) {
+            return null;
+        }
 
-            private function resolveEntityId(string $model, ?string $value, int $stationId): ?int
-            {
-                if (empty($value)) {
-                    return null;
-                }
+        // Id numérique existant
+        if (is_numeric($value)) {
+            return $model::findOrFail((int) $value)->id;
+        }
 
-                // Id numérique existant
-                if (is_numeric($value)) {
-                    return $model::findOrFail((int) $value)->id;
-                }
+        // Nouveau nom : on cherche d’abord dans la même station
+        $record = $model::firstOrCreate(
+            ['station_id' => $stationId, 'name' => trim($value)]
+        );
 
-                // Nouveau nom : on cherche d’abord dans la même station
-                $record = $model::firstOrCreate(
-                    ['station_id' => $stationId, 'name' => trim($value)]
-                );
-
-                return $record->id;
-            }
-
+        return $record->id;
+    }
 
     public function edit(CreditTopup $creditTopup)
     {

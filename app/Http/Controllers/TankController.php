@@ -34,6 +34,7 @@ class TankController extends Controller
 
         return view('tanks.create', compact('products'));
     }
+
     public function store(Request $request)
     {
         $data = $request->validate([

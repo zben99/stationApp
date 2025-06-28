@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Station;
-use Illuminate\Http\Request;
-use App\Models\StationCategory;
 use App\Http\Requests\CategorieProduitRequest;
+use App\Models\Station;
+use App\Models\StationCategory;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {

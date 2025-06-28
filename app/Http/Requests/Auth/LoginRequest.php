@@ -55,7 +55,7 @@ class LoginRequest extends FormRequest
         $user = Auth::user();
 
         // Vérification du rôle
-        if ($user->hasRole('Admin') or $user->hasRole('Super Gestionnaire') or $user->hasRole('Gestionnaire Multi-Sites') ) {
+        if ($user->hasRole('Admin') or $user->hasRole('Super Gestionnaire') or $user->hasRole('Gestionnaire Multi-Sites')) {
             // Pour un admin, tu peux stocker un flag ou rediriger vers une page pour choisir la station
             session(['needs_station_selection' => true]);
 

@@ -21,10 +21,9 @@ return new class extends Migration
 
             $table->foreignId('transporter_id')->constrained()->onDelete('set null')->nullable();
             $table->foreignId('driver_id')->nullable()->constrained()->onDelete('set null');
-             $table->string('vehicle_registration', 30)->nullable();
+            $table->string('vehicle_registration', 30)->nullable();
             $table->enum('observation_type', ['prêt', 'remboursement'])->nullable();
             $table->decimal('observation_litre', 10, 2)->nullable();
-
 
             $table->text('remarques')->nullable();
             $table->timestamps();

@@ -15,9 +15,8 @@ return new class extends Migration
             $table->string('num_bc')->nullable();
             $table->string('num_bl')->nullable();
 
-
             $table->date('date_reception');
-             $table->enum('rotation', ['6-14', '14-22', '22-6']);
+            $table->enum('rotation', ['6-14', '14-22', '22-6']);
             $table->timestamps();
         });
     }

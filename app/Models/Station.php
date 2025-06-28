@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Packaging;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Station extends Model
 {
@@ -17,7 +16,6 @@ class Station extends Model
         return $this->hasMany(Product::class);
     }
 
-
     public function categories()
     {
         return $this->hasMany(StationCategory::class);
@@ -28,7 +26,7 @@ class Station extends Model
         return $this->hasMany(Tank::class);
     }
 
-        public function packagings()
+    public function packagings()
     {
         return $this->hasMany(Packaging::class);
     }

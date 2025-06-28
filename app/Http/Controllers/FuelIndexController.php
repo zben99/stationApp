@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pump;
-use App\Models\FuelIndex;
-use Illuminate\Http\Request;
-use App\Models\DailyRevenueReview;
-use Illuminate\Support\Facades\DB;
 use App\Models\DailyRevenueValidation;
+use App\Models\FuelIndex;
+use App\Models\Pump;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FuelIndexController extends Controller
 {
@@ -100,7 +99,6 @@ class FuelIndexController extends Controller
             ])->withInput();
         }
 
-
         // ✅ Enregistre les relevés pour chaque pompe
         foreach ($request->pumps as $pumpData) {
             FuelIndex::create([
@@ -113,7 +111,7 @@ class FuelIndexController extends Controller
                 'index_fin' => $pumpData['index_fin'],
                 'retour_en_cuve' => $pumpData['retour_en_cuve'] ?? 0,
                 'prix_unitaire' => $pumpData['prix_unitaire'],
-                'montant_recette'=> (($pumpData['index_fin']-$pumpData['index_debut'])-$pumpData['retour_en_cuve'] ?? 0)*$pumpData['prix_unitaire']
+                'montant_recette' => (($pumpData['index_fin'] - $pumpData['index_debut']) - $pumpData['retour_en_cuve'] ?? 0) * $pumpData['prix_unitaire'],
             ]);
         }
 
@@ -168,7 +166,7 @@ class FuelIndexController extends Controller
         }
 
         // Valide uniquement les champs modifiables
-       $pumpData = $request->validate([
+        $pumpData = $request->validate([
             'index_debut' => 'required|numeric|min:0',
             'index_fin' => 'required|numeric|gte:index_debut',
             'retour_en_cuve' => 'nullable|numeric|min:0',
@@ -179,7 +177,7 @@ class FuelIndexController extends Controller
             'index_debut' => $request->index_debut,
             'index_fin' => $request->index_fin,
             'retour_en_cuve' => $request->retour_en_cuve ?? 0,
-            'montant_recette'=> (($pumpData['index_fin']-$pumpData['index_debut'])-$pumpData['retour_en_cuve'] ?? 0)*$fuelIndex->prix_unitaire
+            'montant_recette' => (($pumpData['index_fin'] - $pumpData['index_debut']) - $pumpData['retour_en_cuve'] ?? 0) * $fuelIndex->prix_unitaire,
         ]);
 
         return redirect()->route('fuel-indexes.details', [

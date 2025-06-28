@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 
 class PermissionTableSeeder extends Seeder
@@ -149,44 +148,44 @@ class PermissionTableSeeder extends Seeder
             'edit-lubricant-products',
             'delete-lubricant-products',
 
-               'view-transporters',
-                'create-transporters',
-                'edit-transporters',
-                'delete-transporters',
+            'view-transporters',
+            'create-transporters',
+            'edit-transporters',
+            'delete-transporters',
 
-                'view-drivers',
-                'create-drivers',
-                'edit-drivers',
-                'delete-drivers',
+            'view-drivers',
+            'create-drivers',
+            'edit-drivers',
+            'delete-drivers',
 
-                'view-product-packagings',
+            'view-product-packagings',
 
-                'view-pumps',
-                'create-pumps',
-                'edit-pumps',
-                'delete-pumps',
+            'view-pumps',
+            'create-pumps',
+            'edit-pumps',
+            'delete-pumps',
 
-                'view-fuel-indexes',
-                'create-fuel-indexes',
-                'edit-fuel-indexes',
-                'view-fuel-index-details',
+            'view-fuel-indexes',
+            'create-fuel-indexes',
+            'edit-fuel-indexes',
+            'view-fuel-index-details',
 
-                'view-daily-product-sales',
-                'create-daily-product-sales',
+            'view-daily-product-sales',
+            'create-daily-product-sales',
 
-                'view-daily-simple-revenues',
-                'create-daily-simple-revenues',
-                'edit-daily-simple-revenues',
-                'delete-daily-simple-revenues',
+            'view-daily-simple-revenues',
+            'create-daily-simple-revenues',
+            'edit-daily-simple-revenues',
+            'delete-daily-simple-revenues',
 
-                'view-daily-revenue-review',
-                'create-daily-revenue-review',
+            'view-daily-revenue-review',
+            'create-daily-revenue-review',
 
-                'view-daily-revenue-validations',
-                'create-daily-revenue-validations',
+            'view-daily-revenue-validations',
+            'create-daily-revenue-validations',
         ];
 
-          foreach ($permissions as $permission) {
+        foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
     }

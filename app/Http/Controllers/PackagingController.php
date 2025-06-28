@@ -9,10 +9,10 @@ class PackagingController extends Controller
 {
     public function index(Request $request)
     {
-         $stationId = session('selected_station_id');
+        $stationId = session('selected_station_id');
 
         $query = Packaging::where('station_id', $stationId)
-                ->orderBy('label');
+            ->orderBy('label');
 
         if ($request->filled('type')) {
             $query->where('type', $request->type);
@@ -34,7 +34,7 @@ class PackagingController extends Controller
     public function store(Request $request)
     {
 
-         $data = $request->validate([
+        $data = $request->validate([
             'label' => 'required|string|max:50',
             'quantity' => 'required|numeric|min:0.01',
             'unit' => 'required|string|in:L,kg,u',

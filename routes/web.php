@@ -254,15 +254,16 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     Route::get('clients/{client}/balance-usages', [BalanceUsageController::class, 'byClient'])->name('clients.balance.usages')->middleware('can:balance-view');
 
     // --- CREDITS ---
-    Route::resource('credit-topups', CreditTopupController::class)->middleware([
-        'index' => 'can:credit-topup-list',
-        'create' => 'can:credit-topup-create',
-        'store' => 'can:credit-topup-create',
-        'show' => 'can:credit-topup-view',
-        'edit' => 'can:credit-topup-edit',
-        'update' => 'can:credit-topup-edit',
-        'destroy' => 'can:credit-topup-delete',
-    ]);
+    Route::resource('credit-topups', CreditTopupController::class)
+        ->except(['show'])
+        ->middleware([
+            'index' => 'can:credit-topup-list',
+            'create' => 'can:credit-topup-create',
+            'store' => 'can:credit-topup-create',
+            'edit' => 'can:credit-topup-edit',
+            'update' => 'can:credit-topup-edit',
+            'destroy' => 'can:credit-topup-delete',
+        ]);
     Route::get('/credit-topups/client/{client}', [CreditTopupController::class, 'show'])->name('credit-topups.show')->middleware('can:credit-topup-view');
     Route::get('clients/{client}/credits', [ClientCreditController::class, 'topups'])->name('clients.topups')->middleware('can:credit-view');
     Route::get('clients/{client}/remboursements', [ClientCreditController::class, 'payments'])->name('clients.payments')->middleware('can:credit-view');

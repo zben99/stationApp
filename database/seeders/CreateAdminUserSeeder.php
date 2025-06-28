@@ -14,18 +14,21 @@ class CreateAdminUserSeeder extends Seeder
      */
     public function run(): void
     {
+        $permissions = Permission::pluck('name'); // ou une sélection personnalisée
+
         $user = User::create([
             'name' => 'Ben',
             'email' => 'admin',
             'password' => bcrypt('12345678'),
         ]);
 
-        $role = Role::create(['name' => 'Admin']);
+        $role = Role::where('name', 'Super Gestionnaire')->first();
 
-        $permissions = Permission::pluck('id', 'id')->all();
-
-        $role->syncPermissions($permissions);
-
-        $user->assignRole([$role->id]);
+        if ($role) {
+            $role->syncPermissions($permissions); // Associe toutes les permissions
+            $user->assignRole($role); // Assigne le rôle à l'utilisateur
+        } else {
+            throw new \Exception("Le rôle 'Super Gestionnaire' est introuvable.");
+        }
     }
 }

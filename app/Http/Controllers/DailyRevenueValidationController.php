@@ -53,6 +53,7 @@ class DailyRevenueValidationController extends Controller
             'pea_amount' => 'nullable|numeric|min:0',
             'gaz_amount' => 'nullable|numeric|min:0',
             'lampes_amount' => 'nullable|numeric|min:0',
+             'divers_amount' => 'nullable|numeric|min:0',
             'lavage_amount' => 'nullable|numeric|min:0',
             'boutique_amount' => 'nullable|numeric|min:0',
 
@@ -92,6 +93,7 @@ class DailyRevenueValidationController extends Controller
         + ($data['pea_amount'] ?? 0)
         + ($data['gaz_amount'] ?? 0)
         + ($data['lampes_amount'] ?? 0)
+         + ($data['divers_amount'] ?? 0)
         + ($data['lavage_amount'] ?? 0)
         + ($data['boutique_amount'] ?? 0)
         + ($data['credit_repaid'] ?? 0)
@@ -123,6 +125,7 @@ class DailyRevenueValidationController extends Controller
             'pea_amount' => $data['pea_amount'] ?? 0,
             'gaz_amount' => $data['gaz_amount'] ?? 0,
             'lampes_amount' => $data['lampes_amount'] ?? 0,
+            'divers_amount' => $data['lampes_amount'] ?? 0,
             'lavage_amount' => $data['lavage_amount'] ?? 0,
             'boutique_amount' => $data['boutique_amount'] ?? 0,
 
@@ -177,7 +180,7 @@ class DailyRevenueValidationController extends Controller
             |    (on filtre par nom ; adapte si tu utilises un champ `code` ou `slug`)
             * -----------------------------------------------------------------*/
             $superId = StationProduct::where('station_id', $stationId)
-                ->where('name', 'like', '%Super%')
+                ->where('name', 'like', '%SUPER%')
                 ->value('id');
 
             $gazoilId = StationProduct::where('station_id', $stationId)
@@ -211,7 +214,7 @@ class DailyRevenueValidationController extends Controller
             | 4. IDs catégories : lubrifiant, pea, gaz, lampe
             * -----------------------------------------------------------------*/
             $catIds = StationCategory::where('station_id', $stationId)
-                ->whereIn('name', ['Lubrifiant', 'Produits d\'Entretien Auto (PEA)', 'GAZ', 'Lampes'])
+                ->whereIn('name', ['LUBRIFIANTS', 'Produits d\'entretien auto', 'GAZ', 'LAMPES SOLAIRES', 'DIVERS'])
                 ->pluck('id', 'name'); // ['lubrifiant' => 3, …]
 
             /* -----------------------------------------------------------------
@@ -223,13 +226,13 @@ class DailyRevenueValidationController extends Controller
 
             $lub = isset($catIds['Lubrifiant'])
                 ? (clone $productBase)
-                    ->whereHas('productPackaging.product', fn ($q) => $q->where('category_id', $catIds['Lubrifiant']))
+                    ->whereHas('productPackaging.product', fn ($q) => $q->where('category_id', $catIds['LUBRIFIANTS']))
                     ->sum('total_price')
                 : 0;
 
-            $pea = isset($catIds['Produits d\'Entretien Auto (PEA)'])
+            $pea = isset($catIds['Produits d\'entretien auto'])
                 ? (clone $productBase)
-                    ->whereHas('productPackaging.product', fn ($q) => $q->where('category_id', $catIds['Produits d\'Entretien Auto (PEA)']))
+                    ->whereHas('productPackaging.product', fn ($q) => $q->where('category_id', $catIds['Produits d\'entretien auto']))
                     ->sum('total_price')
                 : 0;
 
@@ -239,9 +242,15 @@ class DailyRevenueValidationController extends Controller
                     ->sum('total_price')
                 : 0;
 
-            $lampes = isset($catIds['Lampes'])
+            $lampes = isset($catIds['LAMPES SOLAIRES'])
                 ? (clone $productBase)
-                    ->whereHas('productPackaging.product', fn ($q) => $q->where('category_id', $catIds['Lampes']))
+                    ->whereHas('productPackaging.product', fn ($q) => $q->where('category_id', $catIds['LAMPES SOLAIRES']))
+                    ->sum('total_price')
+                : 0;
+
+            $divers = isset($catIds['DIVERS'])
+                ? (clone $productBase)
+                    ->whereHas('productPackaging.product', fn ($q) => $q->where('category_id', $catIds['DIVERS']))
                     ->sum('total_price')
                 : 0;
 
@@ -292,6 +301,7 @@ class DailyRevenueValidationController extends Controller
                 'pea_amount' => $pea,
                 'gaz_amount' => $gaz,
                 'lampes_amount' => $lampes,
+                'divers_amount' => $divers,
                 'lavage_amount' => $lavage,
                 'boutique_amount' => $boutique,
 

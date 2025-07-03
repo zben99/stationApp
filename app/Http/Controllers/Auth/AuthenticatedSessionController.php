@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
     public function showSelectionPage()
     {
         $user = Auth::user();
-        if (! $user->hasRole('Admin')) {
+        if (! $user->hasRole('Super Gestionnaire')) {
             return redirect()->route('dashboard');
         }
 
@@ -57,7 +57,7 @@ class AuthenticatedSessionController extends Controller
     public function select(Request $request)
     {
         $user = Auth::user();
-        if (! $user->hasRole('Admin')) {
+        if (! $user->hasRole('Super Gestionnaire')) {
             return redirect()->route('dashboard');
         }
 

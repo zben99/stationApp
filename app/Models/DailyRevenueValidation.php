@@ -24,6 +24,7 @@ class DailyRevenueValidation extends Model
         'pea_amount',
         'gaz_amount',
         'lampes_amount',
+        'divers_amount',
         'lavage_amount',
         'boutique_amount',
 

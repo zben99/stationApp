@@ -46,6 +46,7 @@
                         'pea_amount'         => 'PEA',
                         'gaz_amount'         => 'GAZ',
                         'lampes_amount'      => 'Lampes',
+                         'divers_amount'      => 'Divers',
                         'lavage_amount'      => 'Lavage',
                         'boutique_amount'    => 'Boutique',
                         'credit_repaid'      => 'Remboursement crédit',
@@ -135,7 +136,7 @@
         /* ---------- Helpers ---------- */
         const incomeIds  = [
             'fuel_super_amount','fuel_gazoil_amount',
-            'lub_amount','pea_amount','gaz_amount','lampes_amount',
+            'lub_amount','pea_amount','gaz_amount','lampes_amount','divers_amount',
             'lavage_amount','boutique_amount',
             'credit_repaid','balance_received','tpe_recharge_amount','om_recharge_amount'
         ];

@@ -14,7 +14,7 @@ class EnsureStationIsSet
 
         if ($user) {
             // ✅ Ne rien faire si c'est un admin
-            if ($user->hasRole('Admin')) {
+            if ($user->hasRole('Super Gestionnaire')) {
                 return $next($request);
             }
 

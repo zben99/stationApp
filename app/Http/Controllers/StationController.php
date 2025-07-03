@@ -617,6 +617,29 @@ class StationController extends Controller
             }
         }
 
+
+
+        // 5. Création des produits FUEL
+        $fuelCategory = $station->categories()->where('name', 'Carburant')->first();
+
+        if ($fuelCategory) {
+            $fuelProducts = [
+                'SUPER SANS PLOMB' => 850,
+                'GASOIL' => 675,
+            ];
+
+            foreach ($fuelProducts as $name => $price) {
+                // Créer le produit sans packaging
+                StationProduct::create([
+                    'station_id' => $station->id,
+                    'name' => $name,
+                    'category_id' => $fuelCategory->id,
+                    'price' => $price,
+                    'code' => strtoupper(Str::slug($name, '_')),
+                    'is_active' => true,
+                ]);
+            }
+        }
         return redirect()->route('stations.index')->with('success', 'Station ajoutée avec succès.');
     }
 

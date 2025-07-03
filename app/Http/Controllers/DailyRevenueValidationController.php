@@ -224,7 +224,7 @@ class DailyRevenueValidationController extends Controller
                 ->where('date', $date)
                 ->where('rotation', $rotation);
 
-            $lub = isset($catIds['Lubrifiant'])
+            $lub = isset($catIds['LUBRIFIANTS'])
                 ? (clone $productBase)
                     ->whereHas('productPackaging.product', fn ($q) => $q->where('category_id', $catIds['LUBRIFIANTS']))
                     ->sum('total_price')

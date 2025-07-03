@@ -56,7 +56,7 @@
         </thead>
         <tbody>
             @foreach($users as $user)
-                @if($user->stations->isNotEmpty())
+                @if($user->stations && $user->stations->isNotEmpty())
                     @foreach($user->stations as $station)
                         <tr>
                             <td>{{ $user->name }}</td>
@@ -76,6 +76,7 @@
                     @endforeach
                 @endif
             @endforeach
+
 
         </tbody>
     </table>

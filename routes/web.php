@@ -105,7 +105,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('stations/associate', [StationUserController::class, 'index'])->name('stations.associate');
     Route::post('stations/associate', [StationUserController::class, 'store'])->name('stations.associate.store');
-    Route::post('stations/detach/{user}', [StationUserController::class, 'detach'])->name('stations.associate.detach');
+  //  Route::post('stations/detach/{user}', [StationUserController::class, 'detach'])->name('stations.associate.detach');
+Route::post('stations/detach', [StationUserController::class, 'detach'])->name('stations.associate.detach');
 
     // Gestion des crédits clients (approvisionnement, dettes, remboursements)
     Route::post('clients/{id}/credit/add', [ClientController::class, 'addCredit'])->name('clients.credit.add')

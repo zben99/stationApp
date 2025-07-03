@@ -59,8 +59,8 @@ class User extends Authenticatable
             ->implode('');
     }
 
-    public function station()
-    {
-        return $this->belongsTo(Station::class);
-    }
+ public function stations()
+{
+    return $this->belongsToMany(Station::class);
+}
 }

@@ -11,9 +11,11 @@ class StationUserController extends Controller
     public function index()
     {
         $stations = Station::all();
+
+        // Exclure les super utilisateurs et charger les relations stations
         $users = User::whereDoesntHave('roles', function ($query) {
-            $query->whereIn('name', ['admin', 'super-admin']);
-        })->get();
+            $query->whereIn('name', ['Super Gestionnaire', 'super-admin']);
+        })->with('stations')->get();
 
         return view('stations.associate', compact('stations', 'users'));
     }
@@ -24,13 +26,16 @@ class StationUserController extends Controller
             'user_id' => 'required|exists:users,id',
             'station_id' => 'required|array',
             'station_id.*' => 'exists:stations,id',
+        ], [
+            'user_id.required' => 'Veuillez sélectionner un utilisateur.',
+            'station_id.required' => 'Veuillez sélectionner au moins une station.',
+            'station_id.*.exists' => 'Une station sélectionnée est invalide.',
         ]);
 
         $user = User::findOrFail($request->user_id);
 
-        foreach ($request->station_id as $stationId) {
-            $user->stations()->syncWithoutDetaching([$stationId]);
-        }
+        // Associer sans détacher les stations déjà associées
+        $user->stations()->syncWithoutDetaching($request->station_id);
 
         return redirect()->route('stations.associate')->with('success', 'Utilisateur associé aux stations avec succès.');
     }
@@ -40,9 +45,13 @@ class StationUserController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'station_id' => 'required|exists:stations,id',
+        ], [
+            'user_id.required' => 'Utilisateur introuvable.',
+            'station_id.required' => 'Station invalide.',
         ]);
 
         $user = User::findOrFail($request->user_id);
+
         $user->stations()->detach($request->station_id);
 
         return redirect()->route('stations.associate')->with('success', 'Utilisateur dissocié de la station.');

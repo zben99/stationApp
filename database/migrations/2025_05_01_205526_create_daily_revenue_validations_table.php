@@ -24,6 +24,7 @@ class CreateDailyRevenueValidationsTable extends Migration
             $table->decimal('pea_amount', 12, 2)->default(0);
             $table->decimal('gaz_amount', 12, 2)->default(0);
             $table->decimal('lampes_amount', 12, 2)->default(0);
+              $table->decimal('divers_amount', 12, 2)->default(0);
             $table->decimal('lavage_amount', 12, 2)->default(0);
             $table->decimal('boutique_amount', 12, 2)->default(0);
 

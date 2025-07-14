@@ -56,17 +56,19 @@ class LubricantReceptionBatchController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        $categories = StationCategory::where('station_id', $stationId)
-            ->whereIn('type', ['lubrifiant', 'pea', 'gaz', 'lampe'])
-            ->pluck('id');
 
-        $stationProducts = StationProduct::whereIn('category_id', $categories)
-            ->with('packagings')
+
+        $categories = StationCategory::where('station_id', $stationId)
+            ->whereIn('type', ['lubrifiant'])
             ->get();
+
+        /*$stationProducts = StationProduct::whereIn('category_id', $categories)
+            ->with('packagings')
+            ->get();*/
 
         $suppliers = Supplier::where('station_id', $stationId)->get();
 
-        return view('lubricant_reception_batches.create', compact('stationProducts', 'suppliers'));
+        return view('lubricant_reception_batches.create', compact('categories', 'suppliers'));
     }
 
     public function store(Request $request)
@@ -278,4 +280,11 @@ class LubricantReceptionBatchController extends Controller
 
         return response()->json($packagings);
     }
+
+    public function getProductsByCategory($categoryId)
+{
+    $products = StationProduct::where('category_id', $categoryId)->get();
+    return response()->json($products);
+}
+
 }

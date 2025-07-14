@@ -19,7 +19,6 @@ use App\Http\Controllers\FuelIndexController;
 use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\LubricantProductController;
 use App\Http\Controllers\LubricantReceptionBatchController;
-use App\Http\Controllers\LubricantReceptionController;
 use App\Http\Controllers\PackagingController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPackagingController;
@@ -227,7 +226,11 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
         Route::put('/batch/{batch}', [LubricantReceptionBatchController::class, 'update'])->name('batch.update')->middleware('can:lubricant-reception-edit');
         Route::delete('/batch/{batch}', [LubricantReceptionBatchController::class, 'destroy'])->name('batch.destroy')->middleware('can:lubricant-reception-delete');
         Route::get('/packagings/{productId}', [LubricantReceptionBatchController::class, 'getPackagings'])->name('packagings')->middleware('can:lubricant-reception-view');
+
     });
+
+    Route::get('/lubricant-receptions/products/{categoryId}', [LubricantReceptionBatchController::class, 'getProductsByCategory'])
+    ->name('lubricant-receptions.getProductsByCategory');
 
     // --- BALANCES ---
     Route::resource('balance-topups', BalanceTopupController::class)->middleware([
@@ -367,8 +370,8 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
 
     // Conditionnements d’un produit
 
-    Route::get('/product/{product}/packagings', [LubricantReceptionController::class, 'getPackagings'])
-        ->middleware('can:view-product-packagings');
+    //Route::get('/product/{product}/packagings', [LubricantReceptionController::class, 'getPackagings'])
+      //  ->middleware('can:view-product-packagings');
 
     // pumps
 

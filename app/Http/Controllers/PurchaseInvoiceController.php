@@ -38,24 +38,38 @@ class PurchaseInvoiceController extends Controller
         return view('purchase_invoices.create');
     }
 
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'invoice_number' => 'required|string|max:255',
-            'date' => 'required|date',
-            'rotation' => 'nullable|string|in:6-14,14-22,22-6',
-            'supplier_name' => 'required|string|max:255',
-            'amount_ht' => 'required|numeric|min:0',
-            'amount_ttc' => 'required|numeric|min:0',
-        ]);
+public function store(Request $request)
+{
+    // Validation des données de la facture
+    $validated = $request->validate([
+        'invoice_number' => 'required|string',
+        'date' => 'required|date',
+        'rotation' => 'required|string',
+        'supplier_name' => 'required|string',
+        'amount_ht' => 'required|numeric',
+        'amount_ttc' => 'required|numeric',
+    ]);
 
-        $data['station_id'] = session('selected_station_id');
-        $data['created_by'] = auth()->id();
+    // Création de la facture
+    $invoice = new PurchaseInvoice();
+    $invoice->invoice_number = $validated['invoice_number'];
+    $invoice->date = $validated['date'];
+    $invoice->rotation = $validated['rotation'];
+    $invoice->supplier_name = $validated['supplier_name'];
+    $invoice->amount_ht = $validated['amount_ht'];
+    $invoice->amount_ttc = $validated['amount_ttc'];
+    $invoice->station_id = session('selected_station_id');
 
-        PurchaseInvoice::create($data);
+    // Initialisation du montant payé et restant
+    $invoice->amount_paid = 0;
+    $invoice->amount_remaining = $validated['amount_ttc'];  // Le montant restant à payer est égal à amount_ttc initialement
 
-        return redirect()->route('purchase-invoices.index')->with('success', 'Facture enregistrée avec succès.');
-    }
+    $invoice->created_by = auth()->id();;
+    // Sauvegarde de la facture
+    $invoice->save();
+
+    return redirect()->route('purchase-invoices.index')->with('success', 'Facture créée avec succès');
+}
 
     public function edit(PurchaseInvoice $purchaseInvoice)
     {
@@ -113,5 +127,18 @@ class PurchaseInvoiceController extends Controller
         $purchaseInvoice->delete();
 
         return back()->with('success', 'Facture supprimée avec succès.');
+    }
+
+
+        /**
+     * Afficher les paiements associés à une facture
+     */
+    public function showPayments($invoiceId)
+    {
+        $invoice = PurchaseInvoice::findOrFail($invoiceId);
+
+        $payments = $invoice->payments; // Relation définie dans le modèle Invoice
+
+        return view('purchase_invoices.show_payments', compact('invoice', 'payments'));
     }
 }

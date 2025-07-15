@@ -71,6 +71,18 @@
                                     <a href="{{ route('purchase-invoices.edit', $invoice) }}" class="btn btn-sm btn-warning">
                                         Modifier
                                     </a>
+                                    <!-- Bouton pour voir les paiements associés -->
+                                    <a href="{{ route('invoices.showPayments', $invoice->id) }}" class="btn btn-sm btn-info">
+                                        Voir les paiements
+                                    </a>
+                                    <!-- Bouton pour supprimer la facture -->
+                                    <form action="{{ route('purchase-invoices.destroy', $invoice->id) }}" method="POST" style="display:inline;" id="deleteForm{{ $invoice->id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="confirmDelete(event, {{ $invoice->id }})">
+                                            Supprimer
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
@@ -86,7 +98,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmDelete(userId) {
+        function confirmDelete(event, invoiceId) {
+            event.preventDefault();  // Empêche le formulaire de se soumettre immédiatement
+
             Swal.fire({
                 title: 'Êtes-vous sûr ?',
                 text: "Cette action est irréversible !",
@@ -98,9 +112,10 @@
                 cancelButtonText: 'Annuler'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('deleteForm' + userId).submit();
+                    document.getElementById('deleteForm' + invoiceId).submit();  // Soumet le formulaire après confirmation
                 }
             });
         }
     </script>
+
 </x-app-layout>

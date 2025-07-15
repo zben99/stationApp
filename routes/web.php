@@ -1,38 +1,39 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PumpController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TankController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DriverController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StationController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\FuelIndexController;
+use App\Http\Controllers\PackagingController;
+use App\Http\Controllers\CreditTopupController;
+use App\Http\Controllers\StationUserController;
+use App\Http\Controllers\TransporterController;
 use App\Http\Controllers\BalanceTopupController;
 use App\Http\Controllers\BalanceUsageController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ClientBalanceController;
-use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientCreditController;
+use App\Http\Controllers\ClientBalanceController;
 use App\Http\Controllers\CreditPaymentController;
-use App\Http\Controllers\CreditTopupController;
-use App\Http\Controllers\DailyProductSaleController;
-use App\Http\Controllers\DailyRevenueReviewController;
-use App\Http\Controllers\DailyRevenueValidationController;
-use App\Http\Controllers\DailySimpleRevenueController;
-use App\Http\Controllers\DriverController;
-use App\Http\Controllers\ExpenseCategoryController;
-use App\Http\Controllers\ExpenseController;
-use App\Http\Controllers\FuelIndexController;
 use App\Http\Controllers\FuelReceptionController;
-use App\Http\Controllers\LubricantProductController;
-use App\Http\Controllers\LubricantReceptionBatchController;
-use App\Http\Controllers\PackagingController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductPackagingController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PumpController;
+use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\PurchaseInvoiceController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\StationController;
-use App\Http\Controllers\StationUserController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\TankController;
-use App\Http\Controllers\TransporterController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DailyProductSaleController;
+use App\Http\Controllers\LubricantProductController;
+use App\Http\Controllers\ProductPackagingController;
+use App\Http\Controllers\DailyRevenueReviewController;
+use App\Http\Controllers\DailySimpleRevenueController;
+use App\Http\Controllers\DailyRevenueValidationController;
+use App\Http\Controllers\LubricantReceptionBatchController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -293,6 +294,20 @@ Route::middleware(['auth', 'ensure.station', 'station.required'])->group(functio
     ]);
     Route::get('purchase-invoices/export/pdf', [PurchaseInvoiceController::class, 'exportPdf'])->name('purchase-invoices.export.pdf')->middleware('can:purchase-invoice-export');
     Route::get('purchase-invoices/export/excel', [PurchaseInvoiceController::class, 'exportExcel'])->name('purchase-invoices.export.excel')->middleware('can:purchase-invoice-export');
+
+
+// Route pour afficher les paiements d'une facture
+Route::get('invoices/{invoiceId}/payments', [PurchaseInvoiceController::class, 'showPayments'])->name('invoices.showPayments');
+
+// Route pour afficher le formulaire de paiement d'une facture
+Route::get('invoices/{invoiceId}/payments/create', [PaymentController::class, 'create'])->name('payments.create');
+
+// Route pour enregistrer un paiement
+Route::post('invoices/{invoiceId}/payments', [PaymentController::class, 'store'])->name('payments.store');
+
+
+Route::delete('payments/{paymentId}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+
 
     // product-packagings
     Route::get('product-packagings/{product}/', [ProductPackagingController::class, 'index'])

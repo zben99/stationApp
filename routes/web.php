@@ -326,13 +326,15 @@ Route::delete('payments/{paymentId}', [PaymentController::class, 'destroy'])->na
         ->name('product-packagings.edit')
         ->middleware('can:edit-product-packagings');
 
-    Route::put('product-packagings/{productPackaging}', [ProductPackagingController::class, 'update'])
-        ->name('product-packagings.update')
-        ->middleware('can:edit-product-packagings');
+Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagingController::class, 'update'])
+    ->name('product-packagings.update')
+    ->middleware('can:edit-product-packagings');
 
-    Route::delete('product-packagings/{productPackaging}', [ProductPackagingController::class, 'destroy'])
-        ->name('product-packagings.destroy')
-        ->middleware('can:delete-product-packagings');
+
+ Route::delete('product-packagings/{productId}/{productPackaging}', [ProductPackagingController::class, 'destroy'])
+    ->name('product-packagings.destroy')
+    ->middleware('can:delete-product-packagings');
+
 
     // lubricant-products
 

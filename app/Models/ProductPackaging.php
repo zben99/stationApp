@@ -12,6 +12,7 @@ class ProductPackaging extends Model
         'station_product_id',
         'packaging_id',
         'price',
+        'prix_achat',
     ];
 
     public function product()
@@ -26,7 +27,7 @@ class ProductPackaging extends Model
 
     public function lubricantStock()
     {
-        return $this->hasOne(LubricantStock::class, 'product_packaging_id', 'id');
+        return $this->hasOne(LubricantStock::class, 'product_packaging_id');
     }
 
     public function getQuantiteDisponibleAttribute()

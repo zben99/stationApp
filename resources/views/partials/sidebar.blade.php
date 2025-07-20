@@ -118,6 +118,10 @@
         </a>
         <div id="collapseFuel" class="collapse" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+                 @can('view-fuel-products')
+                    <a class="collapse-item" href="{{ route('fuel-products.index') }}">Gestion de Produits</a>
+                @endcan
+
                 @can('tank-list')
                     <a class="collapse-item" href="{{ route('tanks.index') }}">Gestion des cuves</a>
                 @endcan

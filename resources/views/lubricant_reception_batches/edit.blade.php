@@ -63,7 +63,6 @@
                         <th>Produit</th>
                         <th>Conditionnement</th>
                         <th>Quantité</th>
-                        <th>Prix achat</th>
                         <th>Observations</th>
                     </tr>
                 </thead>
@@ -95,7 +94,6 @@
                             </td>
 
                             <td><input type="number" step="0.01" name="products[{{ $i }}][quantite]" value="{{ $rec->quantite }}" class="form-control" required></td>
-                            <td><input type="number" step="0.01" name="products[{{ $i }}][prix_achat]" value="{{ $rec->prix_achat }}" class="form-control"></td>
                             <td><input type="text" name="products[{{ $i }}][observations]" value="{{ $rec->observations }}" class="form-control"></td>
                         </tr>
                     @endforeach

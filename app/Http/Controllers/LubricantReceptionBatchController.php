@@ -83,7 +83,6 @@ class LubricantReceptionBatchController extends Controller
             'products.*.station_product_id' => 'required|exists:station_products,id',
             'products.*.product_packaging_id' => 'required|exists:station_product_packaging,id',
             'products.*.quantite' => 'required|numeric|min:0.01',
-            'products.*.prix_achat' => 'nullable|numeric|min:0',
             'products.*.prix_vente' => 'nullable|numeric|min:0',
             'products.*.observations' => 'nullable|string|max:1000',
         ]);
@@ -104,7 +103,10 @@ class LubricantReceptionBatchController extends Controller
                 'num_bl' => $request->num_bl,
             ]);
 
+
+
             foreach ($data['products'] as $prod) {
+                 $produitPack = ProductPackaging::findOrFail($prod['product_packaging_id']);
                 LubricantReception::create([
                     'batch_id' => $batch->id,
                     'station_product_id' => $prod['station_product_id'],
@@ -112,7 +114,7 @@ class LubricantReceptionBatchController extends Controller
                     'supplier_id' => $supplierId,
                     'date_reception' => $request->date_reception,
                     'quantite' => $prod['quantite'],
-                    'prix_achat' => $prod['prix_achat'] ?? null,
+                    'prix_achat' =>  $produitPack->prix_achat ?? null,
                     'prix_vente' => $prod['prix_vente'] ?? null,
                     'observations' => $prod['observations'] ?? null,
                 ]);
@@ -208,7 +210,6 @@ class LubricantReceptionBatchController extends Controller
             'products.*.station_product_id' => 'required|exists:station_products,id',
             'products.*.product_packaging_id' => 'required|exists:station_product_packaging,id',
             'products.*.quantite' => 'required|numeric|min:0.01',
-            'products.*.prix_achat' => 'nullable|numeric|min:0',
             'products.*.observations' => 'nullable|string|max:1000',
         ]);
 
@@ -233,7 +234,6 @@ class LubricantReceptionBatchController extends Controller
                 'supplier_id' => $request->supplier_id,
                 'date_reception' => $request->date_reception,
                 'quantite' => $prod['quantite'],
-                'prix_achat' => $prod['prix_achat'] ?? null,
                 'observations' => $prod['observations'] ?? null,
             ]);
 

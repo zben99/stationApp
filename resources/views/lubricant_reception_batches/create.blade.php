@@ -56,7 +56,6 @@
                         <th>Produit</th>
                         <th>Conditionnement</th>
                         <th>Quantité</th>
-                        <th>Prix achat</th>
                         <th>Observations</th>
                         <th>Action</th>
                     </tr>
@@ -82,7 +81,6 @@
                             </select>
                         </td>
                         <td><input type="number" step="0.01" name="products[0][quantite]" class="form-control" required></td>
-                        <td><input type="number" step="0.01" name="products[0][prix_achat]" class="form-control"></td>
                         <td><input type="text" name="products[0][observations]" class="form-control"></td>
                         <td><button type="button" class="btn btn-danger btn-sm remove-row">X</button></td>
                     </tr>

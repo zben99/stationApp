@@ -17,6 +17,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\FuelIndexController;
 use App\Http\Controllers\PackagingController;
 use App\Http\Controllers\CreditTopupController;
+use App\Http\Controllers\FuelProductController;
 use App\Http\Controllers\StationUserController;
 use App\Http\Controllers\TransporterController;
 use App\Http\Controllers\BalanceTopupController;
@@ -334,6 +335,43 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
  Route::delete('product-packagings/{productId}/{productPackaging}', [ProductPackagingController::class, 'destroy'])
     ->name('product-packagings.destroy')
     ->middleware('can:delete-product-packagings');
+
+
+
+
+
+    // fuel-products
+
+    Route::get('fuel-products', [FuelProductController::class, 'index'])
+        ->name('fuel-products.index')
+        ->middleware('can:view-fuel-products');
+
+    Route::get('fuel-products/create', [FuelProductController::class, 'create'])
+        ->name('fuel-products.create')
+        ->middleware('can:create-fuel-products');
+
+    Route::post('fuel-products', [FuelProductController::class, 'store'])
+        ->name('fuel-products.store')
+        ->middleware('can:create-fuel-products');
+
+    Route::get('fuel-products/{fuel_product}', [FuelProductController::class, 'show'])
+        ->name('fuel-products.show')
+        ->middleware('can:view-fuel-products');
+
+    Route::get('fuel-products/{fuel_product}/edit', [FuelProductController::class, 'edit'])
+        ->name('fuel-products.edit')
+        ->middleware('can:edit-fuel-products');
+
+    Route::put('fuel-products/{fuel_product}', [FuelProductController::class, 'update'])
+        ->name('fuel-products.update')
+        ->middleware('can:edit-fuel-products');
+
+    Route::delete('fuel-products/{fuel_product}', [FuelProductController::class, 'destroy'])
+        ->name('fuel-products.destroy')
+        ->middleware('can:delete-fuel-products');
+
+
+
 
 
     // lubricant-products

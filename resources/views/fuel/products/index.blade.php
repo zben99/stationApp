@@ -6,7 +6,7 @@
 
     <x-slot name="header">
 
-        Gestion des Produits (Lubrifiant / PEA / GAZ / Lampes)
+        Gestion des Produits (Carburant)
 
     </x-slot>
 
@@ -18,26 +18,9 @@
     @endsession
 
                     <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <div class="pull-right">
-                                <a class="btn btn-success mb-2" href="{{ route('lubricant-products.create') }}"><i class="fa fa-plus"></i> Nouveau produit</a>
-                            </div>
-                        </div>
+
                         <div class="card-body">
-                            <form method="GET" action="{{ route('lubricant-products.index') }}" class="mb-3">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <select name="category" class="form-control" onchange="this.form.submit()">
-                                            <option value="">-- Toutes les catégories --</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                                                    {{ $category->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </form>
+
 
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -47,6 +30,8 @@
                                              <th>Code</th>
                                             <th>Produit</th>
                                             <th>Catégorie</th>
+                                            <th>Prix d'achat</th>
+                                            <th>Prix de vente</th>
                                             <th >Action</th>
                                         </tr>
                                     </thead>
@@ -59,13 +44,12 @@
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $product->stationCategory->name }}</td>
 
+                                            <td>{{ $product->prix_achat }}</td>
+                                            <td>{{ $product->price }}</td>
                                             <td>
 
-                                                <a class="btn btn-secondary btn-sm" href="{{ route('product-packagings.index', $product->id) }}">
-                                                    <i class="bi bi-box-seam"></i> Conditionnements
-                                                </a>
                                                   @can('product-edit')
-                                                        <a class="btn btn-primary btn-sm" href="{{ route('lubricant-products.edit',$product->id) }}">
+                                                        <a class="btn btn-primary btn-sm" href="{{ route('fuel-products.edit',$product->id) }}">
                                                             <i class="bi bi-pencil-square"></i> Modifier
                                                         </a>
                                                     @endcan

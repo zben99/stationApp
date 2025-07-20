@@ -142,6 +142,12 @@ class PermissionTableSeeder extends Seeder
             'edit-product-packagings',
             'delete-product-packagings',
 
+            // FUEL PRODUCTS
+            'view-fuel-products',
+            'create-fuel-products',
+            'edit-fuel-products',
+            'delete-fuel-products',
+
             // LUBRICANT PRODUCTS
             'view-lubricant-products',
             'create-lubricant-products',

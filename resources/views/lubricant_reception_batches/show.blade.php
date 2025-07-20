@@ -22,7 +22,6 @@
                             <th>Produit</th>
                             <th>Conditionnement</th>
                             <th>Quantité</th>
-                            <th>Prix achat</th>
                             <th>Observations</th>
                         </tr>
                     </thead>
@@ -32,7 +31,6 @@
                                 <td>{{ $rec->product->name }}</td>
                                 <td>{{ $rec->packaging->packaging->label ?? '?' }}</td>
                                 <td>{{ $rec->quantite }}</td>
-                                <td>{{ $rec->prix_achat ?? '-' }} FCFA</td>
                                 <td>{{ $rec->observations ?? '-' }}</td>
                             </tr>
                         @endforeach

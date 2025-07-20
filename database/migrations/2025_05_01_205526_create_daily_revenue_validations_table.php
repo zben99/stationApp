@@ -43,6 +43,8 @@ class CreateDailyRevenueValidationsTable extends Migration
             /* === Décaissements : dépenses espèces === */
             $table->decimal('expenses', 12, 2)->default(0);
 
+             $table->decimal('payment_facture', 12, 2)->default(0);
+
             /* === Cash déclaré & net calculé === */
             $table->decimal('cash_amount', 12, 2)->default(0);   // montant effectivement remis
             $table->decimal('net_to_deposit', 12, 2)->default(0);   // calcul appli

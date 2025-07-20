@@ -42,6 +42,7 @@ class DailyRevenueValidation extends Model
 
         /* Dépenses & liquidités */
         'expenses',
+        'payment_facture',
         'cash_amount',
         'net_to_deposit',
 

@@ -38,9 +38,12 @@ class PaymentController extends Controller
             return redirect()->back()->withErrors(['amount' => 'Le paiement ne peut pas dépasser le montant restant dû']);
         }
 
+
+
         // Créer un enregistrement de paiement
         $payment = new Payment();
         $payment->invoice_id = $invoice->id;
+        $payment->station_id = session('selected_station_id');
         $payment->amount = $validated['amount'];
         $payment->payment_date = $validated['payment_date'];
         $payment->rotation = $validated['rotation']; // Ajout de la rotation

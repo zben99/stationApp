@@ -70,10 +70,11 @@
             <div class="card-body row g-3">
                 @foreach ([
                     'expenses'        => 'Dépenses',
+                   'payment_facture'        => 'Payement Factures',
                     'credit_received' => 'Crédit accordé',
                     'balance_used'    => 'Avoir servi'
                 ] as $name => $label)
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">{{ $label }}</label>
                         <input type="number" step="0.01" class="form-control"
                                name="{{ $name }}" id="{{ $name }}" value="{{ old($name, 0) }}">
@@ -141,7 +142,7 @@
             'credit_repaid','balance_received','tpe_recharge_amount','om_recharge_amount'
         ];
         const expenseIds = [
-            'expenses','credit_received','balance_used',
+            'expenses','credit_received','balance_used','payment_facture',
             'tpe_amount','om_amount'
         ];
 

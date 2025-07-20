@@ -79,6 +79,10 @@
                             Dépenses :
                             <strong>{{ number_format($validation->expenses, 0, ',', ' ') }} F</strong>
                         </li>
+                        <li class="list-group-item">
+                            Payment factures :
+                            <strong>{{ number_format($validation->payment_facture, 0, ',', ' ') }} F</strong>
+                        </li>
                     </ul>
                 </div>
             </div>

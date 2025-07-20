@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('supplier_name');
             $table->decimal('amount_ht', 10, 2);
             $table->decimal('amount_ttc', 10, 2);
+             // Ajout des colonnes amount_paid et amount_remaining
+            $table->decimal('amount_paid', 10, 2)->default(0); // Montant payé
+            $table->decimal('amount_remaining', 10, 2); // Montant restant dû
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
         });

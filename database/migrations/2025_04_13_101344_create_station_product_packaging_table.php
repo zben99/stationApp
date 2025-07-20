@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('station_product_id')->constrained()->onDelete('cascade');
             $table->foreignId('packaging_id')->constrained()->onDelete('cascade');
+             $table->decimal('prix_achat', 10, 2)->nullable();  // Prix d'achat
             $table->decimal('price', 10, 2)->nullable(); // Prix de vente pour ce conditionnement
             $table->timestamps();
 

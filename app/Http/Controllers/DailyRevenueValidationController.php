@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
+use App\Models\Payment;
+use App\Models\FuelIndex;
+use App\Models\CreditTopup;
 use App\Models\BalanceTopup;
 use App\Models\BalanceUsage;
-use App\Models\CreditPayment;
-use App\Models\CreditTopup;
-use App\Models\DailyProductSale;
-use App\Models\DailyRevenueValidation;
-use App\Models\DailySimpleRevenue;
-use App\Models\Expense;
-use App\Models\FuelIndex;
-use App\Models\StationCategory;
-use App\Models\StationProduct;
 use Illuminate\Http\Request;
+use App\Models\CreditPayment;
+use App\Models\StationProduct;
+use App\Models\StationCategory;
+use App\Models\DailyProductSale;
+use App\Models\DailySimpleRevenue;
+use App\Models\DailyRevenueValidation;
 
 class DailyRevenueValidationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
 
         $stationId = session('selected_station_id');
+
 
         $validations = DailyRevenueValidation::where('station_id', $stationId)
             ->orderByDesc('date')
@@ -71,6 +73,8 @@ class DailyRevenueValidationController extends Controller
 
             /* Dépenses & caisse */
             'expenses' => 'nullable|numeric|min:0',
+             'payment_facture' => 'nullable|numeric|min:0',
+
             'cash_amount' => 'nullable|numeric|min:0',
             'net_to_deposit' => 'nullable|numeric|min:0',
         ]);
@@ -104,6 +108,7 @@ class DailyRevenueValidationController extends Controller
 
         $totalOut = (
             ($data['expenses'] ?? 0)
+        + ($data['payment_facture'] ?? 0)
         + ($data['credit_received'] ?? 0)
         + ($data['balance_used'] ?? 0)
         + ($data['tpe_amount'] ?? 0)
@@ -140,6 +145,8 @@ class DailyRevenueValidationController extends Controller
             'om_amount' => $data['om_amount'] ?? 0,
 
             'expenses' => $data['expenses'] ?? 0,
+            'payment_facture' => $data['payment_facture'] ?? 0,
+
             'cash_amount' => $data['cash_amount'] ?? 0,
             'net_to_deposit' => $net,                       // override pour cohérence
 
@@ -194,6 +201,9 @@ class DailyRevenueValidationController extends Controller
             |    Si FuelIndex possède directement un `product_id`, garde where().
             |    Ici on passe par pump ➜ tank ➜ product.
             * -----------------------------------------------------------------*/
+
+
+
             $fuelBase = FuelIndex::where('station_id', $stationId)
                 ->where('date', $date)
                 ->where('rotation', $rotation);
@@ -257,6 +267,12 @@ class DailyRevenueValidationController extends Controller
             /* -----------------------------------------------------------------
             | 6. Boutique & Lavage (DailySimpleRevenue)
             * -----------------------------------------------------------------*/
+
+            $paymentFacture = Payment::where('station_id', $stationId)
+                ->where('payment_date', $date)
+                ->where('rotation', $rotation)
+                ->sum('amount');
+
             $lavage = DailySimpleRevenue::where('station_id', $stationId)
                 ->where('date', $date)
                 ->where('rotation', $rotation)
@@ -311,6 +327,8 @@ class DailyRevenueValidationController extends Controller
                 'credit_received' => $creditReceived,
                 'credit_repaid' => $creditRepaid,
                 'expenses' => $expenses,
+                'payment_facture' => $paymentFacture,
+
 
                 // placeholders (mobile money / TPE)
                 'om_amount' => 0,

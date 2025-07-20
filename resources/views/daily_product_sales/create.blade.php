@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-md-2">
                     <label>PU</label>
-                    <input type="number" step="0.01" name="sales[0][unit_price]" class="form-control unit-price" required>
+                    <input type="number" step="0.01" name="sales[0][unit_price]" class="form-control unit-price" required readonly>
                 </div>
                 <div class="col-md-2">
                     <label>Total</label>

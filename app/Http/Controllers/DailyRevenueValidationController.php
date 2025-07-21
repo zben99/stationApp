@@ -130,7 +130,7 @@ class DailyRevenueValidationController extends Controller
             'pea_amount' => $data['pea_amount'] ?? 0,
             'gaz_amount' => $data['gaz_amount'] ?? 0,
             'lampes_amount' => $data['lampes_amount'] ?? 0,
-            'divers_amount' => $data['lampes_amount'] ?? 0,
+            'divers_amount' => $data['divers_amount'] ?? 0,
             'lavage_amount' => $data['lavage_amount'] ?? 0,
             'boutique_amount' => $data['boutique_amount'] ?? 0,
 

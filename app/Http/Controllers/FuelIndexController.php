@@ -12,7 +12,6 @@ class FuelIndexController extends Controller
 {
     public function index()
     {
-        // dd('');
         $stationId = session('selected_station_id');
         $fuelIndexes = FuelIndex::with('pump', 'user')
             ->where('station_id', $stationId)

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// tu avais oublié d'importer ce modèle ici
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

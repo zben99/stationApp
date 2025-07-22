@@ -50,6 +50,13 @@ class BalanceTopupController extends Controller
         return redirect()->route('balances.summary')->with('success', 'Recharge ajoutée.');
     }
 
+    /**
+     * Resolve the entity ID from a request value.
+     *
+     * @param class-string $model     Model class to use for lookup
+     * @param string|null  $value     ID or name provided by the user
+     * @param int          $stationId Current station identifier
+     */
     private function resolveEntityId(string $model, ?string $value, int $stationId): ?int
     {
         if (empty($value)) {

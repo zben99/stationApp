@@ -35,8 +35,6 @@ class PurchaseInvoice extends Model
         return $this->hasMany(Payment::class, 'invoice_id');
     }
 
-    // Dans le modèle Invoice.php
-
     public function updateAmounts()
     {
         // Calcule le montant payé jusqu'à présent

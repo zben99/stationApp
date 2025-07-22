@@ -45,9 +45,15 @@ class FuelReceptionController extends Controller
 
         $stationId = session('selected_station_id');
 
-        $tanks = Tank::where('station_id', $stationId)->get();
-        $transporters = Transporter::where('station_id', $stationId)->get();
-        $drivers = Driver::where('station_id', $stationId)->get();
+        $tanks = Tank::where('station_id', $stationId)
+            ->orderBy('code')
+            ->get();
+        $transporters = Transporter::where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
+        $drivers = Driver::where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
 
         return view('fuel_receptions.create', compact('tanks', 'transporters', 'drivers'));
     }
@@ -215,9 +221,15 @@ class FuelReceptionController extends Controller
         $stationId = session('selected_station_id');
 
         $reception = FuelReception::with(['lines', 'station', 'transporter', 'driver'])->findOrFail($id);
-        $tanks = Tank::where('station_id', $stationId)->get();
-        $transporters = Transporter::where('station_id', $stationId)->get();
-        $drivers = Driver::where('station_id', $stationId)->get();
+        $tanks = Tank::where('station_id', $stationId)
+            ->orderBy('code')
+            ->get();
+        $transporters = Transporter::where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
+        $drivers = Driver::where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
 
         return view('fuel_receptions.edit', compact('reception', 'tanks', 'transporters', 'drivers'));
     }

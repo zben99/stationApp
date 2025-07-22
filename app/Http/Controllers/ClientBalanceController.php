@@ -13,6 +13,7 @@ class ClientBalanceController extends Controller
 
         $clients = Client::with(['balanceTopups', 'balanceUsages'])
             ->where('station_id', $stationId)
+            ->orderBy('name')
             ->get()
             ->filter(function ($client) {
                 $totalRecharges = $client->balanceTopups->sum('amount');

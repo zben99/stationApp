@@ -11,7 +11,10 @@ class PumpController extends Controller
     public function index()
     {
         $stationId = session('selected_station_id');
-        $pumps = Pump::with('tank')->where('station_id', $stationId)->get();
+        $pumps = Pump::with('tank')
+            ->where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
 
         return view('pumps.index', compact('pumps'));
     }

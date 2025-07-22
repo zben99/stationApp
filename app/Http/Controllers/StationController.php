@@ -16,7 +16,7 @@ class StationController extends Controller
     public function index(Request $request)
     {
 
-        $data = Station::latest()->paginate(5);
+        $data = Station::orderBy('name')->paginate(5);
 
         return view('stations.index', compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);

@@ -17,6 +17,7 @@ class TankController extends Controller
 
         $tanks = Tank::with(['station', 'product', 'stock'])
             ->where('station_id', $stationId)
+            ->orderBy('code')
             ->get();
 
         return view('tanks.index', compact('tanks'));

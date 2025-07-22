@@ -27,7 +27,9 @@ class CreditTopupController extends Controller
 
     public function create()
     {
-        $clients = Client::where('station_id', session('selected_station_id'))->get();
+        $clients = Client::where('station_id', session('selected_station_id'))
+            ->orderBy('name')
+            ->get();
 
         return view('credit_topups.create', compact('clients'));
     }
@@ -76,7 +78,9 @@ class CreditTopupController extends Controller
 
     public function edit(CreditTopup $creditTopup)
     {
-        $clients = Client::where('station_id', session('selected_station_id'))->get();
+        $clients = Client::where('station_id', session('selected_station_id'))
+            ->orderBy('name')
+            ->get();
 
         return view('credit_topups.edit', compact('creditTopup', 'clients'));
     }

@@ -21,7 +21,9 @@ class BalanceTopupController extends Controller
 
     public function create()
     {
-        $clients = Client::where('station_id', session('selected_station_id'))->get();
+        $clients = Client::where('station_id', session('selected_station_id'))
+            ->orderBy('name')
+            ->get();
 
         return view('balance_topups.create', compact('clients'));
     }
@@ -69,7 +71,9 @@ class BalanceTopupController extends Controller
 
     public function edit(BalanceTopup $balanceTopup)
     {
-        $clients = Client::where('station_id', session('selected_station_id'))->get();
+        $clients = Client::where('station_id', session('selected_station_id'))
+            ->orderBy('name')
+            ->get();
 
         return view('balance_topups.edit', compact('balanceTopup', 'clients'));
     }

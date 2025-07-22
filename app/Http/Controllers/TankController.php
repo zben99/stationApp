@@ -50,7 +50,6 @@ class TankController extends Controller
             'capacite' => 'required|numeric|min:0',
         ]);
 
-        // dd(session('selected_station_id'));
 
         // Injecter la station depuis la session
         $data['station_id'] = session('selected_station_id');

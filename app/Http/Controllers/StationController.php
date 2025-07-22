@@ -588,7 +588,6 @@ class StationController extends Controller
 
         foreach ($productsData as $prod) {
             $category = $station->categories()->where('name', $prod['category'])->first();
-            // dd($category);
             $product = StationProduct::create([
                 'station_id' => $station->id,
                 'name' => $prod['name'],

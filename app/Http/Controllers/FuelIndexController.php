@@ -185,12 +185,4 @@ class FuelIndexController extends Controller
         ])->with('success', 'Relevé mis à jour avec succès.');
     }
 
-    private function getPreviousRotation($rotation)
-    {
-        return match ($rotation) {
-            '6-14' => '22-6',
-            '14-22' => '6-14',
-            '22-6' => '14-22',
-        };
-    }
 }

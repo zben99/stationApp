@@ -60,13 +60,16 @@ class LubricantReceptionBatchController extends Controller
 
         $categories = StationCategory::where('station_id', $stationId)
             ->whereIn('type', ['lubrifiant'])
+            ->orderBy('name')
             ->get();
 
         /*$stationProducts = StationProduct::whereIn('category_id', $categories)
             ->with('packagings')
             ->get();*/
 
-        $suppliers = Supplier::where('station_id', $stationId)->get();
+        $suppliers = Supplier::where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
 
         return view('lubricant_reception_batches.create', compact('categories', 'suppliers'));
     }
@@ -168,13 +171,17 @@ class LubricantReceptionBatchController extends Controller
 
         $categories = StationCategory::where('station_id', $stationId)
             ->whereIn('type', ['lubrifiant', 'pea', 'gaz', 'lampe'])
+            ->orderBy('name')
             ->pluck('id');
 
         $stationProducts = StationProduct::whereIn('category_id', $categories)
             ->with('productPackagings.packaging') // ← on utilise bien le modèle pivot avec ses relations
+            ->orderBy('name')
             ->get();
 
-        $suppliers = Supplier::where('station_id', $stationId)->get();
+        $suppliers = Supplier::where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
 
         $batch->load('receptions.product', 'receptions.packaging.packaging'); // ← pour la vue
 

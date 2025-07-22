@@ -25,7 +25,9 @@ class CreditPaymentController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        $clients = Client::where('station_id', $stationId)->get();
+        $clients = Client::where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
 
         return view('credit_payments.create', compact('clients'));
     }
@@ -62,7 +64,9 @@ class CreditPaymentController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        $clients = Client::where('station_id', $stationId)->get();
+        $clients = Client::where('station_id', $stationId)
+            ->orderBy('name')
+            ->get();
 
         return view('credit_payments.edit', compact('creditPayment', 'clients'));
     }

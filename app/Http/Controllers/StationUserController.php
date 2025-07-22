@@ -10,12 +10,15 @@ class StationUserController extends Controller
 {
     public function index()
     {
-        $stations = Station::all();
+        $stations = Station::orderBy('name')->get();
 
         // Exclure les super utilisateurs et charger les relations stations
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['Super Gestionnaire', 'super-admin']);
-        })->with('stations')->get();
+        })
+            ->with('stations')
+            ->orderBy('name')
+            ->get();
 
         return view('stations.associate', compact('stations', 'users'));
     }

@@ -11,7 +11,9 @@ class ExpenseCategoryController extends Controller
     {
         $stationId = session('selected_station_id');
 
-        $categories = ExpenseCategory::where('station_id', $stationId)->paginate(10);
+        $categories = ExpenseCategory::where('station_id', $stationId)
+            ->orderBy('name')
+            ->paginate(10);
 
         return view('expense_categories.index', compact('categories'))->with('i', ($request->input('page', 1) - 1) * 10);
     }

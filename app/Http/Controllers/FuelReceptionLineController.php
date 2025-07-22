@@ -12,7 +12,6 @@ class FuelReceptionLineController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -20,7 +19,6 @@ class FuelReceptionLineController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -28,7 +26,6 @@ class FuelReceptionLineController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -36,7 +33,6 @@ class FuelReceptionLineController extends Controller
      */
     public function show(FuelReceptionLine $fuelReceptionLine)
     {
-        //
     }
 
     /**
@@ -44,7 +40,6 @@ class FuelReceptionLineController extends Controller
      */
     public function edit(FuelReceptionLine $fuelReceptionLine)
     {
-        //
     }
 
     /**
@@ -52,7 +47,6 @@ class FuelReceptionLineController extends Controller
      */
     public function update(Request $request, FuelReceptionLine $fuelReceptionLine)
     {
-        //
     }
 
     /**
@@ -60,6 +54,5 @@ class FuelReceptionLineController extends Controller
      */
     public function destroy(FuelReceptionLine $fuelReceptionLine)
     {
-        //
     }
 }

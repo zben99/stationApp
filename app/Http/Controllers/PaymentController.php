@@ -19,8 +19,9 @@ class PaymentController extends Controller
 
 
 
-    // Dans PaymentController.php
-
+    /**
+     * Enregistre un paiement pour la facture spécifiée.
+     */
     public function store(Request $request, $invoiceId)
     {
         // Validation des données
@@ -57,6 +58,9 @@ class PaymentController extends Controller
     }
 
 
+    /**
+     * Supprime un paiement existant et met à jour la facture associée.
+     */
     public function destroy($paymentId)
     {
         // Trouver le paiement à supprimer

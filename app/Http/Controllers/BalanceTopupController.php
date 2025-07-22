@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\BalanceTopup;
 use App\Models\Client;
+use App\Models\DailyRevenueValidation;
+use App\Models\ModificationLog;
+use App\Traits\ValidatesRotation;
 use Illuminate\Http\Request;
 
 class BalanceTopupController extends Controller
 {
+    use ValidatesRotation;
     public function index()
     {
         $stationId = session('selected_station_id');
@@ -94,17 +98,51 @@ class BalanceTopupController extends Controller
             'rotation' => 'required|in:6-14,14-22,22-6',
             'notes' => 'nullable|string',
         ]);
+        $isValidated = DailyRevenueValidation::where('station_id', $balanceTopup->station_id)
+            ->where('date', $balanceTopup->date)
+            ->where('rotation', $balanceTopup->rotation)
+            ->exists();
 
-        $oldAmount = $balanceTopup->amount;
+        if (! $this->modificationAllowed(
+            $balanceTopup->station_id,
+            $balanceTopup->date,
+            $balanceTopup->rotation
+        )) {
+            return redirect()->route('clients.balance.topups', $balanceTopup->client_id)
+                ->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
+        }
 
+        $before = $balanceTopup->getOriginal();
         $balanceTopup->update($data);
+
+        if ($isValidated) {
+            $this->logOverride($balanceTopup, $before, $balanceTopup->getAttributes());
+        }
 
         return redirect()->route('clients.balance.topups', $balanceTopup->client_id)->with('success', 'Recharge mise à jour.');
     }
 
     public function destroy(BalanceTopup $balanceTopup)
     {
+        $isValidated = DailyRevenueValidation::where('station_id', $balanceTopup->station_id)
+            ->where('date', $balanceTopup->date)
+            ->where('rotation', $balanceTopup->rotation)
+            ->exists();
+
+        if (! $this->modificationAllowed(
+            $balanceTopup->station_id,
+            $balanceTopup->date,
+            $balanceTopup->rotation
+        )) {
+            return back()->with('error', 'Cette rotation a déjà été validée. Suppression impossible.');
+        }
+
+        $before = $balanceTopup->getOriginal();
         $balanceTopup->delete();
+
+        if ($isValidated) {
+            $this->logOverride($balanceTopup, $before, []);
+        }
 
         return back()->with('success', 'Recharge supprimée.');
     }

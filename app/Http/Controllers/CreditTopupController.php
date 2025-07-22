@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\CreditTopup;
+use App\Models\DailyRevenueValidation;
+use App\Models\ModificationLog;
+use App\Traits\ValidatesRotation;
 use Illuminate\Http\Request;
 
 class CreditTopupController extends Controller
 {
+    use ValidatesRotation;
     public function index()
     {
         $stationId = session('selected_station_id');
@@ -94,17 +98,51 @@ class CreditTopupController extends Controller
             'rotation' => 'required|in:6-14,14-22,22-6',
             'notes' => 'nullable|string',
         ]);
+        $isValidated = DailyRevenueValidation::where('station_id', $creditTopup->station_id)
+            ->where('date', $creditTopup->date)
+            ->where('rotation', $creditTopup->rotation)
+            ->exists();
 
-        $oldAmount = $creditTopup->amount;
+        if (! $this->modificationAllowed(
+            $creditTopup->station_id,
+            $creditTopup->date,
+            $creditTopup->rotation
+        )) {
+            return redirect()->route('clients.topups', $creditTopup->client_id)
+                ->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
+        }
 
+        $before = $creditTopup->getOriginal();
         $creditTopup->update($data);
+
+        if ($isValidated) {
+            $this->logOverride($creditTopup, $before, $creditTopup->getAttributes());
+        }
 
         return redirect()->route('clients.topups', $creditTopup->client_id)->with('success', 'Recharge de crédit mise à jour.');
     }
 
     public function destroy(CreditTopup $creditTopup)
     {
+        $isValidated = DailyRevenueValidation::where('station_id', $creditTopup->station_id)
+            ->where('date', $creditTopup->date)
+            ->where('rotation', $creditTopup->rotation)
+            ->exists();
+
+        if (! $this->modificationAllowed(
+            $creditTopup->station_id,
+            $creditTopup->date,
+            $creditTopup->rotation
+        )) {
+            return back()->with('error', 'Cette rotation a déjà été validée. Suppression impossible.');
+        }
+
+        $before = $creditTopup->getOriginal();
         $creditTopup->delete();
+
+        if ($isValidated) {
+            $this->logOverride($creditTopup, $before, []);
+        }
 
         return back()->with('success', 'Recharge de crédit supprimée.');
     }

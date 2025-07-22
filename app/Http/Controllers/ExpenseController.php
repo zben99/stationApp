@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Models\DailyRevenueValidation;
+use App\Models\ModificationLog;
+use App\Traits\ValidatesRotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ExpenseController extends Controller
 {
+    use ValidatesRotation;
     public function index()
     {
         $stationId = session('selected_station_id');
@@ -56,6 +60,19 @@ class ExpenseController extends Controller
     {
         $categories = ExpenseCategory::where('station_id', $expense->station_id)->where('is_active', true)->get();
 
+        $isValidated = DailyRevenueValidation::where('station_id', $expense->station_id)
+            ->where('date', $expense->date_depense)
+            ->where('rotation', $expense->rotation)
+            ->exists();
+
+        if (! $this->modificationAllowed(
+            $expense->station_id,
+            $expense->date_depense,
+            $expense->rotation
+        )) {
+            return redirect()->route('expenses.index')->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
+        }
+
         return view('expenses.edit', compact('expense', 'categories'));
     }
 
@@ -72,6 +89,14 @@ class ExpenseController extends Controller
 
         $data = $request->all();
 
+        if (! $this->modificationAllowed(
+            $expense->station_id,
+            $expense->date_depense,
+            $expense->rotation
+        )) {
+            return redirect()->route('expenses.index')->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
+        }
+
         if ($request->hasFile('piece_jointe')) {
             if ($expense->piece_jointe) {
                 Storage::delete($expense->piece_jointe);
@@ -79,18 +104,42 @@ class ExpenseController extends Controller
             $data['piece_jointe'] = $request->file('piece_jointe')->store('justificatifs');
         }
 
+        $before = $expense->getOriginal();
+
         $expense->update($data);
+
+        if ($isValidated) {
+            $this->logOverride($expense, $before, $expense->getAttributes());
+        }
 
         return redirect()->route('expenses.index')->with('success', 'Dépense modifiée.');
     }
 
     public function destroy(Expense $expense)
     {
+        $isValidated = DailyRevenueValidation::where('station_id', $expense->station_id)
+            ->where('date', $expense->date_depense)
+            ->where('rotation', $expense->rotation)
+            ->exists();
+
+        if (! $this->modificationAllowed(
+            $expense->station_id,
+            $expense->date_depense,
+            $expense->rotation
+        )) {
+            return redirect()->route('expenses.index')->with('error', 'Cette rotation a déjà été validée. Suppression impossible.');
+        }
+
         if ($expense->piece_jointe) {
             Storage::delete($expense->piece_jointe);
         }
 
+        $before = $expense->getOriginal();
         $expense->delete();
+
+        if ($isValidated) {
+            $this->logOverride($expense, $before, []);
+        }
 
         return redirect()->route('expenses.index')->with('success', 'Dépense supprimée.');
     }

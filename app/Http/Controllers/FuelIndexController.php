@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DailyRevenueValidation;
 use App\Models\FuelIndex;
 use App\Models\Pump;
-use App\Models\ModificationLog;
 use App\Traits\ValidatesRotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -137,11 +135,6 @@ class FuelIndexController extends Controller
     {
         $stationId = $fuelIndex->station_id;
 
-        $isValidated = DailyRevenueValidation::where('station_id', $fuelIndex->station_id)
-            ->whereDate('date', $fuelIndex->date)
-            ->where('rotation', $fuelIndex->rotation)
-            ->exists();
-
         if (! $this->modificationAllowed(
             $fuelIndex->station_id,
             $fuelIndex->date,
@@ -158,12 +151,6 @@ class FuelIndexController extends Controller
 
     public function update(Request $request, FuelIndex $fuelIndex)
     {
-        // Vérifie si la rotation est validée
-        $isValidated = DailyRevenueValidation::where('station_id', $fuelIndex->station_id)
-            ->whereDate('date', $fuelIndex->date)
-            ->where('rotation', $fuelIndex->rotation)
-            ->exists();
-
         if (! $this->modificationAllowed(
             $fuelIndex->station_id,
             $fuelIndex->date,
@@ -182,9 +169,6 @@ class FuelIndexController extends Controller
             'retour_en_cuve' => 'nullable|numeric|min:0',
         ]);
 
-        // Conserve les valeurs avant modification pour le log
-        $before = $fuelIndex->only(['index_debut', 'index_fin', 'retour_en_cuve', 'montant_recette']);
-
         // Met à jour sans toucher au prix unitaire
         $fuelIndex->update([
             'index_debut' => $request->index_debut,
@@ -192,16 +176,6 @@ class FuelIndexController extends Controller
             'retour_en_cuve' => $request->retour_en_cuve ?? 0,
             'montant_recette' => (($pumpData['index_fin'] - $pumpData['index_debut']) - $pumpData['retour_en_cuve'] ?? 0) * $fuelIndex->prix_unitaire,
         ]);
-
-        // Si rotation validée, journalise la modification
-        if ($isValidated) {
-            $this->logOverride($fuelIndex, $before, $fuelIndex->only([
-                'index_debut',
-                'index_fin',
-                'retour_en_cuve',
-                'montant_recette',
-            ]));
-        }
 
         return redirect()->route('fuel-indexes.details', [
             'date' => $fuelIndex->date->format('Y-m-d'),

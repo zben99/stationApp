@@ -499,7 +499,7 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
     Route::get('exports/fuel-stock', [FuelStockController::class, 'index'])
         ->name('exports.fuel-stock.index')
         ->middleware('can:fuel-stock-export');
-    Route::get('exports/fuel-stock/excel', [FuelStockController::class, 'exportExcel'])
+    Route::post('exports/fuel-stock/excel', [FuelStockController::class, 'exportExcel'])
         ->name('exports.fuel-stock.excel')
         ->middleware('can:fuel-stock-export');
 

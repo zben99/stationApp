@@ -6,6 +6,7 @@ use App\Models\FuelIndex;
 use App\Models\FuelReceptionLine;
 use App\Models\Pump;
 use App\Models\Tank;
+use App\Models\TankPhysicalStock;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -51,7 +52,13 @@ class FuelStockExport implements FromCollection, WithHeadings
                 });
 
             $reception = $receptionQuery->sum('reception_par_cuve');
-            $stockPhysique = $receptionQuery->sum('station_d15');
+
+            $manualStock = TankPhysicalStock::where('tank_id', $tank->id)
+                ->where('station_id', $this->stationId)
+                ->where('date', $this->to)
+                ->value('quantity');
+
+            $stockPhysique = $manualStock ?? $receptionQuery->sum('station_d15');
 
             $stockOuverture = $tank->stock->quantite_actuelle ?? 0;
             $stockTheorique = $stockOuverture + $reception - $vente;

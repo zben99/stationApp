@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Pump;
+use App\Models\Station;
+use App\Models\StationProduct;
+use App\Models\TankStock;
+use App\Models\FuelReception;
+use App\Models\TankPhysicalStock;
 
 class Tank extends Model
 {
@@ -52,5 +57,10 @@ class Tank extends Model
     public function pumps()
     {
         return $this->hasMany(Pump::class);
+    }
+
+    public function physicalStocks()
+    {
+        return $this->hasMany(TankPhysicalStock::class);
     }
 }

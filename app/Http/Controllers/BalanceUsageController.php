@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\BalanceUsage;
 use App\Models\Client;
-use App\Models\DailyRevenueValidation;
-use App\Models\ModificationLog;
 use App\Traits\ValidatesRotation;
 use Illuminate\Http\Request;
 
@@ -68,11 +66,7 @@ class BalanceUsageController extends Controller
             'rotation' => 'required|in:6-14,14-22,22-6',
             'notes' => 'nullable|string',
         ]);
-        $isValidated = DailyRevenueValidation::where('station_id', $balanceUsage->station_id)
-            ->where('date', $balanceUsage->date)
-            ->where('rotation', $balanceUsage->rotation)
-            ->exists();
-
+        
         if (! $this->modificationAllowed(
             $balanceUsage->station_id,
             $balanceUsage->date,
@@ -81,23 +75,13 @@ class BalanceUsageController extends Controller
             return redirect()->route('balance-usages.index')->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
         }
 
-        $before = $balanceUsage->getOriginal();
         $balanceUsage->update($data);
-
-        if ($isValidated) {
-            $this->logOverride($balanceUsage, $before, $balanceUsage->getAttributes());
-        }
 
         return redirect()->route('balance-usages.index')->with('success', 'Avoir servi mis à jour avec succès.');
     }
 
     public function destroy(BalanceUsage $balanceUsage)
     {
-        $isValidated = DailyRevenueValidation::where('station_id', $balanceUsage->station_id)
-            ->where('date', $balanceUsage->date)
-            ->where('rotation', $balanceUsage->rotation)
-            ->exists();
-
         if (! $this->modificationAllowed(
             $balanceUsage->station_id,
             $balanceUsage->date,
@@ -106,12 +90,7 @@ class BalanceUsageController extends Controller
             return back()->with('error', 'Cette rotation a déjà été validée. Suppression impossible.');
         }
 
-        $before = $balanceUsage->getOriginal();
         $balanceUsage->delete();
-
-        if ($isValidated) {
-            $this->logOverride($balanceUsage, $before, []);
-        }
 
         return back()->with('success', 'Avoir servi supprimé avec succès.');
     }

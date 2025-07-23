@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\CreditPayment;
-use App\Models\DailyRevenueValidation;
-use App\Models\ModificationLog;
 use App\Traits\ValidatesRotation;
 use Illuminate\Http\Request;
 
@@ -95,12 +93,6 @@ class CreditPaymentController extends Controller
         if ($data['amount'] > $reste) {
             return back()->withErrors(['amount' => 'Le montant du remboursement dépasse le solde total disponible du client.'])->withInput();
         }
-
-        $isValidated = DailyRevenueValidation::where('station_id', $creditPayment->station_id)
-            ->where('date', $creditPayment->date)
-            ->where('rotation', $creditPayment->rotation)
-            ->exists();
-
         if (! $this->modificationAllowed(
             $creditPayment->station_id,
             $creditPayment->date,
@@ -109,24 +101,13 @@ class CreditPaymentController extends Controller
             return redirect()->route('clients.payments', $creditPayment->client_id)
                 ->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
         }
-
-        $before = $creditPayment->getOriginal();
         $creditPayment->update($data);
-
-        if ($isValidated) {
-            $this->logOverride($creditPayment, $before, $creditPayment->getAttributes());
-        }
 
         return redirect()->route('clients.payments', $creditPayment->client_id)->with('success', 'Remboursement modifié avec succès.');
     }
 
     public function destroy(CreditPayment $creditPayment)
     {
-        $isValidated = DailyRevenueValidation::where('station_id', $creditPayment->station_id)
-            ->where('date', $creditPayment->date)
-            ->where('rotation', $creditPayment->rotation)
-            ->exists();
-
         if (! $this->modificationAllowed(
             $creditPayment->station_id,
             $creditPayment->date,
@@ -135,13 +116,8 @@ class CreditPaymentController extends Controller
             return back()->with('error', 'Cette rotation a déjà été validée. Suppression impossible.');
         }
 
-        $before = $creditPayment->getOriginal();
         $creditPayment->client->decrement('credit_balance', $creditPayment->amount);
         $creditPayment->delete();
-
-        if ($isValidated) {
-            $this->logOverride($creditPayment, $before, []);
-        }
 
         return back()->with('success', 'Remboursement supprimé avec succès.');
     }

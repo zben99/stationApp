@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailySimpleRevenue;
-use App\Models\DailyRevenueValidation;
-use App\Models\ModificationLog;
 use App\Traits\ValidatesRotation;
 use Illuminate\Http\Request;
 
@@ -109,16 +107,7 @@ class DailySimpleRevenueController extends Controller
         if ($exists) {
             return back()->withErrors(['type' => 'Une recette existe déjà pour cette date, rotation et type.'])->withInput();
         }
-
-        $before = $dailySimpleRevenue->getOriginal();
         $dailySimpleRevenue->update($data);
-
-        if (DailyRevenueValidation::where('station_id', $dailySimpleRevenue->station_id)
-            ->where('date', $dailySimpleRevenue->date)
-            ->where('rotation', $dailySimpleRevenue->rotation)
-            ->exists()) {
-            $this->logOverride($dailySimpleRevenue, $before, $dailySimpleRevenue->getAttributes());
-        }
 
         return redirect()->route('daily-simple-revenues.index')->with('success', 'Recette mise à jour.');
     }
@@ -131,18 +120,7 @@ class DailySimpleRevenueController extends Controller
             $dailySimpleRevenue->rotation
         )) {
             return back()->with('error', 'Cette rotation a déjà été validée. Suppression impossible.');
-        }
-
-        $before = $dailySimpleRevenue->getOriginal();
-        $dailySimpleRevenue->delete();
-
-        if (DailyRevenueValidation::where('station_id', $dailySimpleRevenue->station_id)
-            ->where('date', $dailySimpleRevenue->date)
-            ->where('rotation', $dailySimpleRevenue->rotation)
-            ->exists()) {
-            $this->logOverride($dailySimpleRevenue, $before, []);
-        }
-
+        }        $dailySimpleRevenue->delete();
         return back()->with('success', 'Recette supprimée.');
     }
 }

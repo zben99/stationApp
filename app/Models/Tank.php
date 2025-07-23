@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Pump;
 
 class Tank extends Model
 {
@@ -45,5 +46,11 @@ class Tank extends Model
     public function receptions()
     {
         return $this->hasMany(FuelReception::class);
+    }
+
+    // Une cuve alimente plusieurs pompes
+    public function pumps()
+    {
+        return $this->hasMany(Pump::class);
     }
 }

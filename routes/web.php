@@ -35,6 +35,7 @@ use App\Http\Controllers\DailyRevenueReviewController;
 use App\Http\Controllers\DailySimpleRevenueController;
 use App\Http\Controllers\DailyRevenueValidationController;
 use App\Http\Controllers\LubricantReceptionBatchController;
+use App\Http\Controllers\FuelStockController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -493,6 +494,14 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
     Route::get('daily-revenue-validations/{dailyRevenueValidation}', [DailyRevenueValidationController::class, 'show'])
         ->name('daily-revenue-validations.show')
         ->middleware('can:view-daily-revenue-validations');
+
+    // --- EXPORT STOCK CARBURANT ---
+    Route::get('exports/fuel-stock', [FuelStockController::class, 'index'])
+        ->name('exports.fuel-stock.index')
+        ->middleware('can:fuel-stock-export');
+    Route::get('exports/fuel-stock/excel', [FuelStockController::class, 'exportExcel'])
+        ->name('exports.fuel-stock.excel')
+        ->middleware('can:fuel-stock-export');
 
 });
 

@@ -18,8 +18,8 @@
 
                 <!-- Export ventes fuel -->
                 <div class="col-md-4">
-                    <a href="{{ route('fuel-stock-controls.index') }}" class="btn btn-outline-success w-100 shadow-sm">
-                        <i class="fas fa-chart-line"></i> Ventes carburant (graphique)
+                    <a href="{{ route('fuel-reports.index') }}" class="btn btn-outline-success w-100 shadow-sm">
+                        <i class="fas fa-chart-line"></i> Ventes carburant
                     </a>
                 </div>
 

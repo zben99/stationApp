@@ -7,6 +7,7 @@ use App\Http\Controllers\TankController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\FuelIndexController;
 use App\Http\Controllers\FuelStockController;
 use App\Http\Controllers\PackagingController;
+use App\Http\Controllers\FuelReportController;
 use App\Http\Controllers\CreditTopupController;
 use App\Http\Controllers\FuelProductController;
 use App\Http\Controllers\StationUserController;
@@ -510,11 +512,13 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
         ->name('fuel-stock-controls.index')
         ->middleware('auth');
 
-    Route::get('/repports/', [RepportController::class, 'index'])
+    Route::get('/repports/', [ReportController::class, 'index'])
     ->name('repports.index');
 
     Route::get('/reports/fuel', [FuelReportController::class, 'index'])->name('fuel-reports.index');
 
+    Route::get('/reports/fuel/pdf', [FuelReportController::class, 'exportPdf'])->name('fuel-reports.export-pdf');
+    Route::get('/reports/fuel/excel', [FuelReportController::class, 'exportExcel'])->name('fuel-reports.export-excel');
 
 
 

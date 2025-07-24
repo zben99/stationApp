@@ -25,8 +25,8 @@
 
                 <!-- Export ventes produits (lubrifiants, gaz, etc.) -->
                 <div class="col-md-4">
-                    <a href="{{ route('fuel-stock-controls.index') }}" class="btn btn-outline-warning w-100 shadow-sm">
-                        <i class="fas fa-box"></i> Ventes produits divers
+                    <a href="{{ route('daily-revenue-report.index') }}" class="btn btn-outline-warning w-100 shadow-sm">
+                        <i class="fas fa-box"></i> Recette journalière consolidée
                     </a>
                 </div>
 

@@ -36,6 +36,7 @@ use App\Http\Controllers\DailyProductSaleController;
 use App\Http\Controllers\FuelStockControlController;
 use App\Http\Controllers\LubricantProductController;
 use App\Http\Controllers\ProductPackagingController;
+use App\Http\Controllers\DailyRevenueReportController;
 use App\Http\Controllers\DailyRevenueReviewController;
 use App\Http\Controllers\DailySimpleRevenueController;
 use App\Http\Controllers\DailyRevenueValidationController;
@@ -520,6 +521,8 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
     Route::get('/reports/fuel/pdf', [FuelReportController::class, 'exportPdf'])->name('fuel-reports.export-pdf');
     Route::get('/reports/fuel/excel', [FuelReportController::class, 'exportExcel'])->name('fuel-reports.export-excel');
 
+    Route::get('/reports/recette', [DailyRevenueReportController::class, 'index'])
+    ->name('daily-revenue-report.index');
 
 
 });

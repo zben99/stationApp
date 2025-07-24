@@ -189,7 +189,9 @@ class PermissionTableSeeder extends Seeder
 
             'view-daily-revenue-validations',
             'create-daily-revenue-validations',
+            'repport-list',
             'fuel-stock-export',
+
         ];
 
         foreach ($permissions as $permission) {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use App\Models\Tank;
 use App\Models\Client;
 use App\Models\Driver;
@@ -12,9 +11,11 @@ use App\Models\Transporter;
 use Illuminate\Http\Request;
 use App\Models\FuelReception;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\TankStockHistory;
 use App\Models\FuelReceptionLine;
 use Illuminate\Support\Facades\DB;
 use App\Exports\FuelReceptionExport;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FuelReceptionController extends Controller
@@ -151,6 +152,18 @@ class FuelReceptionController extends Controller
                     ['tank_id' => $tank->id],
                     ['quantite_actuelle' => $qteProjetee]
                 );
+
+                TankStockHistory::create([
+                    'station_id' => $stationId,
+                    'tank_id' => $tank->id,
+                    'previous_quantity' => $stockActuel,
+                    'change_quantity' => $qteProjetee - $stockActuel,
+                    'new_quantity' => $qteProjetee,
+                    'operation_type' => 'reception',
+                    'operation_id' => $reception->id,
+                    'operation_date' => $data['date_reception'] . ' ' . now()->format('H:i:s'),
+                ]);
+
 
                 $totalContreValeur += $contreValeur;
             }

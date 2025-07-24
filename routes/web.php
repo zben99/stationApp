@@ -11,10 +11,12 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RepportController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\FuelIndexController;
+use App\Http\Controllers\FuelStockController;
 use App\Http\Controllers\PackagingController;
 use App\Http\Controllers\CreditTopupController;
 use App\Http\Controllers\FuelProductController;
@@ -29,13 +31,13 @@ use App\Http\Controllers\FuelReceptionController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\DailyProductSaleController;
+use App\Http\Controllers\FuelStockControlController;
 use App\Http\Controllers\LubricantProductController;
 use App\Http\Controllers\ProductPackagingController;
 use App\Http\Controllers\DailyRevenueReviewController;
 use App\Http\Controllers\DailySimpleRevenueController;
 use App\Http\Controllers\DailyRevenueValidationController;
 use App\Http\Controllers\LubricantReceptionBatchController;
-use App\Http\Controllers\FuelStockController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -499,9 +501,22 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
     Route::get('exports/fuel-stock', [FuelStockController::class, 'index'])
         ->name('exports.fuel-stock.index')
         ->middleware('can:fuel-stock-export');
+
     Route::post('exports/fuel-stock/excel', [FuelStockController::class, 'exportExcel'])
         ->name('exports.fuel-stock.excel')
         ->middleware('can:fuel-stock-export');
+
+    Route::get('/fuel-stock-controls', [FuelStockControlController::class, 'index'])
+        ->name('fuel-stock-controls.index')
+        ->middleware('auth');
+
+    Route::get('/repports/', [RepportController::class, 'index'])
+    ->name('repports.index');
+
+    Route::get('/reports/fuel', [FuelReportController::class, 'index'])->name('fuel-reports.index');
+
+
+
 
 });
 

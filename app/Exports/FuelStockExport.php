@@ -2,82 +2,152 @@
 
 namespace App\Exports;
 
-use App\Models\FuelIndex;
-use App\Models\FuelReceptionLine;
 use App\Models\Pump;
 use App\Models\Tank;
+use App\Models\Station;
+use App\Models\FuelIndex;
+use App\Models\FuelReceptionLine;
 use App\Models\TankPhysicalStock;
+use App\Models\FuelStockControl;
+use App\Models\TankStockHistory;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\FromCollection;
 
 class FuelStockExport implements FromCollection, WithHeadings
 {
-    protected $from;
-    protected $to;
-    protected $stationId;
+    protected string $from;
+    protected string $to;
+    protected int $stationId;
+    protected bool $forceRecalculate;
 
-    public function __construct(string $from, string $to, int $stationId)
+    public function __construct(string $from, string $to, int $stationId, bool $forceRecalculate = false)
     {
         $this->from = $from;
         $this->to = $to;
         $this->stationId = $stationId;
+        $this->forceRecalculate = $forceRecalculate;
     }
 
     public function collection()
     {
         $rows = collect();
 
-        $tanks = Tank::where('station_id', $this->stationId)
-            ->with(['product', 'stock'])
-            ->get();
+        $station = Station::find($this->stationId);
+        $stationName = $station?->name ?? 'Station inconnue';
+
+        // Titre
+        $rows->push(["Contrôle de stock carburants"]);
+        $rows->push(["Station : {$stationName}"]);
+        $rows->push(["Période : du {$this->from} au {$this->to}"]);
+        $rows->push([]);
+
+        // En-tête
+        $rows->push([
+            'CUVES', 'PRODUITS', 'INDEX Fermeture', 'INDEX Ouverture',
+            'Différence d’index', 'RETOUR EN CUVE', 'VENTE',
+            'Stock Ouverture', 'Livraison Période', 'Stock physique',
+            'Stock théorique', 'écart sur stock', 'écart en %'
+        ]);
+
+        $tanks = Tank::where('station_id', $this->stationId)->with(['product', 'stock'])->get();
 
         foreach ($tanks as $tank) {
-            $pumpIds = Pump::where('tank_id', $tank->id)->pluck('id');
+            // Si snapshot existe et pas de recalcul forcé
+            $snapshot = FuelStockControl::where('station_id', $this->stationId)
+                ->where('tank_id', $tank->id)
+                ->where('control_date', $this->to)
+                ->first();
 
+            if ($snapshot && !$this->forceRecalculate) {
+                $rows->push([
+                    $tank->code,
+                    $tank->product->name ?? '-',
+                    number_format($snapshot->index_end, 2, '.', ''),
+                    number_format($snapshot->index_start, 2, '.', ''),
+                    number_format($snapshot->index_end - $snapshot->index_start, 2, '.', ''),
+                    number_format($snapshot->return_to_tank, 2, '.', ''),
+                    number_format($snapshot->sale, 2, '.', ''),
+                    number_format($snapshot->stock_opening, 2, '.', ''),
+                    number_format($snapshot->reception, 2, '.', ''),
+                    number_format($snapshot->stock_physical, 2, '.', ''),
+                    number_format($snapshot->stock_theoretical, 2, '.', ''),
+                    number_format($snapshot->gap_liters, 2, '.', ''),
+                    number_format($snapshot->gap_percent, 2, '.', '') . '%',
+                ]);
+                continue;
+            }
+
+            // Recalcul automatique
+            $pumpIds = Pump::where('tank_id', $tank->id)->pluck('id');
             $indexes = FuelIndex::where('station_id', $this->stationId)
                 ->whereIn('pump_id', $pumpIds)
                 ->whereBetween('date', [$this->from, $this->to])
                 ->get();
 
-            $indexDebut = $indexes->sum('index_debut');
-            $indexFin = $indexes->sum('index_fin');
-            $retourCuve = $indexes->sum('retour_en_cuve');
-            $vente = $indexFin - $indexDebut - $retourCuve;
+            $indexDebut  = (float) $indexes->sum('index_debut');
+            $indexFin    = (float) $indexes->sum('index_fin');
+            $retourCuve  = (float) $indexes->sum('retour_en_cuve');
+            $diffIndex   = $indexFin - $indexDebut;
+            $vente       = $diffIndex - $retourCuve;
 
-            $receptionQuery = FuelReceptionLine::where('tank_id', $tank->id)
+            $reception = (float) FuelReceptionLine::where('tank_id', $tank->id)
                 ->whereHas('reception', function ($q) {
                     $q->where('station_id', $this->stationId)
                       ->whereBetween('date_reception', [$this->from, $this->to]);
-                });
-
-            $reception = $receptionQuery->sum('reception_par_cuve');
+                })
+                ->sum('reception_par_cuve');
 
             $manualStock = TankPhysicalStock::where('tank_id', $tank->id)
                 ->where('station_id', $this->stationId)
                 ->where('date', $this->to)
                 ->value('quantity');
 
-            $stockPhysique = $manualStock ?? $receptionQuery->sum('station_d15');
+            $stockPhysique = is_numeric($manualStock) ? (float) $manualStock : 0;
 
-            $stockOuverture = $tank->stock->quantite_actuelle ?? 0;
+            // ✅ Stock d’ouverture à la date du $from
+            $stockOuverture = (float) TankStockHistory::where('station_id', $this->stationId)
+            ->where('tank_id', $tank->id)
+            ->where('operation_date', '<', $this->from . ' 00:00:00') // ✅ AVANT la période
+            ->orderByDesc('operation_date')
+            ->value('new_quantity') ?? 0;
+
             $stockTheorique = $stockOuverture + $reception - $vente;
             $ecartL = $stockPhysique - $stockTheorique;
-            $ecartPercent = $vente > 0 ? ($ecartL / $vente) * 100 : 0;
+            $ecartPercent = $vente > 0 ? round(($ecartL / $vente) * 100, 2) : 0;
+
+            // Sauvegarde snapshot
+            FuelStockControl::updateOrCreate([
+                'station_id' => $this->stationId,
+                'tank_id' => $tank->id,
+                'control_date' => $this->to,
+            ], [
+                'stock_opening' => $stockOuverture,
+                'index_start' => $indexDebut,
+                'index_end' => $indexFin,
+                'return_to_tank' => $retourCuve,
+                'sale' => $vente,
+                'reception' => $reception,
+                'stock_theoretical' => $stockTheorique,
+                'stock_physical' => $stockPhysique,
+                'gap_liters' => $ecartL,
+                'gap_percent' => $ecartPercent,
+            ]);
 
             $rows->push([
                 $tank->code,
                 $tank->product->name ?? '-',
-                $indexDebut,
-                $indexFin,
-                $retourCuve,
-                $vente,
-                $stockOuverture,
-                $reception,
-                $stockTheorique,
-                $stockPhysique,
-                $ecartL,
-                $ecartPercent,
+                number_format($indexFin, 2, '.', ''),
+                number_format($indexDebut, 2, '.', ''),
+                number_format($diffIndex, 2, '.', ''),
+                number_format($retourCuve, 2, '.', ''),
+                number_format($vente, 2, '.', ''),
+                number_format($stockOuverture, 2, '.', ''),
+                number_format($reception, 2, '.', ''),
+                number_format($stockPhysique, 2, '.', ''),
+                number_format($stockTheorique, 2, '.', ''),
+                number_format($ecartL, 2, '.', ''),
+                $ecartPercent . '%',
             ]);
         }
 
@@ -86,19 +156,6 @@ class FuelStockExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return [
-            'Cuve',
-            'Produit',
-            'Index Début',
-            'Index Fin',
-            'Retour cuve',
-            'Vente',
-            'Stock ouverture',
-            'Réception',
-            'Stock théorique',
-            'Stock physique',
-            'Écart (L)',
-            'Écart (%)',
-        ];
+        return [];
     }
 }

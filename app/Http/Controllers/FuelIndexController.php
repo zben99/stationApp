@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FuelIndex;
 use App\Models\Pump;
-use App\Traits\ValidatesRotation;
+use App\Models\FuelIndex;
+use App\Models\TankStock;
 use Illuminate\Http\Request;
+use App\Models\TankStockHistory;
+use App\Traits\ValidatesRotation;
 use Illuminate\Support\Facades\DB;
 
 class FuelIndexController extends Controller
 {
     use ValidatesRotation;
+
     public function index()
     {
         $stationId = session('selected_station_id');
@@ -34,31 +37,23 @@ class FuelIndexController extends Controller
             ->get()
             ->sortBy(function ($pump) {
                 $productName = strtolower($pump->tank->product->name ?? '');
-
                 return str_contains($productName, 'super') ? '0_'.$pump->name : '1_'.$pump->name;
             })
             ->values();
 
-        // Liste des rotations par ordre chronologique
         $rotationOrder = ['6-14', '14-22', '22-6'];
-
-        // Trouver l'index de la rotation courante
         $currentRotationIndex = array_search($rotation, $rotationOrder);
 
-        // Préparer tableau des derniers index par pompe
         $lastIndexes = [];
 
         foreach ($pumps as $pump) {
-            // Chercher la dernière saisie antérieure pour cette pompe
             $lastFuelIndex = FuelIndex::where('station_id', $stationId)
                 ->where('pump_id', $pump->id)
                 ->where(function ($query) use ($date, $rotationOrder, $currentRotationIndex) {
                     $query->where(function ($q) use ($date, $rotationOrder, $currentRotationIndex) {
-                        // Rotation du même jour, antérieure
                         $q->whereDate('date', $date)
                             ->whereIn('rotation', array_slice($rotationOrder, 0, $currentRotationIndex));
                     })->orWhere(function ($q) use ($date) {
-                        // Rotation du jour précédent
                         $q->whereDate('date', '<', $date);
                     });
                 })
@@ -87,7 +82,6 @@ class FuelIndexController extends Controller
         $stationId = session('selected_station_id');
         $userId = auth()->id();
 
-        // 🔒 Vérifie si une saisie existe déjà pour cette date + rotation
         $existing = FuelIndex::where('station_id', $stationId)
             ->whereDate('date', $request->date)
             ->where('rotation', $request->rotation)
@@ -99,20 +93,47 @@ class FuelIndexController extends Controller
             ])->withInput();
         }
 
-        // ✅ Enregistre les relevés pour chaque pompe
         foreach ($request->pumps as $pumpData) {
-            FuelIndex::create([
+            $pump = Pump::with('tank.stock')->findOrFail($pumpData['pump_id']);
+            $tank = $pump->tank;
+
+            $indexDebut = $pumpData['index_debut'];
+            $indexFin = $pumpData['index_fin'];
+            $retour = $pumpData['retour_en_cuve'] ?? 0;
+            $vente = ($indexFin - $indexDebut) - $retour;
+            $prix = $pumpData['prix_unitaire'];
+            $montant = $vente * $prix;
+
+            $fuelIndex=FuelIndex::create([
                 'station_id' => $stationId,
-                'pump_id' => $pumpData['pump_id'],
+                'pump_id' => $pump->id,
                 'user_id' => $userId,
                 'date' => $request->date,
                 'rotation' => $request->rotation,
-                'index_debut' => $pumpData['index_debut'],
-                'index_fin' => $pumpData['index_fin'],
-                'retour_en_cuve' => $pumpData['retour_en_cuve'] ?? 0,
-                'prix_unitaire' => $pumpData['prix_unitaire'],
-                'montant_recette' => (($pumpData['index_fin'] - $pumpData['index_debut']) - $pumpData['retour_en_cuve'] ?? 0) * $pumpData['prix_unitaire'],
+                'index_debut' => $indexDebut,
+                'index_fin' => $indexFin,
+                'retour_en_cuve' => $retour,
+                'prix_unitaire' => $prix,
+                'montant_recette' => $montant,
             ]);
+
+            // Mise à jour du stock de la cuve
+            if ($tank && $tank->stock) {
+                $tank->stock->decrement('quantite_actuelle', $vente);
+
+                TankStockHistory::create([
+                    'station_id' => $stationId,
+                    'tank_id' => $tank->id,
+                    'previous_quantity' => $tank->stock->quantite_actuelle + $vente,
+                    'change_quantity' => -$vente,
+                    'new_quantity' => $tank->stock->quantite_actuelle,
+                    'operation_type' => 'vente',
+                    'operation_id' => $fuelIndex->id,
+                    'operation_date' => $request->date . ' ' . now()->format('H:i:s'),
+                ]);
+            }
+
+
         }
 
         return redirect()->route('fuel-indexes.index')->with('success', 'Relevés journaliers enregistrés avec succès.');
@@ -162,19 +183,19 @@ class FuelIndexController extends Controller
             ])->with('error', 'Cette rotation a déjà été validée. Modification impossible.');
         }
 
-        // Valide uniquement les champs modifiables
         $pumpData = $request->validate([
             'index_debut' => 'required|numeric|min:0',
             'index_fin' => 'required|numeric|gte:index_debut',
             'retour_en_cuve' => 'nullable|numeric|min:0',
         ]);
 
-        // Met à jour sans toucher au prix unitaire
+        $vente = ($pumpData['index_fin'] - $pumpData['index_debut']) - ($pumpData['retour_en_cuve'] ?? 0);
+
         $fuelIndex->update([
             'index_debut' => $request->index_debut,
             'index_fin' => $request->index_fin,
             'retour_en_cuve' => $request->retour_en_cuve ?? 0,
-            'montant_recette' => (($pumpData['index_fin'] - $pumpData['index_debut']) - $pumpData['retour_en_cuve'] ?? 0) * $fuelIndex->prix_unitaire,
+            'montant_recette' => $vente * $fuelIndex->prix_unitaire,
         ]);
 
         return redirect()->route('fuel-indexes.details', [
@@ -182,5 +203,4 @@ class FuelIndexController extends Controller
             'rotation' => $fuelIndex->rotation,
         ])->with('success', 'Relevé mis à jour avec succès.');
     }
-
 }

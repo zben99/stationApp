@@ -29,36 +29,44 @@ class FuelStockController extends Controller
         ]);
     }
 
-    public function exportExcel(Request $request)
-    {
-        $request->validate([
-            'from' => 'required|date',
-            'to' => 'required|date|after_or_equal:from',
-            'stocks' => 'array',
-            'stocks.*' => 'nullable|numeric',
-        ]);
+ public function exportExcel(Request $request)
+{
+    $request->validate([
+    'from' => 'required|date',
+    'to' => 'required|date|after_or_equal:from',
+    'stocks' => 'array',
+    'stocks.*' => 'nullable|numeric',
+]);
 
-        $stationId = session('selected_station_id');
 
-        if ($request->has('stocks')) {
-            foreach ($request->get('stocks') as $tankId => $qty) {
-                if ($qty === null || $qty === '') {
-                    continue;
-                }
-                TankPhysicalStock::updateOrCreate(
-                    [
-                        'station_id' => $stationId,
-                        'tank_id' => $tankId,
-                        'date' => $request->to,
-                    ],
-                    ['quantity' => $qty]
-                );
+    $stationId = session('selected_station_id');
+    $from = $request->from;
+    $to = $request->to;
+    $force = $request->boolean('force', false); // 👈 conversion propre
+
+    // 🔄 Enregistrement des stocks physiques
+    if ($request->has('stocks')) {
+        foreach ($request->get('stocks') as $tankId => $qty) {
+            if ($qty === null || $qty === '') {
+                continue;
             }
-        }
 
-        return Excel::download(
-            new FuelStockExport($request->from, $request->to, $stationId),
-            'controle_stock_fuel_'.$request->from.'_'.$request->to.'.xlsx'
-        );
+            TankPhysicalStock::updateOrCreate(
+                [
+                    'station_id' => $stationId,
+                    'tank_id' => $tankId,
+                    'date' => $to,
+                ],
+                ['quantity' => $qty]
+            );
+        }
     }
+
+    // 📤 Export avec ou sans recalcul forcé
+    return Excel::download(
+        new FuelStockExport($from, $to, $stationId, $force),
+        'controle_stock_fuel_'.$from.'_'.$to.'.xlsx'
+    );
+}
+
 }

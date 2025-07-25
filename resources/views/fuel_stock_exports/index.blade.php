@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">Export Stock Carburant</x-slot>
+    <x-slot name="header">Contrôle Stock Carburant</x-slot>
 
     @if ($errors->any())
         <div class="alert alert-danger">

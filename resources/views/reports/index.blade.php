@@ -12,39 +12,34 @@
                 <!-- Rapport de stock carburant -->
                 <div class="col-md-4">
                     <a href="{{ route('exports.fuel-stock.index') }}" class="btn btn-outline-primary w-100 shadow-sm">
-                        <i class="fas fa-file-invoice"></i> Contrôle stock carburant
+                        <i class="fas fa-gas-pump"></i> Contrôle stock carburant
+                    </a>
+                </div>
+
+                <!-- Export recettes consolidées par période -->
+                <div class="col-md-4">
+                    <a href="{{ route('reports.consolidee.period') }}" class="btn btn-outline-success w-100 shadow-sm">
+                        <i class="fas fa-calendar-alt"></i> Contrôle Caisse par période
+                    </a>
+                </div>
+
+
+
+            </div>
+            <br>
+            <div class="row g-4">
+
+                 <!-- Export recettes consolidées par rotation -->
+                <div class="col-md-4">
+                    <a href="{{ route('daily-revenue-report.index') }}" class="btn btn-outline-warning w-100 shadow-sm">
+                        <i class="fas fa-clock"></i> Contrôle Caisse par rotation
                     </a>
                 </div>
 
                 <!-- Export ventes fuel -->
                 <div class="col-md-4">
-                    <a href="{{ route('fuel-reports.index') }}" class="btn btn-outline-success w-100 shadow-sm">
-                        <i class="fas fa-chart-line"></i> Ventes carburant
-                    </a>
-                </div>
-
-                <!-- Export ventes produits (lubrifiants, gaz, etc.) -->
-                <div class="col-md-4">
-                    <a href="{{ route('daily-revenue-report.index') }}" class="btn btn-outline-warning w-100 shadow-sm">
-                        <i class="fas fa-box"></i> Recette journalière consolidée
-                    </a>
-                </div>
-
-            </div>
-            <br>
-             <div class="row g-4">
-
-                <!-- Export général en Excel -->
-                <div class="col-md-4">
-                    <a href="{{ route('fuel-stock-controls.index') }}" class="btn btn-outline-secondary w-100 shadow-sm">
-                        <i class="fas fa-file-excel"></i> Export Excel complet
-                    </a>
-                </div>
-
-                <!-- Historique des mouvements de cuve -->
-                <div class="col-md-4">
-                    <a href="{{ route('fuel-stock-controls.index') }}" class="btn btn-outline-dark w-100 shadow-sm">
-                        <i class="fas fa-history"></i> Historique des stocks cuves
+                    <a href="{{ route('fuel-reports.index') }}" class="btn btn-outline-danger w-100 shadow-sm">
+                        <i class="fas fa-tachometer-alt"></i> Ventes carburant par rotation
                     </a>
                 </div>
 

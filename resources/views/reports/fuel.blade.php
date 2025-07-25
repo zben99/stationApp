@@ -70,10 +70,11 @@
                 </table>
             </div>
         </div>
+          <a href="{{ route('repports.index') }}" class="btn btn-secondary mt-3">Retour</a>
+
     </div>
 
 
 
-        <a href="{{ route('repports.index') }}" class="btn btn-secondary mt-3">Retour</a>
 
 </x-app-layout>

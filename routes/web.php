@@ -27,6 +27,7 @@ use App\Http\Controllers\TransporterController;
 use App\Http\Controllers\BalanceTopupController;
 use App\Http\Controllers\BalanceUsageController;
 use App\Http\Controllers\ClientCreditController;
+use App\Http\Controllers\ReportExportController;
 use App\Http\Controllers\ClientBalanceController;
 use App\Http\Controllers\CreditPaymentController;
 use App\Http\Controllers\FuelReceptionController;
@@ -524,6 +525,14 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
     Route::get('/reports/recette', [DailyRevenueReportController::class, 'index'])
     ->name('daily-revenue-report.index');
 
+
+    Route::get('/reports/recette-consolidee/pdf', [ReportExportController::class, 'exportConsolideePdf'])->name('reports.consolidee.pdf');
+    Route::get('/reports/recette-consolidee/excel', [ReportExportController::class, 'exportExcel'])->name('reports.consolidee.excel');
+
+
+    Route::get('/recettes/consolidees/periode', [ReportController::class, 'showConsolidatedPeriod'])->name('reports.consolidee.period');
+    Route::get('/recettes/consolidees/periode/excel', [ReportController::class, 'exportConsolidatedPeriodExcel'])->name('reports.consolidee.period.excel');
+    Route::get('/recettes/consolidees/periode/pdf', [ReportController::class, 'exportConsolidatedPeriodPdf'])->name('reports.consolidee.period.pdf');
 
 });
 

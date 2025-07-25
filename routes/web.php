@@ -35,11 +35,13 @@ use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\DailyProductSaleController;
 use App\Http\Controllers\FuelStockControlController;
+use App\Http\Controllers\FuelSupplyReportController;
 use App\Http\Controllers\LubricantProductController;
 use App\Http\Controllers\ProductPackagingController;
 use App\Http\Controllers\DailyRevenueReportController;
 use App\Http\Controllers\DailyRevenueReviewController;
 use App\Http\Controllers\DailySimpleRevenueController;
+use App\Http\Controllers\LubricantSupplyReportController;
 use App\Http\Controllers\DailyRevenueValidationController;
 use App\Http\Controllers\LubricantReceptionBatchController;
 
@@ -533,6 +535,15 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
     Route::get('/recettes/consolidees/periode', [ReportController::class, 'showConsolidatedPeriod'])->name('reports.consolidee.period');
     Route::get('/recettes/consolidees/periode/excel', [ReportController::class, 'exportConsolidatedPeriodExcel'])->name('reports.consolidee.period.excel');
     Route::get('/recettes/consolidees/periode/pdf', [ReportController::class, 'exportConsolidatedPeriodPdf'])->name('reports.consolidee.period.pdf');
+
+
+    Route::get('/reports/supplies/fuel', [FuelSupplyReportController::class, 'index'])->name('reports.supplies.fuel');
+    Route::get('/reports/supplies/lubricants', [LubricantSupplyReportController::class, 'index'])->name('reports.supplies.lubricants');
+
+    Route::get('/reports/supplies/fuel/export-excel', [FuelSupplyReportController::class, 'exportExcel'])->name('reports.supplies.fuel.excel');
+
+    Route::get('/reports/supplies/fuel/export-pdf', [FuelSupplyReportController::class, 'exportPdf'])->name('reports.supplies.fuel.pdf');
+
 
 });
 

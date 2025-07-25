@@ -14,6 +14,8 @@ class FuelReceptionLine extends Model
         'tank_id',
         'jauge_avant',
         'reception_par_cuve',
+        'unit_price_purchase',
+        'unit_price_sale',
         'jauge_apres',
         'ecart_reception',
         'ecart_stock',

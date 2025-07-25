@@ -140,6 +140,10 @@ class FuelReceptionController extends Controller
                     'tank_id' => $tank->id,
                     'jauge_avant' => $jaugeAvant ?: null,
                     'reception_par_cuve' => $qteReception,
+
+                    'reception_par_cuve' => $tank->product->prix_achat,
+                    'unit_price_purchase' => $tank->product->price,
+
                     'contre_plein_litre' => $contreLitres,
                     'contre_plein_valeur' => $contreValeur,
                     'jauge_apres' => $jaugeApres ?: null,
@@ -257,6 +261,7 @@ class FuelReceptionController extends Controller
             'contre_plein.*' => 'nullable|numeric',
         ]);
 
+
         DB::beginTransaction();
 
         try {
@@ -276,7 +281,9 @@ class FuelReceptionController extends Controller
                 'updated_by' => Auth::id(),
             ]);
 
+
             foreach ($request->cuve_id as $index => $cuve_id) {
+
                 $jAvant = $request->jauge_avant[$index];
                 $jApres = $request->jauge_apres[$index];
                 $qteRec = $request->reception_par_cuve[$index];
@@ -286,14 +293,22 @@ class FuelReceptionController extends Controller
                 $livreNet = $qteRec + $cpl;
                 $ecart = $livreNet - $variation;
 
+                $tank = Tank::with('product')->find($cuve_id);
+                $purchasePrice = $tank->product->prix_achat ?? 0;
+                $salePrice = $tank->product->price ?? 0;
+
                 $reception->lines()->create([
                     'tank_id' => $cuve_id,
                     'jauge_avant' => $jAvant,
                     'jauge_apres' => $jApres,
                     'reception_par_cuve' => $qteRec,
+                    'unit_price_purchase' => $purchasePrice,
+                    'unit_price_sale' => $salePrice,
+
                     'contre_plein_litre' => $cpl,
                     'ecart_reception' => $ecart,
                 ]);
+
 
                 // Mise à jour du stock
                 $stock = TankStock::firstOrNew(['tank_id' => $cuve_id]);

@@ -16,6 +16,12 @@
                     </a>
                 </div>
 
+                  <div class="col-md-4">
+                    <a href="{{ route('reports.supplies.fuel') }}" class="btn btn-outline-primary w-100 shadow-sm">
+                        <i class="fas fa-gas-pump"></i> Approvisionnement carburant
+                    </a>
+                </div>
+
                 <!-- Export recettes consolidées par période -->
                 <div class="col-md-4">
                     <a href="{{ route('reports.consolidee.period') }}" class="btn btn-outline-success w-100 shadow-sm">

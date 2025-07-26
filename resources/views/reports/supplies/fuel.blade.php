@@ -52,7 +52,7 @@
                             <td>{{ $line->tank->name ?? '-' }}</td>
                             <td>{{ $reception->transporter->name ?? '-' }}</td>
 
-                            <td>{{ number_format($reception->num_bl, 2) }}</td>
+                            <td>{{ $reception->num_bl }}</td>
 
                             <td>{{ number_format($line->reception_par_cuve, 2) }}</td>
 

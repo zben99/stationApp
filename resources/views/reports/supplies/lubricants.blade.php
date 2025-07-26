@@ -32,6 +32,7 @@
                     <th>Produit</th>
                     <th>Conditionnement</th>
                     <th>Fournisseur</th>
+                    <th>BC</th>
                     <th>Quantité</th>
                     <th>Prix unitaire</th>
                     <th>Montant total</th>
@@ -46,6 +47,8 @@
                             <td>{{ $d->packaging->product->name ?? '-' }}</td>
                             <td>{{ $d->packaging->packaging->label ?? '-' }}</td>
                             <td>{{ $batch->supplier->name ?? '-' }}</td>
+
+                             <td>{{ $batch->num_bc }}</td>
                             <td>{{ $d->quantite }}</td>
                             <td>{{ number_format($d->prix_achat, 2) }} F</td>
                             <td>{{ number_format($d->quantite * $d->prix_achat, 2) }} F</td>

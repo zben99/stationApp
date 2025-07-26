@@ -58,7 +58,7 @@
                     <div class="col-md-4">
                         <label class="form-label">{{ $label }}</label>
                         <input type="number" step="0.01" class="form-control"
-                               name="{{ $name }}" id="{{ $name }}" value="{{ old($name, 0) }}">
+                               name="{{ $name }}" id="{{ $name }}" value="{{ old($name, 0) }}" readonly>
                     </div>
                 @endforeach
             </div>
@@ -77,7 +77,7 @@
                     <div class="col-md-3">
                         <label class="form-label">{{ $label }}</label>
                         <input type="number" step="0.01" class="form-control"
-                               name="{{ $name }}" id="{{ $name }}" value="{{ old($name, 0) }}">
+                               name="{{ $name }}" id="{{ $name }}" value="{{ old($name, 0) }}" readonly>
                     </div>
                 @endforeach
             </div>

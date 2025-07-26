@@ -33,7 +33,8 @@
 
         <div class="mb-3">
             <label>Date</label>
-            <input type="date" name="date" class="form-control" required>
+           <input type="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
+
         </div>
 
         <div class="mb-3">

@@ -18,7 +18,8 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label>Date</label>
-                <input type="date" name="date" class="form-control" required>
+               <input type="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
+
             </div>
 
             <div class="col-md-6 mb-3">

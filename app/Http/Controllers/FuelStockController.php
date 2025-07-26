@@ -36,7 +36,7 @@ class FuelStockController extends Controller
     'to' => 'required|date|after_or_equal:from',
     'stocks' => 'array',
     'stocks.*' => 'nullable|numeric',
-]);
+    ]);
 
 
     $stationId = session('selected_station_id');

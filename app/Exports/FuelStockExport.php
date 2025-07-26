@@ -98,12 +98,27 @@ class FuelStockExport implements FromCollection, WithHeadings
                 })
                 ->sum('reception_par_cuve');
 
+            // 1. Vérifie s’il existe un stock physique saisi manuellement
             $manualStock = TankPhysicalStock::where('tank_id', $tank->id)
                 ->where('station_id', $this->stationId)
                 ->where('date', $this->to)
                 ->value('quantity');
 
-            $stockPhysique = is_numeric($manualStock) ? (float) $manualStock : 0;
+            // 2. Sinon, cherche le dernier stock historique
+            if (is_numeric($manualStock)) {
+                $stockPhysique = (float) $manualStock;
+            } else {
+                $lastStock = TankStockHistory::where('station_id', $this->stationId)
+                    ->where('tank_id', $tank->id)
+                    ->where('operation_date', '<=', $this->to . ' 23:59:59')
+                    ->orderByDesc('operation_date')
+                    ->value('new_quantity');
+
+                $stockPhysique = (float) ($lastStock ?? 0);
+            }
+
+
+
 
             // ✅ Stock d’ouverture à la date du $from
             $stockOuverture = (float) TankStockHistory::where('station_id', $this->stationId)
@@ -112,7 +127,10 @@ class FuelStockExport implements FromCollection, WithHeadings
             ->orderByDesc('operation_date')
             ->value('new_quantity') ?? 0;
 
-            $stockTheorique = $stockOuverture + $reception - $vente;
+             $stockTheorique = $stockOuverture + $reception - $vente;
+
+
+
             $ecartL = $stockPhysique - $stockTheorique;
             $ecartPercent = $vente > 0 ? round(($ecartL / $vente) * 100, 2) : 0;
 

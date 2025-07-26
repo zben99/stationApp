@@ -61,6 +61,7 @@ class FuelReceptionController extends Controller
 
     public function store(Request $request)
     {
+
         /* 1° VALIDATION ---------------------------------------------------- */
         $data = $request->validate([
             'date_reception' => ['required', 'date'],
@@ -140,8 +141,6 @@ class FuelReceptionController extends Controller
                     'tank_id' => $tank->id,
                     'jauge_avant' => $jaugeAvant ?: null,
                     'reception_par_cuve' => $qteReception,
-
-                    'reception_par_cuve' => $tank->product->prix_achat,
                     'unit_price_purchase' => $tank->product->price,
 
                     'contre_plein_litre' => $contreLitres,
@@ -154,15 +153,15 @@ class FuelReceptionController extends Controller
                 /* mise à jour stock cuve */
                 TankStock::updateOrCreate(
                     ['tank_id' => $tank->id],
-                    ['quantite_actuelle' => $qteProjetee]
+                    ['quantite_actuelle' => $jaugeApres]
                 );
 
                 TankStockHistory::create([
                     'station_id' => $stationId,
                     'tank_id' => $tank->id,
                     'previous_quantity' => $stockActuel,
-                    'change_quantity' => $qteProjetee - $stockActuel,
-                    'new_quantity' => $qteProjetee,
+                    'change_quantity' => $jaugeApres - $stockActuel,
+                    'new_quantity' => $jaugeApres,
                     'operation_type' => 'reception',
                     'operation_id' => $reception->id,
                     'operation_date' => $data['date_reception'] . ' ' . now()->format('H:i:s'),

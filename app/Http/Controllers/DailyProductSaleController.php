@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use App\Models\StationCategory;
 use App\Models\DailyProductSale;
 use App\Models\ProductPackaging;
-use Illuminate\Http\Request;
 
 class DailyProductSaleController extends Controller
 {
@@ -26,13 +27,27 @@ class DailyProductSaleController extends Controller
         $stationId = session('selected_station_id');
 
         // Récupère les produits de type lubrifiant, PEA, GAZ ou lampe
-        $products = ProductPackaging::with('product', 'packaging')
+       $products = ProductPackaging::with('product', 'packaging')
             ->whereHas('product.stationCategory', function ($q) use ($stationId) {
                 $q->where('station_id', $stationId)
                     ->whereIn('type', ['lubrifiant', 'pea', 'gaz', 'lampe']);
-            })->get();
+            })
+            ->get()
+            ->sortBy([
+                fn($a, $b) => strcmp($a->product->name, $b->product->name),
+                fn($a, $b) => strcmp($a->packaging->label, $b->packaging->label),
+            ])
+            ->values();
 
-        return view('daily_product_sales.create', compact('products'));
+
+
+
+        $productCategories = StationCategory::where('station_id', $stationId)
+            ->whereIn('type', ['lubrifiant'])
+            ->orderBy('name')
+            ->get();
+        return view('daily_product_sales.create', compact('products', 'productCategories'));
+
     }
 
     public function store(Request $request)

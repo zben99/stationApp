@@ -36,8 +36,9 @@
                     <th>Produit</th>
                     <th>Cuve</th>
                     <th>Transporteur</th>
+
+                    <th>BL</th>
                     <th>Qté reçue (L)</th>
-                    <th>Prix achat (F)</th>
                     <th>Montant total (achat)</th>
                 </tr>
             </thead>
@@ -50,8 +51,11 @@
                             <td>{{ $line->tank->product->name ?? '-' }}</td>
                             <td>{{ $line->tank->name ?? '-' }}</td>
                             <td>{{ $reception->transporter->name ?? '-' }}</td>
+
+                            <td>{{ number_format($reception->num_bl, 2) }}</td>
+
                             <td>{{ number_format($line->reception_par_cuve, 2) }}</td>
-                            <td>{{ number_format($line->unit_price_purchase, 2) }}</td>
+
 
                             <td>{{ number_format($line->reception_par_cuve * $line->unit_price_purchase, 2) }} F</td>
                         </tr>

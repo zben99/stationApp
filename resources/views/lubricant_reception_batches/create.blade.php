@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container">
-        <h4 class="mb-4">Nouvelle Réception - Lubrifiant / PEA / GAZ / Lampes</h4>
+        <h4 class="mb-4">Nouvelle Réception - Lubrifiant / PEA / GAZ / Lampes / Divers</h4>
 
         @if ($errors->any())
             <div class="alert alert-danger">

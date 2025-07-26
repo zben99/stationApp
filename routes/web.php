@@ -31,6 +31,7 @@ use App\Http\Controllers\ReportExportController;
 use App\Http\Controllers\ClientBalanceController;
 use App\Http\Controllers\CreditPaymentController;
 use App\Http\Controllers\FuelReceptionController;
+use App\Http\Controllers\DepotageCumuleController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\DailyProductSaleController;
@@ -44,6 +45,7 @@ use App\Http\Controllers\DailySimpleRevenueController;
 use App\Http\Controllers\LubricantSupplyReportController;
 use App\Http\Controllers\DailyRevenueValidationController;
 use App\Http\Controllers\LubricantReceptionBatchController;
+use App\Http\Controllers\ClientCreditReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -544,6 +546,21 @@ Route::put('product-packagings/{productId}/{productPackaging}', [ProductPackagin
 
     Route::get('/reports/supplies/fuel/export-pdf', [FuelSupplyReportController::class, 'exportPdf'])->name('reports.supplies.fuel.pdf');
 
+    Route::get('/reports/supplies/lubricants/export-excel', [LubricantSupplyReportController::class, 'exportExcel'])->name('reports.supplies.lubricants.excel');
+
+    Route::get('/reports/supplies/lubricants/export-pdf', [LubricantSupplyReportController::class, 'exportPdf'])->name('reports.supplies.lubricants.pdf');
+
+    Route::get('/reports/depotage/cumule', [DepotageCumuleController::class, 'index'])->name('reports.depotage.cumule');
+
+    Route::get('/reports/depotage/cumule/export-excel', [DepotageCumuleController::class, 'exportExcel'])->name('reports.depotage.cumule.excel');
+
+    Route::get('/reports/depotage/cumule/export-pdf', [DepotageCumuleController::class, 'exportPdf'])->name('reports.depotage.cumule.pdf');
+
+    Route::get('/reports/clients/credits', [ClientCreditReportController::class, 'index'])->name('reports.clients.credits');
+
+    Route::get('/reports/clients/credits/export-excel', [ClientCreditReportController::class, 'exportExcel'])->name('reports.clients.credits.excel');
+
+    Route::get('/reports/clients/credits/export-pdf', [ClientCreditReportController::class, 'exportPdf'])->name('reports.clients.credits.pdf');
 
 });
 

@@ -1,8 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-dark">
-            Approvisionnements en lubrifiants et PEA ({{ $start }} → {{ $end }})
+        <h2 class="text-xl text-dark">
+            Approvisionnements en Lubrifiant / PEA / GAZ / Lampes / Divers
         </h2>
+
     </x-slot>
 
     <div class="py-4 container">
@@ -38,16 +39,16 @@
             </thead>
             <tbody>
                 @forelse ($batches as $batch)
-                    @foreach ($batch->details as $d)
+                    @foreach ($batch->receptions as $d)
                         <tr>
                             <td>{{ $batch->date }}</td>
                             <td>{{ $batch->rotation }}</td>
-                            <td>{{ $d->productPackaging->product->name ?? '-' }}</td>
-                            <td>{{ $d->productPackaging->label ?? '-' }}</td>
+                            <td>{{ $d->packaging->product->name ?? '-' }}</td>
+                            <td>{{ $d->packaging->packaging->label ?? '-' }}</td>
                             <td>{{ $batch->supplier->name ?? '-' }}</td>
-                            <td>{{ $d->quantity }}</td>
-                            <td>{{ number_format($d->unit_price, 2) }} F</td>
-                            <td>{{ number_format($d->quantity * $d->unit_price, 2) }} F</td>
+                            <td>{{ $d->quantite }}</td>
+                            <td>{{ number_format($d->prix_achat, 2) }} F</td>
+                            <td>{{ number_format($d->quantite * $d->prix_achat, 2) }} F</td>
                         </tr>
                     @endforeach
                 @empty
@@ -57,5 +58,22 @@
                 @endforelse
             </tbody>
         </table>
+
+        <div class="d-flex justify-content-end mb-3 gap-2">
+            <a href="{{ route('reports.supplies.lubricants.excel', ['start_date' => $start, 'end_date' => $end]) }}"
+            class="btn btn-success btn-sm">
+            📥 Export Excel
+            </a>
+
+            <a href="{{ route('reports.supplies.lubricants.pdf', ['start_date' => $start, 'end_date' => $end]) }}"
+            class="btn btn-danger btn-sm" target="_blank">
+            🧾 Export PDF
+            </a>
+        </div>
+
+        <br>
+          <a href="{{ route('repports.index') }}" class="btn btn-secondary mt-3">Retour</a>
+
+
     </div>
 </x-app-layout>
